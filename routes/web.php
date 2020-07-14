@@ -16,3 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+// Route::get('/home', 'HomeController@index')->name('home');
+
+Route::apiResources([
+    'api/products' => 'ProductController',
+    // 'api/logout' => 'Auth\LoginController@logout',
+]);
+
+Route::post('/api/logout', 'Auth\LoginController@logout');
+
+Route::get('{any}', function () {
+    return view('home');
+})->where('any', '.*');
+  

@@ -1,1 +1,31 @@
-//
+// Fonts
+// @import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+// Topbar
+@import 'topbar';
+
+// Sidebar
+@import 'sidebar';
+
+// Card
+@import 'card';
+
+// Card
+@import 'table';
+
+
+.feather {
+  width: 24px;
+  height: 24px;
+  vertical-align: bottom;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
