@@ -1,10 +1,11 @@
 export const modules = {
   namespaced: true,
   state: {
-    currentModule: { name: 'dashboard' },
+    currentModule: { label: 'Dashboard' },
     modules: [
       { label: 'Dashboard', name: 'dashboard', path: '/dashboard', icon: 'pie-chart' },
-      { label: 'Products', name: 'products', path: '/products', icon: 'package' },
+      { label: 'Productos', name: 'products', path: '/products', icon: 'package' },
+      { label: 'Categorias', name: 'categories', path: '/categories', icon: 'package' },
     ]
   },
   mutations: {

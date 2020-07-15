@@ -5,39 +5,9 @@
   background-color: transparent;
 }
 
-.table th,
-.table td {
-  padding: 1rem;
-  vertical-align: top;
-  border-top: 0.0625rem solid #e3e3e3;
-}
-
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 0.125rem solid #e3e3e3;
-}
-
-.table tbody+tbody {
-  border-top: 0.125rem solid #e3e3e3;
-}
-
-.table-sm th,
-.table-sm td {
-  padding: 0.3rem;
-}
-
-.table-bordered {
-  border: 0.0625rem solid #e3e3e3;
-}
-
-.table-bordered th,
-.table-bordered td {
-  border: 0.0625rem solid #e3e3e3;
-}
-
-.table-bordered thead th,
-.table-bordered thead td {
-  border-bottom-width: 0.125rem;
+  border-bottom: 0;
 }
 
 .table-borderless th,

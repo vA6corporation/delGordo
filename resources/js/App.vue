@@ -2,6 +2,7 @@
   <div id="app">
     <topbar/>
     <sidebar/>
+    <vue-snotify/>
     <div class="container-fluid">
       <router-view/>
     </div>

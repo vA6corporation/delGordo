@@ -4,7 +4,7 @@
       <div class="card">
         <div class="card-header">
           <div class="d-flex justify-content-between">
-            <h3 class="card-title">Productos</h3>
+            <h3 class="card-title mb-0">Productos</h3>
             <div class="btn-toolbar">
               <router-link class="btn btn-info" to="/products/create">
                 <feather type="plus"/>
@@ -20,13 +20,19 @@
               <th>Categoria</th>
               <th>Sub Categoria</th>
               <th>P. de Venta</th>
+              <th>Opciones</th>
             </thead>
             <tbody>
               <tr v-for="item in products" :key='item.id'>
-                <td>{{ item }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.sub_category }}</td>
+                <td>{{ item.sale_price }}</td>
+                <td>
+                  <router-link :to="{ path: `/products/${item.id}/edit` }">
+                    <feather type="edit"/>
+                  </router-link>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -50,6 +56,7 @@ export default {
     fetchData() {
       axios.get('products').then(res => {
         console.log(res.data);
+        this.products = res.data.products;
       }).catch(res => {
         console.log('pichula');
         console.log(res);

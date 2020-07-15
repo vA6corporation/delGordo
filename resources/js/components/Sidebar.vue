@@ -14,7 +14,7 @@
       </div>
       <ul class="nav">
         <li class="nav-item" v-for="item in modules" :key="item.name">
-          <router-link class="nav-link" :to="item.path">
+          <router-link class="nav-link" :to="item.path" @click.native="fetchCurrentModule(item)">
             <feather :type="item.icon"/>
             {{ item.label }}
           </router-link>
@@ -25,12 +25,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
     ...mapGetters({
       modules: 'modules/modules'
+    }),
+  },
+  methods: {
+    ...mapActions({
+      fetchCurrentModule: 'modules/fetchCurrentModule',
     }),
   }
 }

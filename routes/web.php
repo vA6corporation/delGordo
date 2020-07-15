@@ -23,12 +23,16 @@ Auth::routes();
 
 Route::apiResources([
     'api/products' => 'ProductController',
-    // 'api/logout' => 'Auth\LoginController@logout',
+    'api/categories' => 'CategoryController',
 ]);
 
 Route::post('/api/logout', 'Auth\LoginController@logout');
 
+Route::get('/store', function () {
+    return view('storeApp');
+});
+
 Route::get('{any}', function () {
-    return view('home');
+    return view('app');
 })->where('any', '.*');
   

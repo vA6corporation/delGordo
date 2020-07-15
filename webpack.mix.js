@@ -15,7 +15,6 @@ mix.webpackConfig({
     resolve: {
       extensions: ['.js', '.vue', '.json'],
       alias: {
-        //'vue$': 'vue/dist/vue.esm.js',
         '@': __dirname + '/resources/js'
       },
     },
@@ -24,4 +23,6 @@ mix.webpackConfig({
 mix.disableNotifications();
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+  .sass('resources/sass/app.scss', 'public/css')
+  .sass('resources/sass/store.scss', 'public/css');
+

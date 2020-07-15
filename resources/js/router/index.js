@@ -5,6 +5,11 @@ Vue.use(VueRouter)
 
   const routes = [
     {
+      path: '/store',
+      name: 'store',
+      component: () => import('@/views/Store')
+    },
+    {
       path: '/home',
       name: 'home',
       component: () => import('@/views/Home')
@@ -18,6 +23,21 @@ Vue.use(VueRouter)
       path: '/products/create',
       // name: 'products',
       component: () => import('@/views/product/Create')
+    },
+    {
+      path: '/products/:productId/edit',
+      // name: 'products',
+      component: () => import('@/views/product/Edit')
+    },
+    {
+      path: '/categories',
+      name: 'categories',
+      component: () => import('@/views/category/Categories')
+    },
+    {
+      path: '/categories/create',
+      // name: 'products',
+      component: () => import('@/views/category/Create')
     },
   ]
 

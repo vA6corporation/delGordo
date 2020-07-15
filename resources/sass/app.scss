@@ -1,5 +1,4 @@
 // Fonts
-// @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
 // Variables
@@ -7,6 +6,9 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+// Vue-snotify
+@import "~vue-snotify/styles/material.css";
 
 // Topbar
 @import 'topbar';
@@ -20,7 +22,6 @@
 // Card
 @import 'table';
 
-
 .feather {
   width: 24px;
   height: 24px;
@@ -28,4 +29,50 @@
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.feather-sm {
+  vertical-align: middle;
+  width: 18px;
+  height: 18px;
+}
+
+.btn {
+  font-weight: 600;
+}
+
+.btn:hover, 
+.btn-info:active, 
+.btn-info:active, 
+.btn:focus, 
+.btn-info:not(:disabled):not(.disabled):active {
+  box-shadow: 2px 2px 6px rgba(0,0,0,.4);
+  transform: translateY(-1px);
+  background-color: $pink;
+  border-color: $pink;
+}
+
+.btn-info:not(:disabled):not(.disabled):active:focus {
+  box-shadow: 0 0 0 0.2rem rgba(225, 78, 202, 0.36);
+}
+
+.btn-info {
+  background: $pink;
+  border-color: $pink;
+  color: $white;
+}
+
+.table td {
+  border-color: hsla(0,0%,100%,.1);
+  padding: 12px 7px;
+  vertical-align: middle;
+}
+
+.table th {
+  border-bottom-width: 1px;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border: 0;
+  color: hsla(0,0%,100%,.7);
 }

@@ -9,7 +9,7 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="#">Dashboard</a>
+        <a class="navbar-brand" href="#">{{ currentModule.label }}</a>
       </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -40,6 +40,9 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-right">
               <li class="nav-link">
+                <a href="/store" class="nav-item dropdown-item">Tienda</a>
+              </li>
+              <li class="nav-link">
                 <a href="#" class="nav-item dropdown-item">Perfil</a>
               </li>
               <li class="nav-link">
@@ -59,7 +62,14 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
+  computed: {
+    ...mapGetters({
+      currentModule: 'modules/currentModule'
+    }),
+  },
   methods: {
     logout() {
       this.$router.replace('/login');
