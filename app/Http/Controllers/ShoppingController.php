@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Product;
+use Illuminate\Support\Str;
+use App\Shopping;
 
-class ProductController extends Controller
+class ShoppingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->get();
-        return ['products' => $products];
+        $shoppings = Shopping::where('tmp_id', session('tmp_id'))->with('product')->get();
+        return ['shoppings' => $shoppings];
     }
 
     /**
@@ -27,20 +27,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product($request->product);
-        $product->save();
-        return ['product' => $product];
-    }
-
-    public function storeImage(Request $request)
-    {
-        $path = $request->file('image')->store('images');
-        return $path;
-    }
-
-    public function getImage($id)
-    {
-        return Storage::download("images/$id");
+        if (!session('tmp_id')) {
+            session(['tmp_id' => Str::random(10)]);
+        }
+        $product = $request->product;
+        error_log(json_encode($product), JSON_PRETTY_PRINT);
+        $shopping = Shopping::where('product_id', $product['id'])->first();
+        if ($shopping) {
+            if (isSet($product['counter'])) {
+                $shopping->counter = $product['counter'];
+            } else {
+                $shopping->counter = 1;
+            }
+        } else {
+            $shopping = new Shopping([
+                'tmp_id' => session('tmp_id'),
+                'counter' => $product['counter'],
+                'product_id' => $product['id'],
+            ]);
+        }
+        $shopping->save();
+        return ['shopping' => $shopping];
     }
 
     /**
@@ -51,8 +58,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::find($id);
-        return ['product' => $product];
+        //
     }
 
     /**
@@ -64,10 +70,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
-        $product->fill($request->product);
-        $product->save();
-        return ['product' => $product];
+        //
     }
 
     /**

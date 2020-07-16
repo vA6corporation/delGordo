@@ -22,7 +22,7 @@
                 {{ product.counter || 0 }}
               </span>
             </div>
-            <button type="button" class="btn btn-dark" @click="plusProduct(product); $forceUpdate()">
+            <button type="button" class="btn btn-dark" @click="plusP(product); $forceUpdate()">
               <feather class="feather-sm" type="plus"/>
             </button>
           </div>
@@ -30,13 +30,13 @@
             <div type="button" class="d-inline lead justify-content-center d-flex align-items-center" style="width: 44px">
               Kg
             </div>
-            <button type="button" class="btn btn-dark" @click="minusProduct(product); $forceUpdate()">
+            <button type="button" class="btn btn-dark" @click="minusP(product); $forceUpdate()">
               <feather class="feather-sm" type="minus"/> 
             </button>
           </div>
         </div>
         <div class="col d-flex align-items-center">
-          <button @click="addProduct(product); $forceUpdate()" class="btn btn-dark">
+          <button @click="addP(product); $forceUpdate()" class="btn btn-dark">
             <feather class="feather-sm" type="shopping-cart"/>
             <span class="lead">
               Agregar 
@@ -67,12 +67,30 @@ export default {
       }
     }
   },
-  methods:{
+  methods: {
     ...mapActions({
       addProduct: 'sale/addProduct',
       plusProduct: 'sale/plusProduct',
       minusProduct: 'sale/minusProduct',
     }),
+    addP(product) {
+      this.addProduct(product);
+      axios.post('shoppings', { product }).catch(err => {
+        console.log(err.response);
+      });
+    },
+    plusP(product) {
+      this.plusProduct(product);
+      axios.post('shoppings', { product }).catch(err => {
+        console.log(err.response);
+      });
+    },
+    minusP(product) {
+      this.minusProduct(product);
+      axios.post('shoppings', { product }).catch(err => {
+        console.log(err.response);
+      });
+    }
   }
 }
 </script>

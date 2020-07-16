@@ -7,9 +7,10 @@ export const sale = {
     ADD_PRODUCT(state, product) {
       var index = state.products.findIndex(e => e.id == product.id);
       if (index >= 0) {
+        product.counter = state.products[index].counter;
         state.products.splice(index, 1, product);
       } else {
-        product.counter = product.counter || 0;
+        product.counter = product.counter || 1;
         state.products.push(product);
       }
     },

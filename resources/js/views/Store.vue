@@ -1,9 +1,9 @@
 <template>
 <div class="row top-one">
-  <categories/>
+  <categories v-model="category_id"/>
   <shoping-card/>
   <div class="col">
-    <div id="bestseller" class="row mb-5">
+    <div id="bestseller" class="row mb-4">
       <div class="container py-3">
         <div class="row">
           <div class="col-4 text-center">
@@ -28,9 +28,16 @@
         </div>
       </div>
     </div>
+    <div class="container mb-4">
+      <div class="row">
+        <div class="col">
+          <input type="text" v-model="key" class="form-control" placeholder="Buscar producto">
+        </div>
+      </div>
+    </div>
     <div class="container">
       <div class="row">
-        <div class="col-4" v-for="item in products" :key="item.id">
+        <div class="col-4" v-for="item in filterProducts" :key="item.id">
           <product-card :product="item"/>
         </div>
       </div>
@@ -43,6 +50,7 @@
 import Categories from '@/components/Categories'
 import ShopingCard from '@/components/ShopingCard'
 import ProductCard from '@/components/ProductCard'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -56,10 +64,33 @@ export default {
   data() {
     return {
       products: [],
+      category_id: null,
+      key: null,
+    }
+  },
+  computed: {
+    filterProducts() {
+      return this.products.filter(e => !this.category_id || this.category_id == e.category_id)
+        .filter(e => !this.key || e.name.includes(this.key));
     }
   },
   methods: {
+    ...mapActions({
+      addProduct: 'sale/addProduct',
+      // plusProduct: 'sale/plusProduct',
+      // minusProduct: 'sale/minusProduct',
+    }),
     fetchData() {
+      axios.get('shoppings').then(res => {
+        console.log(res);
+        var shoppings = res.data.shoppings;
+        shoppings.forEach(item => {
+          var product = item.product;
+          product.counter = item.counter;
+          console.log(product);
+          this.addProduct(product);
+        });
+      });
       axios.get('products').then(res => {
         console.log(res);
         this.products = res.data.products;

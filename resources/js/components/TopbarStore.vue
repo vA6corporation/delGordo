@@ -11,9 +11,11 @@
         <img src="@/assets/img/store_header.png" alt="logo" style="height: 10vh;"> 
         <ul class="navbar-nav ml-auto">
           <li class="nav-link">
-            <a href="carrito" style="color: white; font-size: 2rem;">
-              <i class="fas fa-shopping-cart"></i> 0 
-            </a>
+            <router-link to="/payment" class="d-flex align-items-center" style="color: white; font-size: 2rem;">
+              <!-- <i class="fas fa-shopping-cart"></i>  -->
+              <feather class="feather-lg mr-2" type="shopping-cart"/>
+              {{ products.length }}
+            </router-link>
           </li>
         </ul>
       </div>
@@ -22,7 +24,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-
+  computed: {
+    ...mapGetters({
+      products: 'sale/products',
+    }),
+  }
 }
 </script>

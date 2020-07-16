@@ -25,9 +25,9 @@
             <tbody>
               <tr v-for="item in products" :key='item.id'>
                 <td>{{ item.name }}</td>
-                <td>{{ item.category }}</td>
+                <td>{{ item.category.name }}</td>
                 <td>{{ item.sub_category }}</td>
-                <td>{{ item.sale_price }}</td>
+                <td>S/ {{ item.sale_price.toFixed(2) }}</td>
                 <td>
                   <router-link :to="{ path: `/products/${item.id}/edit` }">
                     <feather type="edit"/>
@@ -57,9 +57,8 @@ export default {
       axios.get('products').then(res => {
         console.log(res.data);
         this.products = res.data.products;
-      }).catch(res => {
-        console.log('pichula');
-        console.log(res);
+      }).catch(err => {
+        console.log(err.response);
       });
     }
   }

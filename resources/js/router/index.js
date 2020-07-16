@@ -5,6 +5,11 @@ Vue.use(VueRouter)
 
   const routes = [
     {
+      path: '/payment',
+      name: 'payment',
+      component: require('@/views/Payment').default
+    },
+    {
       path: '/store',
       name: 'store',
       component: require('@/views/Store').default
