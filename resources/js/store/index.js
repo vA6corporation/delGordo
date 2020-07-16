@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { user } from './user'
+import { sale } from './sale'
 import { setting } from './setting'
 import { modules } from './modules'
 import { system } from './system'
@@ -16,6 +17,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
+    sale,
     user,
     setting,
     modules,

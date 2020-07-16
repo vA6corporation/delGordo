@@ -7,37 +7,37 @@ Vue.use(VueRouter)
     {
       path: '/store',
       name: 'store',
-      component: () => import('@/views/Store')
+      component: require('@/views/Store').default
     },
     {
       path: '/home',
       name: 'home',
-      component: () => import('@/views/Home')
+      component: require('@/views/Home').default
     },
     {
       path: '/products',
       name: 'products',
-      component: () => import('@/views/product/Products')
+      component: require('@/views/product/Products').default
     },
     {
       path: '/products/create',
       // name: 'products',
-      component: () => import('@/views/product/Create')
+      component: require('@/views/product/Create').default
     },
     {
       path: '/products/:productId/edit',
       // name: 'products',
-      component: () => import('@/views/product/Edit')
+      component: require('@/views/product/Edit').default
     },
     {
       path: '/categories',
       name: 'categories',
-      component: () => import('@/views/category/Categories')
+      component: require('@/views/category/Categories').default
     },
     {
       path: '/categories/create',
       // name: 'products',
-      component: () => import('@/views/category/Create')
+      component: require('@/views/category/Create').default
     },
   ]
 

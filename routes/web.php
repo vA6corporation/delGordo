@@ -26,6 +26,9 @@ Route::apiResources([
     'api/categories' => 'CategoryController',
 ]);
 
+Route::post('/api/products/image', 'ProductController@storeImage');
+Route::get('/api/products/images/{id}', 'ProductController@getImage');
+
 Route::post('/api/logout', 'Auth\LoginController@logout');
 
 Route::get('/store', function () {

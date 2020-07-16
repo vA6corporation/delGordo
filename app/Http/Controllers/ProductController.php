@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Product;
 
 class ProductController extends Controller
@@ -29,6 +30,19 @@ class ProductController extends Controller
         $product = new Product($request->product);
         $product->save();
         return ['product' => $product];
+    }
+
+    public function storeImage(Request $request)
+    {
+        $path = $request->file('image')->store('images');
+        return $path;
+        // return ['product' => $product];
+    }
+
+    public function getImage($id)
+    {
+        return Storage::download("images/$id");
+        // return Storage::download('file.jpg', $name, $headers);
     }
 
     /**

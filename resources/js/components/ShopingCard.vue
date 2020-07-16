@@ -1,30 +1,44 @@
 <template>
 <div id="shopping_cart">
-  <div class="row lead" style="margin-right: 0px; margin-left: 0px;">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item d-flex justify-content-between" v-for='item in products' :key="item.id">
+      <span>
+        {{ item.name }}
+      </span>
+      <span>
+        x{{ item.counter }}  
+      </span> 
+    </li>
+  </ul>
+  <div class="form-group font-weight-bold d-flex justify-content-between">
+    <strong>Total</strong>
+    <strong>S/ {{ totalProducts }}</strong>
+  </div>
+  <!-- <div class="row lead" style="margin-right: 0px; margin-left: 0px;">
     <div class="col-8">
       <article class="total card-product">
-        <div class="row font-weight-bold">
-          <div class="col-8">
-            <strong>Total</strong>
-          </div> <div class="col-3">
-            <strong>S/0</strong>
-          </div>
-        </div>
       </article>
     </div>
-  </div> 
+  </div>  -->
   <h5 style="text-align: center;">
-    <a href="http://localhost:4000/carrito">
-      Proceder al pago 
-      <!-- <i class="fas fa-chevron-right"></i> -->
-    </a>
+    <router-link to="/payment">
+      Proceder al pago  
+      <feather type="chevron-right"/>
+    </router-link>
   </h5>
 </div>
 </template>
 
 <script>
-export default {
+import { mapGetters } from 'vuex'
 
+export default {
+  computed: {
+    ...mapGetters({
+      products: 'sale/products',
+      totalProducts: 'sale/totalProducts'
+    }),
+  }
 }
 </script>
 

@@ -55,12 +55,14 @@
     </div>
     <div class="col">
       <div class="card">
+        <input id="inputFile" @change="setImage($event.target.files[0])" type="file" hidden>
         <div class="card-header">
           <h3>Imagen del Producto</h3>
         </div>
-        <div class="card-body">
-
-        </div>
+        <label for="inputFile" class="card-body text-white text-center border" style="cursor:pointer">
+          <feather class="feather-xxl" type="image" v-if='!src'/>
+          <img id="priviewImage" class="img-fluid" :src="src" alt="imagen" v-else>
+        </label>
       </div>
     </div>
   </form>
@@ -69,18 +71,44 @@
 <script>
 export default {
   mounted() {
+    this.priviewImage = this.$el.querySelector('#priviewImage');
     this.fetchData();
   },
   data() {
     return {
+      priviewImage: {},
       categories: [],
+      srcTmp: null,
+      file: null,
       product: {
         category: null,
         sub_category: null,
       },
     }
   },
+  computed: {
+    src() {
+      if (this.product.image_url) {
+        return `/api/products/${this.product.image_url}`;
+      } else if (this.srcTmp) {
+        return this.srcTmp;
+      } else {
+        return null;
+      }
+    }
+  },
   methods: {
+    setImage(file) {
+      this.file = file;
+      console.log(file);
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        console.log(reader.result);
+        this.srcTmp = reader.result;
+        // this.priviewImage.src = reader.result;
+      };
+    },
     fetchData() {
       var productId = this.$route.params.productId;
       axios.get(`products/${productId}`).then(res => {
@@ -92,7 +120,20 @@ export default {
         this.categories = res.data.categories;
       });
     },
-    submit() {
+    async submit() {
+      if (!this.file) {
+        return this.$snotify.error('Es necesario una imagen');
+      }
+      var formData = new FormData();
+      formData.append('image', this.file)
+      var config = {
+          headers: {
+              'content-type': 'multipart/form-data'
+          }
+      }
+      var path = await axios.post('products/image', formData, config).then(res => res.data);
+      this.product.image_url = path;
+      console.log(path);
       axios.put(`products/${this.product.id}`, { product: this.product }).then(res => {
         console.log(res.data);
         this.$snotify.success('Se han guardado los cambios');

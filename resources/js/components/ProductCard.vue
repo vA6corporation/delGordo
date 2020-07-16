@@ -1,7 +1,7 @@
 <template>
 <div class="card" style="border: 1px solid black">
   <header class="bg-primary">
-    <img src="@/assets/img/1.jpg" alt="producto">
+    <img :src="src" alt="producto">
   </header>
   <div class="card-body pro-card" style="">
       <h2 class="card-title text-center">
@@ -18,9 +18,11 @@
         <div class="col-6">
           <div class="mb-1 d-flex justify-content-end">
             <div type="button" class="btn btn-dark mr-1" style="width: 44px">
-              {{ counter }}
+              <span class="lead">
+                {{ product.counter || 0 }}
+              </span>
             </div>
-            <button type="button" class="btn btn-dark" @click="counter++">
+            <button type="button" class="btn btn-dark" @click="plusProduct(product); $forceUpdate()">
               <feather class="feather-sm" type="plus"/>
             </button>
           </div>
@@ -28,15 +30,17 @@
             <div type="button" class="d-inline lead justify-content-center d-flex align-items-center" style="width: 44px">
               Kg
             </div>
-            <button type="button" class="btn btn-dark" @click="counter--">
+            <button type="button" class="btn btn-dark" @click="minusProduct(product); $forceUpdate()">
               <feather class="feather-sm" type="minus"/> 
             </button>
           </div>
         </div>
         <div class="col d-flex align-items-center">
-          <button @click="addToCart" class="btn btn-dark">
+          <button @click="addProduct(product); $forceUpdate()" class="btn btn-dark">
             <feather class="feather-sm" type="shopping-cart"/>
-            Agregar 
+            <span class="lead">
+              Agregar 
+            </span>
           </button>
         </div>
       </div>
@@ -44,18 +48,31 @@
 </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  data(){
+  props: ['product'],
+  data() {
     return {
       counter: 0,
       message: 'Agregar'
     }
   },
-  props: ['product'],
+  computed: {
+    src() {
+      if (this.product.image_url) {
+        return `/api/products/${this.product.image_url}`;
+      } else {
+        return "@/assets/img/1.jpg";
+      }
+    }
+  },
   methods:{
-    addToCart() {
-
-    },
+    ...mapActions({
+      addProduct: 'sale/addProduct',
+      plusProduct: 'sale/plusProduct',
+      minusProduct: 'sale/minusProduct',
+    }),
   }
 }
 </script>
