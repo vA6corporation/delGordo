@@ -1,6 +1,6 @@
 <template>
 <div class="card" style="border: 1px solid black">
-  <header class="bg-primary">
+  <header class="bg-white">
     <img :src="src" alt="producto">
   </header>
   <div class="card-body pro-card" style="">
