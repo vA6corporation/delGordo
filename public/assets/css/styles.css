@@ -1,0 +1,367 @@
+@font-face {
+    font-family: "Big Brother";
+    src: url(/fonts/BigBrother.ttf);
+  }
+
+body{
+    background-color: black;
+}
+.bye{
+    display: none!important;
+}
+html {
+    scroll-behavior: smooth;
+  }
+.centrar{
+    justify-content: center;
+    text-align: center;
+    display: flex;
+}
+#loader{
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+}
+
+#socialmedia{
+    position: fixed;
+    bottom: 3vh;
+    margin-left: 2vw;
+    font-size: 3rem;
+    z-index: 20;
+    color: #E89622!important;
+}
+
+#header{
+    height: 15vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    background-color: black;
+}
+
+#grill{
+    position: absolute;
+    height: 35%;
+    right: 5vw;
+}
+
+#fixed_logo{
+    position: fixed;
+    height: 20vh;
+    left: 2vw;
+    top: 7.5vh;
+    z-index: 25;
+}
+
+#inicio{
+    width: 100%;
+    height: 100vh;
+}
+.home_arrows_carrousel {
+    font-size: 2rem;
+    color:#E89622;
+}
+.home_CII {
+    height: 2vh;
+    width: 4vw;
+}
+.home_CI{
+    top: 70vh;
+}
+.home_img_carrousel{
+    height: 100vh;
+}
+
+.carousel-indicators .active {
+opacity: 1;
+background-color: #E89622;
+}
+
+#shop_now{
+    /*TODO IMPORTANT -> IMPORT FONT BIG BROTHER TO THE WEB PAGE*/
+    font-family: "Big Brother";
+    font-size: 1.5rem;
+    padding: 5px 20px;
+    position: absolute;
+    top: 80vh;
+    z-index: 15;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    border: 5px solid;
+}
+
+#store{
+    width: 100%;
+    height: 100%;
+    background-image: url("store_bg.webp");
+    background-repeat: repeat;
+    background-size: 100vw auto;
+}
+
+#store_header{
+    height: 15vh;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.store_header_img{
+    height: 60%;
+    z-index: 25;
+}
+#best_sellers{
+    background-color:black; padding: 1em
+}
+
+.destacados_img{
+    max-width: 100%;
+}
+.row{
+    margin:0;
+}
+
+.bs{
+    padding: 0;
+}
+
+#consejos{
+    position: relative;
+}
+#entrar{
+    position:absolute;
+    top: 40%; 
+    z-index:15;
+    margin-left:auto;
+    margin-right:auto;
+    width: 20vw;
+    height: auto;
+}
+
+#menu{
+    position: fixed;
+    top: 15vh;
+    height: 85vh;
+    background-color: black;
+    width: 100%;
+    z-index: 21;
+    padding-top: 15vh;
+    padding-bottom: 15vh;
+}
+.fire{
+    width: 15vw;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3vh;
+}
+.fire:hover{
+    cursor: pointer;
+}
+#grill:hover{
+    cursor: pointer;
+}
+.menu_links{
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-family: Big Brother;
+    font-size: 3rem;
+    margin-bottom: 2vh;
+}
+
+.menu_links:hover{
+    text-decoration: none;
+    color: white;
+}
+
+.hide{
+    display: none;
+}
+
+#carrito{
+    width: 100%;
+    height: 100vh;
+    background-image: url("store_bg.webp");
+    background-repeat: repeat;
+    background-size: 100vw auto;
+}
+
+#carrito .container{
+    background-color:white;
+    justify-content: center;
+    text-align: center;
+}
+#carrito .container .row{
+    justify-content: center;
+    text-align: center;
+
+}
+.cart-row{
+    border-top: solid black 1px;
+    border-bottom: solid black 1px;
+    padding: 0.6em 0;
+}
+
+.cart-row .col-6{
+    justify-content: left!important;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: left!important;
+}
+
+#carrito .container img{
+    width: 100%;
+}
+
+.carrito-kg{
+    padding: 1em 0;
+}
+
+.carrito-kg .btn{
+    background-color: black;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.carrito-kg .col-4{
+    padding: 0;
+}
+.left{
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.right{
+    text-align: right;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.st-left{
+    text-align: left;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.st-right{
+    text-align: right;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.rotate-90-ccw{animation:rotate-90-ccw .4s cubic-bezier(.25,.46,.45,.94) both}
+@keyframes rotate-90-ccw{0%{transform:rotate(0)}100%{transform:rotate(-90deg)}}
+
+.slide-in-right{animation:slide-in-right .5s cubic-bezier(.25,.46,.45,.94) both}
+@keyframes slide-in-right{0%{transform:translateX(1000px);opacity:0}100%{transform:translateX(0);opacity:1}}
+
+.slide-out-right{animation:slide-out-right .5s cubic-bezier(.55,.085,.68,.53) both}
+@keyframes slide-out-right{0%{transform:translateX(0);opacity:1}100%{transform:translateX(1000px);opacity:0}}
+
+@media only screen and (min-width: 768px) {
+    #menu{
+        padding-top: 10vh;
+    }
+    .fire{
+        width: 10vw;
+    }
+    #shop_now{
+        font-size: 3.5rem;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    #menu{
+        padding-top: 5vh;
+    }
+    .fire{
+        width: 10vw;
+    }
+
+    #best_seller_img{
+        justify-content: center;
+        display: flex;
+        padding: 1.2em 1.3em;
+    }
+
+    #best_sellers{
+        padding: 1em 10em;
+    }
+    .bs_col{
+        padding: 2em;
+    }
+    .store_col{
+        padding: 2em;
+    }
+    .home_arrows_carrousel {
+        font-size: 5rem;
+
+    }
+    .home_img_carrousel{
+        height: 100vh;
+    }
+    .cat{
+        height: 60%;
+    }
+    .home_CC{
+        top: 20vh;
+    }
+    #us{
+        width: 100%;
+    }
+    #carrito{
+        padding: 5em;
+    }
+    #carrito .container img{
+        width: 50%;
+    }
+    .left{
+        text-align: center;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+    .right{
+        text-align: center;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+    .st-left{
+        font-size: 1.5rem;
+    }
+    .st-right{
+        font-size: 1.3rem;
+    }
+    .cart-row .col-6{
+        font-size: 1.5em;
+        text-align: left;
+    }
+    .carrito-kg .col-3{
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        font-size: 2em;
+        font-weight: bolder;
+    }
+    .carrito-kg .col-4{
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        font-size: 1.2em;
+        font-weight: bolder;
+    }
+    .cart-row .col-6{
+        justify-content: left;
+    }
+
+}    
