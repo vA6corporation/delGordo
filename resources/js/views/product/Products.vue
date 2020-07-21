@@ -26,7 +26,7 @@
               <tr v-for="item in products" :key='item.id'>
                 <td>{{ item.name }}</td>
                 <td>{{ item.category.name }}</td>
-                <td>{{ item.sub_category }}</td>
+                <td>{{ item.sub_category.name }}</td>
                 <td>S/ {{ item.sale_price.toFixed(2) }}</td>
                 <td>
                   <router-link :to="{ path: `/products/${item.id}/edit` }">

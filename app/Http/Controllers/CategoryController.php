@@ -31,7 +31,7 @@ class CategoryController extends Controller
         return ['category' => $category];
     }
 
-    /**
+    /**to night we were young
      * Display the specified resource.
      *
      * @param  int  $id
@@ -39,7 +39,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+        return ['category' => $category];
     }
 
     /**
@@ -51,7 +52,10 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = Category::find($id);
+        $category->fill($request->category);
+        $category->save();
+        return ['category' => $category];
     }
 
     /**

@@ -21,7 +21,7 @@
     </div>
   </div>  -->
   <h5 style="text-align: center;">
-    <router-link to="/payment">
+    <router-link to="/shopping">
       Proceder al pago  
       <feather type="chevron-right"/>
     </router-link>

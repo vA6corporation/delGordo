@@ -24,16 +24,16 @@
           <div class="row form-group">
             <div class="col">
               <label for="">Sub Categoria</label>
-              <select class="custom-select" v-model="product.subcategory_id" required>
+              <select class="custom-select" v-model="product.sub_category_id" required>
                 <option :value="null" disabled selected>SELECCIONE UNA SUB CATEGORIA</option>
-                <option value="1">OPCION</option>
+                <option v-for="item in subCategories" :key="item.id" :value="item.id">{{ item.name }}</option>
               </select>
             </div>
           </div>
           <div class="row form-group">
             <div class="col">
               <label for="">Precio de Venta (Incluir IGV)</label>
-              <input type="number" v-model.number="product.sale_price" step="any" class="form-control" placeholder="Precio de Venta (Incluir IGV)" required>
+              <input type="number" v-model.number="product.sale_price" step="any" min="0" class="form-control" placeholder="Precio de Venta (Incluir IGV)" required>
             </div>
           </div>
           <div class="row form-group">
@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import Compressor from 'compressorjs'
+
 export default {
   mounted() {
     this.fetchData();
@@ -76,11 +78,12 @@ export default {
   data() {
     return {
       categories: [],
+      subCategories: [],
       srcTmp: null,
       file: null,
       product: {
         category_id: null,
-        subcategory_id: null,
+        sub_category_id: null,
       },
     }
   },
@@ -98,13 +101,12 @@ export default {
   methods: {
     setImage(file) {
       this.file = file;
-      console.log(file);
+      // console.log(file);
       var reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        console.log(reader.result);
+        // console.log(reader.result);
         this.srcTmp = reader.result;
-        // this.priviewImage.src = reader.result;
       };
     },
     fetchData() {
@@ -112,13 +114,31 @@ export default {
         console.log(res);
         this.categories = res.data.categories;
       });
+      axios.get('subCategories').then(res => {
+        console.log(res);
+        this.subCategories = res.data.subCategories;
+      });
     },
     async submit() {
       if (!this.file) {
         return this.$snotify.error('Es necesario una imagen');
       }
+      var image = await new Promise((resolve, reject) => {
+        new Compressor(this.file, {
+          quality: 0.2,
+          success: async (result) => {
+            const formData = new FormData();
+            resolve(result);
+            // formData.append('file', result, result.name);
+            // await this.$http.post('uploadsPhotos', formData).then(res => {
+            //   var file = res.body.file;
+            //   this.pictures.push(file)
+            // });
+          }
+        });
+      });
       var formData = new FormData();
-      formData.append('image', this.file)
+      formData.append('image', image);
       var config = {
           headers: {
               'content-type': 'multipart/form-data'

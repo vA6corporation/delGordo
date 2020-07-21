@@ -15,7 +15,20 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->get();
+        $products = Product::with('category', 'subCategory')->get();
+        return ['products' => $products];
+    }
+
+    public function withInventory()
+    {
+        $products = Product::with('category', 'subCategory')->get();
+        return ['products' => $products];
+    }
+
+    public function checkInventory()
+    {
+        $products = Product::with('category', 'subCategory')->get();
+
         return ['products' => $products];
     }
 
@@ -51,7 +64,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::find($id);
+        $product = Product::with('category', 'subCategory')->find($id);
         return ['product' => $product];
     }
 

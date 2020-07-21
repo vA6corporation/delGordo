@@ -14,6 +14,16 @@ export const sale = {
         state.products.push(product);
       }
     },
+    REMOVE_PRODUCT(state, product) {
+      var index = state.products.findIndex(e => e.id == product.id);
+      state.products.splice(index, 1);
+      // if (index >= 0) {
+      //   product.counter = state.products[index].counter;
+      // } else {
+      //   product.counter = product.counter || 1;
+      //   state.products.push(product);
+      // }
+    },
     PLUS_PRODUCT(state, id) {
       var product = state.products.find(e => e.id == id);
       product.counter++;
@@ -28,6 +38,9 @@ export const sale = {
   actions: {
     addProduct({ commit }, product) {
       commit("ADD_PRODUCT", product);
+    },
+    removeProduct({ commit }, product) {
+      commit("REMOVE_PRODUCT", product);
     },
     plusProduct({ commit }, product) {
       commit("ADD_PRODUCT", product);

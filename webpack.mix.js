@@ -23,6 +23,6 @@ mix.webpackConfig({
 mix.disableNotifications();
 
 mix.js('resources/js/app.js', 'public/js')
-  .sass('resources/sass/app.scss', 'public/css')
-  .sass('resources/sass/store.scss', 'public/css');
+  .sass('resources/sass/app/app.scss', 'public/css')
+  .sass('resources/sass/store/store.scss', 'public/css');
 

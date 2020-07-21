@@ -25,23 +25,31 @@ Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/api/products/withInventory', 'ProductController@withInventory');
+Route::post('/api/products/image', 'ProductController@storeImage');
+Route::get('/api/products/images/{id}', 'ProductController@getImage');
+
 Route::apiResources([
     'api/products' => 'ProductController',
     'api/categories' => 'CategoryController',
+    'api/subCategories' => 'SubCategoryController',
     'api/shoppings' => 'ShoppingController',
+    'api/inventories' => 'InventoryController',
 ]);
 
-Route::post('/api/products/image', 'ProductController@storeImage');
-Route::get('/api/products/images/{id}', 'ProductController@getImage');
 
 Route::post('/api/logout', 'Auth\LoginController@logout');
 
 Route::get('/store', function () {
-    return view('storeApp');
+    return view('store');
 });
 
 Route::get('/payment', function () {
-    return view('storeApp');
+    return view('store');
+});
+
+Route::get('/shopping', function () {
+    return view('store');
 });
 
 Route::get('{any}', function () {

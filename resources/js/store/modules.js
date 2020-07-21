@@ -6,6 +6,8 @@ export const modules = {
       { label: 'Dashboard', name: 'dashboard', path: '/dashboard', icon: 'pie-chart' },
       { label: 'Productos', name: 'products', path: '/products', icon: 'package' },
       { label: 'Categorias', name: 'categories', path: '/categories', icon: 'package' },
+      { label: 'Sub Categorias', name: 'subCategories', path: '/subCategories', icon: 'package' },
+      { label: 'Inventario', name: 'inventories', path: '/inventories', icon: 'package' },
     ]
   },
   mutations: {

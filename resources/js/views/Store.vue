@@ -101,11 +101,11 @@ export default {
 </script>
 
 <style>
-  .top-one {
+  /* .top-one {
     background-image: url("../assets/img/bg_wood.png"); 
     background-repeat: repeat;
     height: calc(100vh - 92.8px);
-  }
+  } */
 
   #bestseller {
     background-color: black;

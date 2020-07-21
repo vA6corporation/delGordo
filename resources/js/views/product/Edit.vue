@@ -24,9 +24,9 @@
           <div class="row form-group">
             <div class="col">
               <label for="">Sub Categoria</label>
-              <select class="custom-select" v-model="product.subcategory_id" required>
+              <select class="custom-select" v-model="product.sub_category_id" required>
                 <option :value="null" disabled selected>SELECCIONE UNA SUB CATEGORIA</option>
-                <option value="1">OPCION</option>
+                <option v-for="item in subCategories" :key="item.id" :value="item.id">{{ item.name }}</option>
               </select>
             </div>
           </div>
@@ -78,6 +78,7 @@ export default {
     return {
       priviewImage: {},
       categories: [],
+      subCategories: [],
       srcTmp: null,
       file: null,
       product: {
@@ -118,6 +119,10 @@ export default {
       axios.get('categories').then(res => {
         console.log(res);
         this.categories = res.data.categories;
+      });
+      axios.get('subCategories').then(res => {
+        console.log(res);
+        this.subCategories = res.data.subCategories;
       });
     },
     async submit() {

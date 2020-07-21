@@ -17,13 +17,18 @@
           <table class="table">
             <thead>
               <th>Nombre</th>
-              <!-- <th>Categoria</th>
-              <th>Sub Categoria</th>
-              <th>P. de Venta</th> -->
+              <th>Opciones</th>
+              <!-- <th>Sub Categoria</th> -->
+              <!-- <th>P. de Venta</th> -->
             </thead>
             <tbody>
               <tr v-for="item in categories" :key='item.id'>
                 <td>{{ item.name }}</td>
+                <td>
+                  <router-link :to="{ path: `/categories/${item.id}/edit` }">
+                    <feather type="edit"/>
+                  </router-link>
+                </td>
                 <!-- <td>{{ item.category }}</td>
                 <td>{{ item.sub_category }}</td>
                 <td>{{ item.sale_price }}</td> -->
