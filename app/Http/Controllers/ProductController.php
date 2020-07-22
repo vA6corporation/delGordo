@@ -28,7 +28,6 @@ class ProductController extends Controller
     public function checkInventory()
     {
         $products = Product::with('category', 'subCategory')->get();
-
         return ['products' => $products];
     }
 

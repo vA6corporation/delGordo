@@ -9,6 +9,15 @@ class Inventory extends Model
     protected $fillable = [
         'product_id',
         'weight',
-        // 'image_url'
+        'sale_price'
     ];
+
+    protected $casts = [
+      'sale_price' => 'double',
+    ];
+
+    public function product()
+    {
+      return $this->belongsTo('App\Product');
+    }
 }

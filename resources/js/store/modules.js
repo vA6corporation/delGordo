@@ -7,7 +7,9 @@ export const modules = {
       { label: 'Productos', name: 'products', path: '/products', icon: 'package' },
       { label: 'Categorias', name: 'categories', path: '/categories', icon: 'package' },
       { label: 'Sub Categorias', name: 'subCategories', path: '/subCategories', icon: 'package' },
-      { label: 'Inventario', name: 'inventories', path: '/inventories', icon: 'package' },
+      { label: 'Inventario', name: 'inventories', path: '/inventories', icon: 'clipboard' },
+      { label: 'Clientes', name: 'customers', path: '/customers', icon: 'users' },
+      { label: 'Ventas', name: 'sales', path: '/sales', icon: 'check' },
     ]
   },
   mutations: {

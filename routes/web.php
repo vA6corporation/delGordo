@@ -28,6 +28,8 @@ Auth::routes();
 Route::get('/api/products/withInventory', 'ProductController@withInventory');
 Route::post('/api/products/image', 'ProductController@storeImage');
 Route::get('/api/products/images/{id}', 'ProductController@getImage');
+Route::get('/api/customers/byDni', 'ProductController@byDni');
+Route::get('/api/shoppings/removeAll', 'ShoppingController@removeAll');
 
 Route::apiResources([
     'api/products' => 'ProductController',
@@ -35,6 +37,8 @@ Route::apiResources([
     'api/subCategories' => 'SubCategoryController',
     'api/shoppings' => 'ShoppingController',
     'api/inventories' => 'InventoryController',
+    'api/customers' => 'CustomerController',
+    'api/sales' => 'SaleController',
 ]);
 
 

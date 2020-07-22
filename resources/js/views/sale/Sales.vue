@@ -4,9 +4,9 @@
       <div class="card">
         <div class="card-header">
           <div class="d-flex justify-content-between">
-            <h3 class="card-title mb-0">Inventario</h3>
+            <h3 class="card-title mb-0">Ventas</h3>
             <div class="btn-toolbar">
-              <!-- <router-link class="btn btn-info" to="/products/create">
+              <!-- <router-link class="btn btn-info" to="/sales/create">
                 <feather type="plus"/>
                 Nuevo
               </router-link> -->
@@ -16,32 +16,30 @@
         <div class="card-body">
           <table class="table">
             <thead>
-              <th>Nombre</th>
-              <th>Paquetes</th>
-              <th>T. Kilos</th>
+              <th>F/H de venta</th>
+              <th>Cliente</th>
+              <!-- <th>Sub Categoria</th> -->
+              <th>T. de Venta</th>
               <th>Opciones</th>
             </thead>
             <tbody>
-              <tr v-for="item in products" :key='item.id'>
-                <td>{{ item.name }}</td>
-                <td>{{ item.packages }} Pak</td>
-                <td>{{ item.weights }} Kg</td>
+              <tr v-for="item in sales" :key='item.id'>
+                <td>{{ formatDate(item.created_at) }} / {{ formatTime(item.created_at) }}</td>
+                <td>{{ item.customer.name }}</td>
+                <td>S/ {{ item.items.map(e => e.sale_price).reduce((a, b) => a + b, 0) }}</td>
                 <td>
                   <div class="btn-toolbar">
                     <button type="button" class="btn btn-secondary btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <feather type="more-vertical"/>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <router-link :to="{ path: `/inventories/${item.id}/create` }" class="dropdown-item">Ingresar Paketes</router-link>
-                      <router-link :to="{ path: `/inventories/${item.id}/details` }" class="dropdown-item">Ver Paketes</router-link>
+                      <router-link :to="{ path: `/sales/${item.id}/details` }" class="dropdown-item">Detalles</router-link>
+                      <!-- <router-link :to="{ path: `/inventories/${item.id}/details` }" class="dropdown-item">Ver Paketes</router-link> -->
                       <!-- <button class="dropdown-item" type="button">Another action</button> -->
                       <!-- <button class="dropdown-item" type="button">Retirar</button> -->
                     </div>
                   </div>
                 </td>
-                <!-- <td>{{ item.category }}</td>
-                <td>{{ item.sub_category }}</td>
-                <td>{{ item.sale_price }}</td> -->
               </tr>
             </tbody>
           </table>
@@ -58,14 +56,14 @@ export default {
   },
   data() {
     return {
-      products: [],
+      sales: [],
     }
   },
   methods: {
     fetchData() {
-      axios.get('products/withInventory').then(res => {
-        console.log(res);
-        this.products = res.data.products;
+      axios.get('sales').then(res => {
+        console.log(res.data);
+        this.sales = res.data.sales;
       }).catch(err => {
         console.log(err.response);
       });

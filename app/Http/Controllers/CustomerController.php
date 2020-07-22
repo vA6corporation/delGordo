@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Customer;
 
 use Illuminate\Http\Request;
 
@@ -13,7 +14,18 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::all();
+        return ['customers' => $customers];
+    }
+
+    public function byDni($dni)
+    {
+        $customer = Customer::where('document', $dni)->first();
+        if ($customer) {
+            return ['customer' => $customer];
+        } else {
+            return response(400, 'Sin resultados');
+        }
     }
 
     /**
@@ -24,7 +36,9 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $customer = new Customer($request->customer);
+        $customer->save();
+        return ['customer' => $customer];
     }
 
     /**

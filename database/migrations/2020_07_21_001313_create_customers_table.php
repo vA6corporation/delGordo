@@ -17,7 +17,9 @@ class CreateCustomersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('document');
-            $table->string('type_document');
+            $table->string('address');
+            $table->string('mobile');
+            // $table->string('type_document');
             $table->timestamps();
         });
     }

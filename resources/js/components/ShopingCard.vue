@@ -1,7 +1,7 @@
 <template>
 <div id="shopping_cart">
   <ul class="list-group list-group-flush">
-    <li class="list-group-item d-flex justify-content-between" v-for='item in products' :key="item.id">
+    <li class="list-group-item d-flex justify-content-between px-0" v-for='item in products' :key="item.id">
       <span>
         {{ item.name }}
       </span>
@@ -14,12 +14,6 @@
     <strong>Total</strong>
     <strong>S/ {{ totalProducts }}</strong>
   </div>
-  <!-- <div class="row lead" style="margin-right: 0px; margin-left: 0px;">
-    <div class="col-8">
-      <article class="total card-product">
-      </article>
-    </div>
-  </div>  -->
   <h5 style="text-align: center;">
     <router-link to="/shopping">
       Proceder al pago  
@@ -42,16 +36,22 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
+
+
 #shopping_cart {
   z-index: 100;
-  position:absolute;
-  right:3vw;
+  position: absolute;
+  right: 3vw;
   top: 25vh;
   padding: 10px;
   border: 1px solid black;
   border-radius: 5px;
   background-color: white;
+
+  span, strong {
+    font-size: 1.3rem;
+  }
 }
 
 #shopping_cart a {

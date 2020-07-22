@@ -15,10 +15,6 @@ class Product extends Model
         'image_url'
     ];
 
-    // protected $hidden = [
-    //   'inventory',
-    // ];
-
     protected $casts = [
       'sale_price' => 'double',
     ];
@@ -49,10 +45,6 @@ class Product extends Model
     }
 
     public function inventory() {
-      return $this->hasMany('App\Inventory')->where('sale_id', NULL);
+      return $this->hasMany('App\Inventory')->where('sale_id', NULL)->orderBy('weight', 'desc');
     }
-
-    // public function groups() {
-    //   return $this->hasMany('App\Inventory')->where('sale_id', NULL)->groupBy('weight');
-    // }
 }

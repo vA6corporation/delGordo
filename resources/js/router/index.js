@@ -75,6 +75,22 @@ Vue.use(VueRouter)
       path: '/inventories/:productId/create',
       component: require('@/views/inventory/Create').default
     },
+    {
+      path: '/inventories/:productId/details',
+      component: require('@/views/inventory/Details').default
+    },
+    {
+      path: '/customers',
+      component: require('@/views/customer/Customers').default
+    },
+    {
+      path: '/sales',
+      component: require('@/views/sale/Sales').default
+    },
+    {
+      path: '/sales/:saleId/details',
+      component: require('@/views/sale/Details').default
+    },
   ]
 
 const router = new VueRouter({

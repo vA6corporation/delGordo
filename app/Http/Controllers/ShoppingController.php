@@ -19,6 +19,17 @@ class ShoppingController extends Controller
         return ['shoppings' => $shoppings];
     }
 
+    public function removeAll()
+    {
+        $shoppings = Shopping::where('tmp_id', session('tmp_id'))->with('product')->get();
+        foreach ($shoppings as $item) {
+            $item->delete();
+        }
+        return NULL;
+        // ::destroy([1, 2, 3]);
+        // return ['shoppings' => $shoppings];
+    }
+
     /**
      * Store a newly created resource in storage.
      *
