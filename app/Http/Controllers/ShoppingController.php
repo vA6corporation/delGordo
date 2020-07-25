@@ -92,6 +92,7 @@ class ShoppingController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Shopping::destroy($id);
+        return NULL;
     }
 }

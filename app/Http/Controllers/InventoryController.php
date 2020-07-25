@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Inventory;
 
 class InventoryController extends Controller
@@ -28,6 +29,7 @@ class InventoryController extends Controller
         foreach ($request->inventories as $item) {
             for ($i=0; $i < $item['quantity']; $i++) { 
                 $inventory = new Inventory($item);
+                $inventory->codigo = Str::random(10);
                 $inventory->save();
             }
         }

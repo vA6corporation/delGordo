@@ -12,7 +12,7 @@
   </ul>
   <div class="form-group font-weight-bold d-flex justify-content-between">
     <strong>Total</strong>
-    <strong>S/ {{ totalProducts }}</strong>
+    <strong>S/ {{ totalProducts.toFixed(2) }}</strong>
   </div>
   <h5 style="text-align: center;">
     <router-link to="/shopping">

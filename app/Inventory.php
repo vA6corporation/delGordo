@@ -14,6 +14,7 @@ class Inventory extends Model
 
     protected $casts = [
       'sale_price' => 'double',
+      'weight' => 'double',
     ];
 
     public function product()

@@ -25,14 +25,11 @@ export const sale = {
       // }
     },
     REMOVE_ALL_PRODUCTS(state) {
-      // var index = state.products.findIndex(e => e.id == product.id);
       state.products = [];
-      // if (index >= 0) {
-      //   product.counter = state.products[index].counter;
-      // } else {
-      //   product.counter = product.counter || 1;
-      //   state.products.push(product);
-      // }
+    },
+    REMOVE_PRODUCT(state, product) {
+      var index = state.products.findIndex(e => e.id == product.id);
+      state.products.splice(index, 1);
     },
     PLUS_PRODUCT(state, id) {
       var product = state.products.find(e => e.id == id);
@@ -62,6 +59,9 @@ export const sale = {
     },
     removeAllProducts({ commit }) {
       commit("REMOVE_ALL_PRODUCTS");
+    },
+    removeProduct({ commit }, product) {
+      commit("REMOVE_PRODUCT", product);
     },
   },
   getters: {

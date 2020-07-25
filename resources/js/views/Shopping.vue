@@ -1,12 +1,74 @@
 <template>
 <div>
   <shopping-modal @confirm="submit"/>
-  <div class="row" style="padding-left:10vw; margin-top:1.5em; marging-left:0; margin-right:0;">
-  <h4>
-    <a href="" style="color:black">Seguir Comprando</a>
-  </h4>
+  <div class="row d-sm-block d-md-none">
+    <div class="col m-0 p-0">
+      <div class="card rounded-0">
+        <div class="card-header border-bottom-0 text-center">
+          Tienes {{ products.length }} Items
+        </div>
+        <!-- <div class="card-body">
+
+        </div> -->
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" v-for="item in products" :key="item.id">
+            <div class="form-row">
+              <div class="col-2">
+                <img :src="`/api/products/${item.image_url}`" class="img-fluid" alt="producto">
+              </div>
+              <div class="col text-center">
+                <h5>
+                  {{ item.name }} {{ item.counter }} Kg
+                </h5>
+                <h5 class="text-success" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
+                <h5 class="text-danger" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
+                <p>Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</p>
+              </div>
+              <div class="col" style="max-width: 8.5rem">
+                <div class="btn-group p-0 btn-sm h-100">
+                  <button class="btn btn-sm btn-secondary" @click="removeP(item)">
+                    <feather type="trash-2"/>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" @click="minusP(item)">
+                    <feather type="minus"/>
+                  </button>
+                  <button class="btn btn-sm btn-secondary" @click="plusP(item)">
+                    <feather type="plus"/>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ totalProducts.toFixed(2) }}</h2>
+          </li>
+          <li class="list-group-item d-flex">
+            <router-link to="/store" class="btn btn-info mr-auto">
+              <feather type="chevron-left"/> 
+              Segir Comprando
+            </router-link>
+            <button type="button" data-toggle="modal" data-target="#shoppingModal" class="btn btn-outline-secondary">
+              Pagar 
+              <feather type="chevron-right"/>
+            </button>
+            <!-- <h2 class="text-center font-weight-bold">Total: S/ {{ totalProducts.toFixed(2) }}</h2> -->
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <ul class="list-group">
+      <li class="list-group-item"></li>
+    </ul> -->
   </div>
-  <div class="container">
+  <div class="container d-none d-md-block">
+    <div class="row">
+      <div class="col">
+        <router-link to="/store" class="btn btn-info my-3">
+          <feather type="chevron-left"/> 
+          Seguir Comprando
+        </router-link>
+      </div>
+    </div>
     <div class="card">
       <div class="card-body">
         <h2>Carrito de Compras</h2>
@@ -17,27 +79,24 @@
                 <div class="row">
                   <div class="col-md-6 text-center">
                     <img :src="`/api/products/${item.image_url}`" width="150" alt="producto">
-                    <!-- <div class="form-group">
-                    </div> -->
-                    <!-- <h3>{{ item.name }} x {{ item.counter }}</h3> -->
                   </div>
                   <div class="col text-center">
                     <h3>{{ item.name }} {{ item.counter }} Kg</h3>
                     <h4 class="form-group">S/ {{ item.sale_price.toFixed(2) }}</h4>
                     <div class="form-group">
-                      <button class="btn btn-secondary" @click="removeProduct(item)">
+                      <button class="btn btn-secondary" @click="removeP(item)">
                         <feather type="trash-2"/>
                       </button>
-                      <button class="btn btn-secondary" @click="minusProduct(item)">
+                      <button class="btn btn-secondary" @click="minusP(item)">
                         <feather type="minus"/>
                       </button>
-                      <button class="btn btn-secondary" @click="plusProduct(item)">
+                      <button class="btn btn-secondary" @click="plusP(item)">
                         <feather type="plus"/>
                       </button>
                     </div>
-                    <h4 class="text-success" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) }} Kg</h4>
-                    <h4 class="text-danger" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) }} Kg</h4>
-                    <p>Total: S/ {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price }}</p>
+                    <h4 class="text-success" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h4>
+                    <h4 class="text-danger" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h4>
+                    <p>Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</p>
                   </div>
                 </div>
               </li>
@@ -95,6 +154,24 @@ export default {
     }),
   },
   methods: {
+    removeP(product) {
+      this.removeProduct(product);
+      axios.delete(`shoppings/${product.id}`).catch(err => {
+        console.log(err.response);
+      });
+    },
+    plusP(product) {
+      this.plusProduct(product);
+      axios.post('shoppings', { product }).catch(err => {
+        console.log(err.response);
+      });
+    },
+    minusP(product) {
+      this.minusProduct(product);
+      axios.post('shoppings', { product }).catch(err => {
+        console.log(err.response);
+      });
+    },
     submit(customer) {
       axios.get('shoppings/removeAll').catch(err => {
         console.log(err.response);
@@ -119,18 +196,47 @@ export default {
       }
     },
     checkInventory(product) {
-      var total = 0;
-      var totalCollection = [];
+      var totalOne = 0;
+      var totalCollectionOne = [];
+      var totalTwo = 0;
+      var totalCollectionTwo = [];
+      
       for (const inventory of product.inventory) {
-        if (product.counter >= (total + inventory.weight)) {
-          total += inventory.weight;
-          totalCollection.push(inventory);
+        if (product.counter % inventory.weight) {
+          continue;
+        }
+        if (product.counter >= (totalOne + inventory.weight)) {
+          totalOne += inventory.weight;
+          totalCollectionOne.push(inventory);
         }
       }
-      if (!totalCollection.length && product.inventory.length) {
-        totalCollection.push(product.inventory.slice(-1)[0]);
+
+      for (const inventory of product.inventory) {
+        if (product.counter >= (totalTwo + inventory.weight)) {
+          totalTwo += inventory.weight;
+          totalCollectionTwo.push(inventory);
+        }
       }
-      return totalCollection;
+
+      var minOne = product.counter - totalOne;
+      var minTwo = product.counter - totalTwo; 
+
+      if (minOne < minTwo) {
+        if (!totalCollectionOne.length && product.inventory.length) {
+          totalCollectionOne.push(product.inventory.slice(-1)[0]);
+          return totalCollectionOne;
+        } else {
+          return totalCollectionOne;
+        }
+      } else {
+        if (!totalCollectionTwo.length && product.inventory.length) {
+          totalCollectionTwo.push(product.inventory.slice(-1)[0]);
+          return totalCollectionTwo;
+        } else {
+          return totalCollectionTwo;
+        }
+      }
+      // return [];
     },
     ...mapActions({
       removeAllProducts: 'sale/removeAllProducts',
@@ -143,6 +249,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .btn-group button {
+    background-color: black;
+    color: white;
+  }
 </style>

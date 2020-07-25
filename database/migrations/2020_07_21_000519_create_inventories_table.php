@@ -16,6 +16,7 @@ class CreateInventoriesTable extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->integer('product_id');
+            $table->char('codigo', 10);
             $table->double('weight', 10, 3);
             $table->integer('sale_id')->nullable();
             $table->double('sale_price', 10, 3)->default(0);
