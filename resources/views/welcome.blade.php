@@ -24,16 +24,14 @@
     </div>
     <div id="page" class="bye">
     <img src="./assets/images/logo.png" id="fixed_logo">    
-        <!--@include('social')-->
-        <!--@include('header')-->
+        <@include('social')
+        @include('header')
         @include('menu')
 
         @include('inicio')
         @include('store')
         @include('us')
         @include('consejos')
-
-        @include('carrito')
     </div>
     </body>
 </html>
