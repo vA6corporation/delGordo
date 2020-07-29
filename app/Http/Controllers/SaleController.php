@@ -35,7 +35,8 @@ class SaleController extends Controller
         $ids = collect($request->inventories)->map(function($item) {
             return $item['id'];
         });
-        $inventories = Inventory::where('id', $ids)->with('product')->get();
+        $inventories = Inventory::whereIn('id', $ids)->with('product')->get();
+
         $check = $inventories->search(function($item, $key) {
             return $item->sale_id != NULL;
         });
@@ -46,10 +47,6 @@ class SaleController extends Controller
                 $inventory->sale_price = $inventory->product->sale_price;
                 $inventory->save();
             }
-            // $inventories->each(function($inventory) {
-            //     $inventory->sale_id = $sale->id;
-            //     $inventory->save();
-            // });
             return ['sale' => $sale];
         } else {
             return response(400, 'Revise la disponibilidad del inventario');

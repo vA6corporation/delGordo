@@ -30,6 +30,10 @@
               <span>{{ sale.customer.name }}</span>
             </li>
             <li class="list-group-item d-flex justify-content-between">
+              <span>Direccion:</span>
+              <span>{{ sale.customer.address }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
               <span>Celuar:</span>
               <span>{{ sale.customer.mobile }}</span>
             </li>

@@ -51,7 +51,7 @@ new Vue({
     router,
     store,
     render: function(h) {
-        if (this.$route.path == '/store' || this.$route.path == '/payment' || this.$route.path == '/shopping') {
+        if (this.$route.path == '/store' || this.$route.path == '/payment' || this.$route.path == '/shopping' || this.$route.path == '/checkout') {
             return h(StoreApp);
         } else {
             return h(App); 

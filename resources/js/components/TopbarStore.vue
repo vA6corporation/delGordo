@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-light bg-black shadow-sm">
     <div class="container">
-      <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
+      <button type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
         <span class="navbar-toggler-icon"></span>
-      </button> 
+      </button>
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
           <img src="@/assets/img/logo.png" alt="logo">
@@ -11,8 +11,7 @@
         <img src="@/assets/img/store_header.png" alt="logo" style="height: 10vh;"> 
         <ul class="navbar-nav ml-auto">
           <li class="nav-link">
-            <router-link to="/payment" class="d-flex align-items-center" style="color: white; font-size: 2rem;">
-              <!-- <i class="fas fa-shopping-cart"></i>  -->
+            <router-link to="/shopping" class="d-flex align-items-center" style="color: white; font-size: 2rem;">
               <feather class="feather-lg mr-2" type="shopping-cart"/>
               {{ products.length }}
             </router-link>

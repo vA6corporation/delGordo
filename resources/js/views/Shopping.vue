@@ -43,7 +43,7 @@
             <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ totalProducts.toFixed(2) }}</h2>
           </li>
           <li class="list-group-item d-flex">
-            <router-link to="/store" class="btn btn-info mr-auto">
+            <router-link to="/store" class="btn btn-dark mr-auto">
               <feather type="chevron-left"/> 
               Segir Comprando
             </router-link>
@@ -63,7 +63,7 @@
   <div class="container d-none d-md-block">
     <div class="row">
       <div class="col">
-        <router-link to="/store" class="btn btn-info my-3">
+        <router-link to="/store" class="btn btn-dark my-3">
           <feather type="chevron-left"/> 
           Seguir Comprando
         </router-link>
@@ -106,11 +106,11 @@
             </ul>
           </div>
           <div class="col" payments>
-            <p>Paga con cualquiera de estos métodos a través de PayPal</p>
+            <p>Paga con cualquiera de estos métodos a través de Mercado Pago</p>
             <img src="@/assets/img/ways.jpg" alt="imagen" width="120">
             <img src="@/assets/img/paypal.png" alt="imagen" width="120">
             <div>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#shoppingModal">
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#shoppingModal">
               Pagar ahora
             </button>
             </div>
@@ -155,10 +155,10 @@ export default {
   },
   methods: {
     removeP(product) {
-      this.removeProduct(product);
       axios.delete(`shoppings/${product.id}`).catch(err => {
         console.log(err.response);
       });
+      this.removeProduct(product);
     },
     plusP(product) {
       this.plusProduct(product);
@@ -251,6 +251,11 @@ export default {
 
 <style scoped>
   .btn-group button {
+    background-color: black;
+    color: white;
+  }
+
+  .btn-dark {
     background-color: black;
     color: white;
   }

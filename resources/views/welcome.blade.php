@@ -20,16 +20,16 @@
     </head>
     <body>
     <div id="loader" class="" onLoad="loader()" style="z-index: 23982193">
-        <img src="./assets/images/loader2.gif" alt="" style="width:25%">
+        <img src="./assets/images/loader2.gif" alt="">
     </div>
     <div id="page" class="bye">
     <img src="./assets/images/logo.png" id="fixed_logo">    
-        <@include('social')
+        @include('social')
         @include('header')
         @include('menu')
 
         @include('inicio')
-        @include('store')
+        @include('storeLanding')
         @include('us')
         @include('consejos')
     </div>

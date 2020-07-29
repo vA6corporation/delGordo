@@ -1,130 +1,58 @@
 <template>
 <div>
-  <nav class="navbar navbar-dark bg-dark fixed-top d-sm-block d-md-none">
-    <a class="navbar-brand" href="#">Categorias</a>
-    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="navbar-collapse collapse" id="navbarsExample01" style="">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item" v-for="item in categories" :key="item.id">
-          <a class="nav-link" href="#" @click="category_id = item.id">{{ item.name }}</a>
+  <nav class="navbar navbar-expand-md navbar-light bg-black shadow-sm fixed-top">
+    <div class="container">
+      <ul class="navbar-nav mr-auto d-none d-md-block">
+        <img src="@/assets/img/logo.png" alt="logo">
+      </ul> 
+      <img src="@/assets/img/store_header.png" alt="logo" style="height: 10vh;"> 
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-link">
+          <router-link to="/shopping" class="d-flex align-items-center" style="color: white; font-size: 2rem;">
+            <feather class="feather-lg mr-2" type="shopping-cart"/>
+            {{ products.length }}
+          </router-link>
         </li>
       </ul>
-      <form class="form-inline my-2 my-md-0">
-        <input class="form-control" type="text" placeholder="Search" aria-label="Search">
-      </form>
     </div>
   </nav>
-  <div class="row d-sm-block d-md-none">
-    <div class="col m-0 p-0">
-      <div class="card rounded-0 mb-0">
-        <div class="card-header border-bottom-0 text-center">
-          <span v-if="category_id">
-            {{ categories.find(e => e.id == category_id).name }}
-          </span>
-          <span v-else>
-            Todos los productos
-          </span> 
+  <div class="row mt-5">
+    <div class="col my-3">
+      <nav class="navbar bg-white d-sm-block d-md-none" data-toggle="collapse" data-target="#navbarsExample01">
+        <a class="navbar-brand text-reset" href="#">Categorias</a>
+        <a href="#" class="text-reset">
+          <feather type="chevron-down"/>
+        </a>
+        <div class="navbar-collapse collapse" id="navbarsExample01" style="">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item" v-for="item in categories" :key="item.id">
+              <a class="nav-link" href="#" @click="category_id = item.id">{{ item.name }}</a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-md-0">
+            <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+          </form>
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item" v-for="item in filterProducts" :key="item.id">
-            <div class="form-row">
-              <div class="col-2">
-                <img :src="`/api/products/${item.image_url}`" class="img-fluid" alt="producto">
-              </div>
-              <div class="col text-center d-flex align-items-center justify-content-center">
-                <div>
-                  <h4>
-                    {{ item.name }} {{ item.counter }}
-                  </h4>
-                  <h5 class="card-subtitle">
-                    S/ {{ item.sale_price.toFixed(2) }}
-                    <span style="font-size:0.8rem">x Kg</span>
-                  </h5>
-                </div>
-                <!-- <h5 class="text-success" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
-                <h5 class="text-danger" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
-                <p>Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</p> -->
-              </div>
-              <div class="col" style="max-width: 8.5rem">
-                <div class="btn-group p-0 btn-sm h-100">
-                  <button class="btn btn-sm btn-secondary" @click="minusP(item)">
-                    <feather type="minus"/>
-                  </button>
-                  <button class="btn btn-sm btn-secondary" @click="plusP(item)">
-                    <feather type="plus"/>
-                  </button>
-                  <button class="btn btn-sm btn-secondary" @click="addP(item)">
-                    <feather type="shopping-cart"/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
+      </nav>
+    </div>
+  </div>
+  <div class="row d-sm-block d-md-none">
+    <div class="col-md-4 form-group" v-for="item in filterProducts" :key="item.id">
+      <product-card :product="item"/>
+    </div>
+    <!-- <div class="col m-0 p-0">
       <div class="card rounded-0">
         <div class="card-header border-bottom-0 text-center">
           Tienes {{ pickProducts.length }} Items
         </div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item" v-for="item in pickProducts" :key="item.id">
-            <div class="form-row">
-              <div class="col-2">
-                <img :src="`/api/products/${item.image_url}`" class="img-fluid" alt="producto">
-              </div>
-              <div class="col text-center">
-                <h5>
-                  {{ item.name }} {{ item.counter }} Kg
-                </h5>
-                <!-- <h5 class="text-success" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
-                <h5 class="text-danger" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
-                <p>Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</p> -->
-              </div>
-              <div class="col" style="max-width: 8.5rem">
-                <div class="btn-group p-0 btn-sm h-100">
-                  <button class="btn btn-sm btn-secondary" @click="minusP(item)">
-                    <feather type="minus"/>
-                  </button>
-                  <button class="btn btn-sm btn-secondary" @click="plusP(item)">
-                    <feather type="plus"/>
-                  </button>
-                  <button class="btn btn-sm btn-secondary" @click="removeP(item)">
-                    <feather type="trash-2"/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="list-group-item">
-            <!-- <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ totalProducts.toFixed(2) }}</h2> -->
-            <!-- <p>Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</p> -->
-            <h1 class="text-center">
-              Total: S/ {{ totalProducts.toFixed(2) }}
-            </h1>
-          </li>
-          <li class="list-group-item">
-            <!-- <router-link to="/store" class="btn btn-info mr-auto">
-              <feather type="chevron-left"/> 
-              Segir Comprando
-            </router-link> -->
-            <router-link to="/shopping" class="btn btn-outline-info float-right">
-              Proceder al Pago
-              <feather type="chevron-right"/>
-            </router-link>
-            <!-- <h2 class="text-center font-weight-bold">Total: S/ {{ totalProducts.toFixed(2) }}</h2> -->
-          </li>
-        </ul>
       </div>
-    </div>
+    </div> -->
   </div>
   <div class="row d-none d-md-block">
     <categories v-model="category_id"/>
     <shoping-card/>
     <div class="col">
-      <div id="bestseller" class="row mb-4">
+      <!-- <div id="bestseller" class="row mb-4">
         <div class="container py-3">
           <div class="row">
             <div class="col-4 text-center">
@@ -148,7 +76,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="container mb-4">
         <div class="row">
           <div class="col">
@@ -158,7 +86,7 @@
       </div>
       <div class="container">
         <div class="row">
-          <div class="col-md-4" v-for="item in filterProducts" :key="item.id">
+          <div class="col-md-4 form-group" v-for="item in filterProducts" :key="item.id">
             <product-card :product="item"/>
           </div>
         </div>
@@ -193,7 +121,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      pickProducts: 'sale/products',
+      // pickProducts: 'sale/products',
       totalProducts: 'sale/totalProducts'
     }),
     filterProducts() {
@@ -212,6 +140,12 @@ export default {
     removeP(product) {
       this.removeProduct(product);
       axios.delete(`shoppings/${product.id}`).catch(err => {
+        console.log(err.response);
+      });
+    },
+    addP(product) {
+      this.addProduct(product);
+      axios.post('shoppings', { product }).catch(err => {
         console.log(err.response);
       });
     },
@@ -298,6 +232,12 @@ export default {
   #bestseller {
     background-color: black;
     opacity: 0.6;
+  }
+
+  .categories {
+    top: 5rem;
+    /* position: fixed; */
+    /* height: 0.5rem; */
   }
 
   .btn-group button {

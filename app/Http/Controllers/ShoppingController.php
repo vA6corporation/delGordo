@@ -92,7 +92,10 @@ class ShoppingController extends Controller
      */
     public function destroy($id)
     {
-        Shopping::destroy($id);
+        error_log($id);
+        $shopping = Shopping::where('product_id', $id)->first();
+        // error_log($shopping);
+        $shopping->delete();
         return NULL;
     }
 }

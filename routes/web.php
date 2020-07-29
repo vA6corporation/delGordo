@@ -39,6 +39,7 @@ Route::apiResources([
     'api/inventories' => 'InventoryController',
     'api/customers' => 'CustomerController',
     'api/sales' => 'SaleController',
+    'api/checkout' => 'CheckoutController',
 ]);
 
 
@@ -49,6 +50,10 @@ Route::get('/store', function () {
 });
 
 Route::get('/payment', function () {
+    return view('store');
+});
+
+Route::get('/checkout', function () {
     return view('store');
 });
 

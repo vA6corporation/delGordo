@@ -1,49 +1,51 @@
 <template>
-<div class="card" style="border: 1px solid black">
-  <header class="bg-white">
-    <img :src="src" alt="producto">
-  </header>
-  <div class="card-body pro-card" style="">
-      <h2 class="card-title text-center">
-        <a href="#">
-          {{ product.name }}
-          <!-- {{ product.subcategory_id }} -->
-        </a>
-      </h2> 
-      <h4 class="card-subtitle mb-2 text-center">
-        S/ {{ product.sale_price.toFixed(2) }}
-        <span style="font-size:0.8rem">x Kg</span>
-      </h4>
-      <div class="row">
-        <div class="col-6">
-          <div class="mb-1 d-flex justify-content-end">
-            <div type="button" class="btn btn-dark mr-1" style="width: 44px">
+<div class="bg-card px-5 py-3">
+  <div class="card mb-0" style="border: 1px solid black">
+    <header class="bg-white">
+      <img :src="src" alt="producto">
+    </header>
+    <div class="card-body pro-card" style="">
+        <h2 class="card-title text-center">
+          <a href="#">
+            {{ product.name }}
+            <!-- {{ product.subcategory_id }} -->
+          </a>
+        </h2> 
+        <h4 class="card-subtitle mb-2 text-center">
+          S/ {{ product.sale_price.toFixed(2) }}
+          <span style="font-size:0.8rem">x Kg</span>
+        </h4>
+        <div class="form-row">
+          <div class="col-6">
+            <div class="mb-1 d-flex justify-content-end">
+              <div type="button" class="btn btn-dark mr-1" style="width: 44px">
+                <span class="lead">
+                  {{ product.counter || 0 }}
+                </span>
+              </div>
+              <button type="button" class="btn btn-dark" @click="plusP(product); $forceUpdate()">
+                <feather class="feather-sm" type="plus"/>
+              </button>
+            </div>
+            <div class="form-group d-flex justify-content-end">
+              <div type="button" class="d-inline lead justify-content-center d-flex align-items-center" style="width: 44px">
+                Kg
+              </div>
+              <button type="button" class="btn btn-dark" @click="minusP(product); $forceUpdate()">
+                <feather class="feather-sm" type="minus"/> 
+              </button>
+            </div>
+          </div>
+          <div class="col d-flex align-items-center">
+            <button @click="addP(product); $forceUpdate()" class="btn btn-dark">
+              <feather class="feather-sm" type="shopping-cart"/>
               <span class="lead">
-                {{ product.counter || 0 }}
+                Agregar 
               </span>
-            </div>
-            <button type="button" class="btn btn-dark" @click="plusP(product); $forceUpdate()">
-              <feather class="feather-sm" type="plus"/>
-            </button>
-          </div>
-          <div class="form-group d-flex justify-content-end">
-            <div type="button" class="d-inline lead justify-content-center d-flex align-items-center" style="width: 44px">
-              Kg
-            </div>
-            <button type="button" class="btn btn-dark" @click="minusP(product); $forceUpdate()">
-              <feather class="feather-sm" type="minus"/> 
             </button>
           </div>
         </div>
-        <div class="col d-flex align-items-center">
-          <button @click="addP(product); $forceUpdate()" class="btn btn-dark">
-            <feather class="feather-sm" type="shopping-cart"/>
-            <span class="lead">
-              Agregar 
-            </span>
-          </button>
-        </div>
-      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -94,3 +96,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.bg-card {
+  background-image: url("../assets/img/backgroundCard.jpg"); 
+  /* background-repeat: repeat; */
+  background-size: contain;
+}
+
+</style>
