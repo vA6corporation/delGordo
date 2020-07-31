@@ -1,6 +1,6 @@
 @font-face {
     font-family: "Big Brother";
-    src: url(/fonts/BigBrother.ttf);
+    src: url(./fonts/BigBrother.ttf);
   }
 
 body{
@@ -20,11 +20,19 @@ html {
 #loader{
     width: 100%;
     height: 100vh;
-    background-color: black;
+    background-image: url("mobile/inicio.jpg");
+    background-repeat: repeat;
+    background-size: 100vw auto;
     justify-content: center;
     align-items: center;
     text-align: center;
     display: flex;
+}
+
+#loader img{
+    width: 45%;
+    bottom: 25%;
+    position: absolute;
 }
 
 #socialmedia{
@@ -92,7 +100,7 @@ background-color: #E89622;
     padding: 5px 20px;
     position: absolute;
     top: 80vh;
-    z-index: 15;
+    z-index: 20;
     background-color: black;
     color: white;
     border-radius: 20px;
@@ -102,7 +110,7 @@ background-color: #E89622;
 #store{
     width: 100%;
     height: 100%;
-    background-image: url("store_bg.webp");
+    background-image: url("store_bg.jpg");
     background-repeat: repeat;
     background-size: 100vw auto;
 }
@@ -136,12 +144,20 @@ background-color: #E89622;
 
 #consejos{
     position: relative;
+    display: grid;
+    justify-content: center;
+}
+
+.menu_fire{
+
+    display:none;
+    
 }
 #entrar{
     position:absolute;
     top: 40%; 
     z-index:15;
-    margin-left:auto;
+    margin-left:40%;
     margin-right:auto;
     width: 20vw;
     height: auto;
@@ -194,7 +210,7 @@ background-color: #E89622;
 #carrito{
     width: 100%;
     height: 100vh;
-    background-image: url("store_bg.webp");
+    background-image: url("store_bg.jpg");
     background-repeat: repeat;
     background-size: 100vw auto;
 }
@@ -274,10 +290,13 @@ background-color: #E89622;
         padding-top: 10vh;
     }
     .fire{
-        width: 10vw;
+        width: 15vw;
     }
     #shop_now{
         font-size: 3.5rem;
+    }
+    .menu_fire{
+        display:block!important;
     }
 }
 
@@ -288,7 +307,16 @@ background-color: #E89622;
     .fire{
         width: 10vw;
     }
-
+    #loader{
+        background-image: url("inicio.jpg");
+        background-repeat: repeat;
+        background-size: 100vw auto;
+    }
+    #loader img{
+        width: 15%;
+        bottom: 20%;
+        position: absolute;
+    }
     #best_seller_img{
         justify-content: center;
         display: flex;
@@ -296,7 +324,7 @@ background-color: #E89622;
     }
 
     #best_sellers{
-        padding: 1em 10em;
+        padding: 1em 15em;
     }
     .bs_col{
         padding: 2em;
@@ -364,4 +392,9 @@ background-color: #E89622;
         justify-content: left;
     }
 
+    #prueba{
+        background-image: url("store.png");
+        background-repeat: repeat;
+        background-size: 100vw auto;
+    }
 }    
