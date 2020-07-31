@@ -16,6 +16,9 @@ class CreateSalesTable extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->integer('customer_id');
+            $table->date('delivered_date')->nullable();
+            $table->date('deleted_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

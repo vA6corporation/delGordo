@@ -24,7 +24,7 @@
           <div class="row form-group">
             <div class="col">
               <label for="">Sub Categoria</label>
-              <select class="custom-select" v-model="product.sub_category_id" required>
+              <select class="custom-select text-uppercase" v-model="product.sub_category_id" required>
                 <option :value="null" disabled selected>SELECCIONE UNA SUB CATEGORIA</option>
                 <option v-for="item in subCategories" :key="item.id" :value="item.id">{{ item.name }}</option>
               </select>

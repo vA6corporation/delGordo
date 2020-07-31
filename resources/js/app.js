@@ -13,6 +13,23 @@ Vue.use(Snotify, { toast: { timeout: 4000 } });
 
 Vue.mixin({
     methods: {
+        formatCode(code) {
+          var string = '' + code;
+          switch (string.length) {
+            case 1:
+              return `00000${code}`;        
+            case 2:
+              return `0000${code}`;
+            case 3:
+              return `000${code}`;
+            case 4:
+              return `00${code}`;
+            case 5:
+              return `0${code}`;
+            case 6:
+              return `${code}`;
+          }
+        },
         formatTime(date) {
             date = new Date(date);
             var ampm = 'AM';
@@ -51,7 +68,7 @@ new Vue({
     router,
     store,
     render: function(h) {
-        if (this.$route.path == '/store' || this.$route.path == '/payment' || this.$route.path == '/shopping' || this.$route.path == '/checkout') {
+        if (this.$route.path == '/store' || this.$route.path == '/payment' || this.$route.path == '/shopping' || this.$route.path.includes('/checkout')) {
             return h(StoreApp);
         } else {
             return h(App); 

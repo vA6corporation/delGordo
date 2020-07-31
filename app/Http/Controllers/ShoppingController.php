@@ -42,7 +42,7 @@ class ShoppingController extends Controller
             session(['tmp_id' => Str::random(10)]);
         }
         $product = $request->product;
-        error_log(json_encode($product), JSON_PRETTY_PRINT);
+        // error_log(json_encode($product), JSON_PRETTY_PRINT);
         $shopping = Shopping::where('product_id', $product['id'])->first();
         if ($shopping) {
             if (isSet($product['counter'])) {

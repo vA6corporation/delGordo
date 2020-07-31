@@ -1,15 +1,12 @@
 <template>
 <div>
-  <shopping-modal @confirm="submit"/>
+  <customer-modal @confirm="submit"/>
   <div class="row d-sm-block d-md-none">
     <div class="col m-0 p-0">
       <div class="card rounded-0">
         <div class="card-header border-bottom-0 text-center">
           Tienes {{ products.length }} Items
         </div>
-        <!-- <div class="card-body">
-
-        </div> -->
         <ul class="list-group list-group-flush">
           <li class="list-group-item" v-for="item in products" :key="item.id">
             <div class="form-row">
@@ -124,11 +121,11 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ShoppingModal from '@/components/ShoppingModal'
+import CustomerModal from '@/components/CustomerModal'
 
 export default {
   components: {
-    ShoppingModal,
+    CustomerModal,
   },
   mounted() {
     axios.get('shoppings').then(res => {
@@ -184,9 +181,11 @@ export default {
         axios.post('sales', { customer, inventories }).then(res => {
           console.log(res);
           $('.modal').modal('hide');
-          this.$snotify.success('Compra realizada correctamente');
+          var sale = res.data.sale;
+          // this.$snotify.success('Compra realizada correctamente');
           this.removeAllProducts();
-          this.$router.replace('/store');
+          // this.$router.replace('/store');
+          this.$router.replace(`/${sale.id}/checkout`);
         }).catch(err => {
           console.log(err.response);
         });

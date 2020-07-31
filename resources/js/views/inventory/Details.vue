@@ -7,11 +7,19 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
-              <span>Peso</span>
-              <span>F. Ingreso</span>
+            <span>Peso</span>
+            <span>Codigo</span>
+            <span>Vendido</span>
+            <span>Entrega</span>
+            <span>F. Ingreso</span>
           </li>
-          <li class="list-group-item d-flex justify-content-between" v-for="(item, index) in product.inventory" :key="index">
-            <span>{{ item.weight }} Kg</span>
+          <li class="list-group-item d-flex justify-content-between" v-for="(item, index) in product.inventory_all" :key="index">
+            <span>{{ item.weight.toFixed(2) }} Kg</span>
+            <span>{{ item.codigo }}</span>
+            <span v-if="item.sale_id">Si</span>
+            <span v-else>No</span>
+            <span v-if="item.delivered_date">Si</span>
+            <span v-else>No</span>
             <span>{{ formatDate(item.created_at) }}</span>
           </li>
         </ul>
@@ -37,7 +45,7 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <span>Peso Total:</span>
-            <span>{{ product.inventory.map(e => e.weight).reduce((a, b) => a + b, 0) }} Kg</span>
+            <span>{{ product.inventory.map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</span>
           </li>
         </ul>
       </div>
@@ -67,12 +75,11 @@ export default {
   },
   methods: {
     addInventory() {
-      console.log('chulapi');
       this.inventories.push(Object.assign({}, this.inventory));
     },
     fetchData() {
       var productId = this.$route.params.productId;
-      axios.get(`products/${productId}`).then(res => {
+      axios.get(`products/${productId}/inventoryAll`).then(res => {
         console.log(res);
         this.product = res.data.product;
       }).catch(err => {

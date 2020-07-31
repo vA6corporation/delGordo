@@ -30,6 +30,9 @@ Route::post('/api/products/image', 'ProductController@storeImage');
 Route::get('/api/products/images/{id}', 'ProductController@getImage');
 Route::get('/api/customers/byDni', 'ProductController@byDni');
 Route::get('/api/shoppings/removeAll', 'ShoppingController@removeAll');
+Route::get('/api/products/{id}/inventoryAll', 'ProductController@inventoryAll');
+Route::get('/api/sales/{id}/delivery', 'SaleController@delivery');
+Route::post('/api/sales/deleteSale', 'SaleController@deleteSale');
 
 Route::apiResources([
     'api/products' => 'ProductController',
@@ -50,6 +53,10 @@ Route::get('/store', function () {
 });
 
 Route::get('/payment', function () {
+    return view('store');
+});
+
+Route::get('/{saleId}/checkout', function () {
     return view('store');
 });
 

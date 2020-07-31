@@ -1,7 +1,7 @@
 <template>
 <div>
   <nav class="navbar navbar-expand-md navbar-light bg-black shadow-sm fixed-top">
-    <div class="container">
+    <router-link class="container" to="/store">
       <ul class="navbar-nav mr-auto d-none d-md-block">
         <img src="@/assets/img/logo.png" alt="logo">
       </ul> 
@@ -14,7 +14,7 @@
           </router-link>
         </li>
       </ul>
-    </div>
+    </router-link>
   </nav>
   <div class="row mt-5">
     <div class="col my-3">

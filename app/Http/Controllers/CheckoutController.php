@@ -33,125 +33,75 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
-        if($request->isMethod('post')) {
-            $isCard = false;
-            switch ($request->payment_method_id) {
-                case "master":
-                    $isCard = true;
-                    break;
-                case "visa":
-                    $isCard = true;
-                    break;
-                case "debmaster":
-                    $isCard = true;
-                    break;
-                case "debvisa":
-                    $isCard = true;
-                    break;
-                case "card":
-                    $isCard = true;
-                    break;
-                case "amex":
-                    $isCard = true;
-                    break;
-                case "mercadopagocard":
-                    $isCard = true;
-                    break;
-                default:
-                    return Response([
-                        'msg' => [
-                            'Favor de revisar la información de la tarjeta', 
-                            [], 
-                            false
-                        ]
-                    ], 400)->header('Content-Type', 'application/json');
-                    break;
+        $isCard = false;
+        switch ($request->payment_method_id) {
+            case "master":
+                $isCard = true;
+                break;
+            case "visa":
+                $isCard = true;
+                break;
+            case "debmaster":
+                $isCard = true;
+                break;
+            case "debvisa":
+                $isCard = true;
+                break;
+            case "card":
+                $isCard = true;
+                break;
+            case "amex":
+                $isCard = true;
+                break;
+            case "mercadopagocard":
+                $isCard = true;
+                break;
+            default:
+                return Response([
+                    'msg' => [ 'Favor de revisar la información de la tarjeta', [], false ]
+                ], 400);
+        }
+
+        try {
+            MercadoPago\SDK::setAccessToken('TEST-990840703433865-072809-e62819351af3852a6c9bec3d472486cd-146569502');
+            $payment = new MercadoPago\Payment();
+            $payment->payment_method_id = $request->payment_method_id;
+            $payment->transaction_amount = $request->transaction_amount;
+            $payment->token = $request->token;
+            $payment->description = "Tienda del gordo";
+            $payment->installments = 1;
+            $payment->payer = [
+                "email" => $request->email,
+            ];
+
+            $payment->save();
+            $status = $payment->status;
+            error_log($payment->id);
+            error_log(" === $status === ");
+            $statusResponse = $payment->status_detail;
+            error_log($statusResponse);
+            
+            if (empty($status) && empty($statusResponse)) {
+                return Response([
+                    'msg' => [ 'Tarjeta declinada', [], $isCard ],
+                ], 400);
             }
-            //DB::beginTransaction();
-            try {
-                $user = true;
-                if ($user) {
-                    // Log::info($isCard);
-                    MercadoPago\SDK::setAccessToken('TEST-990840703433865-072809-e62819351af3852a6c9bec3d472486cd-146569502');
 
-                    $items[] = array(
-                        "id"          => $request->id_product,
-                        "title"       => $request->title_product,
-                        "description" => $request->description_product,
-                        "quantity"    => (int)number_format($request->quantity, 0, '.', ''),
-                        "unit_price"  => (float)number_format($request->transaction_amount, 2, '.', '')
-                    );
-
-                    $dateExpiration = date("Y-m-d\TH:i:s.000P", mktime(date("H"), date("i"),date("s"), date("m"), date("d") + 15, date("Y")));
-                    $payment = new MercadoPago\Payment();
-                    $payment->transaction_amount = (float)number_format($request->transaction_amount, 2, '.', '');
-                    $payment->token = $request->token;
-                    $payment->description = "Tu empresa";
-                    $payment->installments = intval($request->monthly_installments);
-                    $payment->payment_method_id = $request->payment_method_id;
-                    $payment->date_of_expiration = $dateExpiration;
-                    $payment->metadata = array(
-                        "products" => $items,
-                        "userId" => 1 //debe venir de la bd y de la varible $user
-                    );
-                    $payment->payer = array(
-                        "email" =>  $request->email
-                    );
-                    $payment->additional_info = array(
-                        "items" => $items,
-                        "payer" => array(
-                            "first_name" => "Demo", //$user->nombre, debe venir de la bd y de la varible $user
-                            "last_name" => "Demo", //$user->nombre, debe venir de la bd y de la varible $user
-                            "phone" => array(
-                                "number" => '0000000000' //$user->celular, debe venir de la bd y de la varible $user
-                            )
-                        )
-                    );
-
-                    $payment->save();
-                    $status = $payment->status;
-                    error_log($status);
-                    $statusResponse = $payment->status_detail;
-                    // Log::info($statusResponse);
-                    
-                    if (empty($status) && empty($statusResponse)) {
-                        return Response([
-                            'msg' => [
-                                'Tarjeta declinada', 
-                                [], 
-                                $isCard
-                            ]
-                        ], 200)->header('Content-Type', 'application/json');
-                    }
-
-                    if($status == self::APPROVED || $status == self::IN_PROCESS || $status == self::PENDING) {
-                        return Response([
-                            'msg' => [
-                                $this->_errorMP($statusResponse), 
-                                $payment, $isCard
-                            ]
-                        ], 200)->header('Content-Type', 'application/json');
-                    } else if ($status == self::REJECTED) {
-                        error_log('pichula');
-                        return Response([
-                            'msg' => [
-                                $this->_errorMP($statusResponse), 
-                                $payment, 
-                                false
-                            ] 
-                        ], 200)->header('Content-Type', 'application/json');
-                    }
-                } else {
-                    return Response([
-                        'msg' => ['Usuario no registrado.']
-                    ], 400)->header('Content-Type', 'application/json');
-                }
-            } catch (\Exception  $e) {
-                //DB::rollback();
-                Log::error('Error: '.$e->getMessage().' - Line:' .$e->getLine() . ' - Archivo: ' . $e->getFile());
-                return Response(['error' => [$e->getMessage(). $e->getLine()]], 400)->header('Content-Type', 'application/json');
+            if($status == self::APPROVED || $status == self::IN_PROCESS || $status == self::PENDING) {
+                return [
+                    'msg' => [ $this->_errorMP($statusResponse), $payment, $isCard ]
+                ];
+            } else if ($status == self::REJECTED) {
+                return Response([
+                    'msg' => [ $this->_errorMP($statusResponse), $payment, false ] 
+                ], 400);
             }
+
+        } catch (\Exception  $e) {
+            error_log('Error: '.$e->getMessage().' - Line:' .$e->getLine() . ' - Archivo: ' . $e->getFile());
+            return Response([
+                'error' => [ $e->getMessage(). $e->getLine() ]
+            ], 400);
         }
     }
 

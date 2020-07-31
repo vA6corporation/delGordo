@@ -19,6 +19,7 @@ class CreateInventoriesTable extends Migration
             $table->char('codigo', 10);
             $table->double('weight', 10, 3);
             $table->integer('sale_id')->nullable();
+            $table->date('delivered_date')->nullable();
             $table->double('sale_price', 10, 3)->default(0);
             $table->timestamps();
         });

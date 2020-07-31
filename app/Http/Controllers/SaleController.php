@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Sale;
 use App\Inventory;
 use Illuminate\Support\Collection;
+use DateTime;
 
 class SaleController extends Controller
 {
@@ -16,7 +17,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::with('customer', 'items')->get();
+        $sales = Sale::withTrashed()->with('customer', 'items')->get();
         return ['sales' => $sales];
     }
 
@@ -67,6 +68,23 @@ class SaleController extends Controller
         return ['sale' => $sale];
     }
 
+    public function delivery($id)
+    {
+        $sale = Sale::with('items')->find($id);
+        foreach ($sale->items as $item) {
+            $inventory = Inventory::find($item->id);
+            $inventory->fill([
+                'delivered_date' => new Datetime(),
+            ]); 
+            $inventory->save();
+        }
+        $sale->fill([
+            'delivered_date' => new Datetime(),
+        ]);
+        $sale->save();
+        return ['sale' => $sale];
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -85,6 +103,21 @@ class SaleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function deleteSale(Request $request)
+    {
+        $doc = $request->sale;
+        $sale = Sale::with('items')->find($doc['id']);
+        foreach ($sale->items as $item) {
+            $inventory = Inventory::find($item->id);
+            $inventory->fill([
+                'sale_id' => NULL,
+            ]); 
+            $inventory->save();
+        }
+        $sale->fill($doc);
+        $sale->save();
+        $sale->delete();
+    }
     public function destroy($id)
     {
         //

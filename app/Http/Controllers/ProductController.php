@@ -67,6 +67,12 @@ class ProductController extends Controller
         return ['product' => $product];
     }
 
+    public function inventoryAll($id)
+    {
+        $product = Product::with('category', 'subCategory', 'inventoryAll')->find($id);
+        return ['product' => $product];
+    }
+
     /**
      * Update the specified resource in storage.
      *

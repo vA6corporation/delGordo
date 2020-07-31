@@ -8,11 +8,13 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
               <span>Producto</span>
+              <span>Codigo</span>
               <span>Peso</span>
           </li>
           <li class="list-group-item d-flex justify-content-between" v-for="(item, index) in sale.items" :key="index">
             <!-- <span>{{ formatDate(item.created_at) }}</span> -->
             {{ item.product.name }}
+            <span>{{ item.codigo }}</span>
             <span>{{ item.weight }} Kg</span>
           </li>
         </ul>

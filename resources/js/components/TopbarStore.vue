@@ -4,7 +4,7 @@
       <button type="button" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse">
+      <router-link class="collapse navbar-collapse" to="/store">
         <ul class="navbar-nav mr-auto">
           <img src="@/assets/img/logo.png" alt="logo">
         </ul> 
@@ -17,7 +17,7 @@
             </router-link>
           </li>
         </ul>
-      </div>
+      </router-link>
     </div>
   </nav>
 </template>

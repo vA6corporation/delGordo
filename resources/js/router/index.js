@@ -5,9 +5,9 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/checkout',
+    path: '/:saleId/checkout',
     name: 'checkout',
-    component: require('@/views/CheckoutPago').default
+    component: require('@/views/Checkout').default
   },
   {
     path: '/payment',

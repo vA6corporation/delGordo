@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Inventory extends Model
 {
     protected $fillable = [
+        'sale_id',
         'product_id',
         'weight',
-        'sale_price'
+        'sale_price',
+        'delivered_date',
     ];
 
     protected $casts = [
