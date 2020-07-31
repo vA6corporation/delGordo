@@ -23,7 +23,7 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-    <a href="#store" type="button" onclick="scroll()" class="btn" id="shop_now">COMPRA AQUÍ</a>
+    <a href="#store" onclick="scroll()" class="btn" id="shop_now">COMPRA AQUÍ</a>
 </section>
 <script type="text/javascript">
 /*(function () { var ldk = document.createElement('script'); 
