@@ -35,9 +35,9 @@ function close_menu(){
 $(document).ready(function(){
     var w = window.innerWidth;
     if(w <= 1024){
-      $(".carrou1").html("<img src='./assets/images/mobile/ca_1.webp' class='d-block w-100 home_img_carrousel' alt='100% Carne Premium'>")
-      $(".carrou2").html("<img src='./assets/images/mobile/ca_2.webp' class='d-block w-100 home_img_carrousel' alt='100% Carne Premium'>")
-      $(".carrou3").html("<img src='./assets/images/mobile/ca_3.webp' class='d-block w-100 home_img_carrousel' alt='100% Carne Premium'>")  
+      $(".carrou1").html("<img src='./assets/images/mobile/ca_1.jpg' class='d-block w-100 home_img_carrousel' alt='100% Carne Premium'>")
+      $(".carrou2").html("<img src='./assets/images/mobile/ca_2.jpg' class='d-block w-100 home_img_carrousel' alt='100% Carne Premium'>")
+      $(".carrou3").html("<img src='./assets/images/mobile/ca_3.jpg' class='d-block w-100 home_img_carrousel' alt='100% Carne Premium'>")  
 
     }
     else{
