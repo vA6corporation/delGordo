@@ -1,7 +1,7 @@
-/*window.onload = function loader(){
+window.onload = function loader(){
     document.getElementById("loader").classList.add('bye');
     document.getElementById("page").classList.remove('bye');    
-}*/
+}
 
 function menu_link(x){
     close_menu();
