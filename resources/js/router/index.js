@@ -69,6 +69,30 @@ const routes = [
     component: require('@/views/subCategory/Edit').default
   },
   {
+    path: '/deliveries',
+    component: require('@/views/delivery/Deliveries').default
+  },
+  {
+    path: '/deliveries/create',
+    component: require('@/views/delivery/Create').default
+  },
+  {
+    path: '/deliveries/:deliveryId/edit',
+    component: require('@/views/delivery/Edit').default
+  },
+  {
+    path: '/paymentMethods',
+    component: require('@/views/paymentMethod/PaymentMethods').default
+  },
+  {
+    path: '/paymentMethods/create',
+    component: require('@/views/paymentMethod/Create').default
+  },
+  {
+    path: '/paymentMethods/:paymentMethodId/edit',
+    component: require('@/views/paymentMethod/Edit').default
+  },
+  {
     path: '/inventories',
     component: require('@/views/inventory/Inventories').default
   },
@@ -95,6 +119,10 @@ const routes = [
   {
     path: '/sales/:saleId/details',
     component: require('@/views/sale/Details').default
+  },
+  {
+    path: '/pos',
+    component: require('@/views/pos/Pos').default
   },
 ]
 

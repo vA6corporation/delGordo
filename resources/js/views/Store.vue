@@ -134,7 +134,7 @@ export default {
       addProduct: 'sale/addProduct',
       removeProduct: 'sale/removeProduct',
       removeAllProducts: 'sale/removeAllProducts',
-      plusProduct: 'sale/plusProduct',
+      // plusProduct: 'sale/plusProduct',
       minusProduct: 'sale/minusProduct',
     }),
     removeP(product) {
@@ -150,7 +150,7 @@ export default {
       });
     },
     plusP(product) {
-      this.plusProduct(product);
+      this.addProduct(product);
       axios.post('shoppings', { product }).catch(err => {
         console.log(err.response);
       });

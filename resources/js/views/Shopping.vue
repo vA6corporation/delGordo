@@ -2,7 +2,7 @@
 <div>
   <customer-modal @confirm="submit"/>
   <div class="row d-sm-block d-md-none">
-    <div class="col m-0 p-0">
+    <form @submit.prevent="checkDelivery" class="col m-0 p-0">
       <div class="card rounded-0">
         <div class="card-header border-bottom-0 text-center">
           Tienes {{ products.length }} Items
@@ -23,19 +23,25 @@
               </div>
               <div class="col" style="max-width: 8.5rem">
                 <div class="btn-group p-0 btn-sm h-100">
-                  <button class="btn btn-sm btn-secondary" @click="removeP(item)">
+                  <button type="button" class="btn btn-sm btn-secondary" @click="removeP(item)">
                     <feather type="trash-2"/>
                   </button>
-                  <button class="btn btn-sm btn-secondary" @click="minusP(item)">
+                  <button type="button" class="btn btn-sm btn-secondary" @click="minusP(item)">
                     <feather type="minus"/>
                   </button>
-                  <button class="btn btn-sm btn-secondary" @click="plusP(item)">
+                  <button type="button" class="btn btn-sm btn-secondary" @click="plusP(item)">
                     <feather type="plus"/>
                   </button>
                 </div>
               </div>
             </div>
           </li>
+          <!-- <li class="list-group-item">
+            <select class="custom-select" v-model="delivery" required>
+              <option :value="null">SELECCIONE EL DISTRITO DE ENVIO...</option>
+              <option v-for="item in deliveries" :value="item" :key="item.id">{{ `${item.name} envio: S/ ${item.price.toFixed(2)}` }}</option>
+            </select>
+          </li> -->
           <li class="list-group-item">
             <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ totalProducts.toFixed(2) }}</h2>
           </li>
@@ -44,7 +50,7 @@
               <feather type="chevron-left"/> 
               Segir Comprando
             </router-link>
-            <button type="button" data-toggle="modal" data-target="#shoppingModal" class="btn btn-outline-secondary">
+            <button type="submit" class="btn btn-outline-secondary">
               Pagar 
               <feather type="chevron-right"/>
             </button>
@@ -52,7 +58,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </form>
     <!-- <ul class="list-group">
       <li class="list-group-item"></li>
     </ul> -->
@@ -66,7 +72,7 @@
         </router-link>
       </div>
     </div>
-    <div class="card">
+    <form class="card" @submit.prevent="checkDelivery">
       <div class="card-body">
         <h2>Carrito de Compras</h2>
         <div class="row">
@@ -81,13 +87,13 @@
                     <h3>{{ item.name }} {{ item.counter }} Kg</h3>
                     <h4 class="form-group">S/ {{ item.sale_price.toFixed(2) }}</h4>
                     <div class="form-group">
-                      <button class="btn btn-secondary" @click="removeP(item)">
+                      <button type="button" class="btn btn-secondary" @click="removeP(item)">
                         <feather type="trash-2"/>
                       </button>
-                      <button class="btn btn-secondary" @click="minusP(item)">
+                      <button type="button" class="btn btn-secondary" @click="minusP(item)">
                         <feather type="minus"/>
                       </button>
-                      <button class="btn btn-secondary" @click="plusP(item)">
+                      <button type="button" class="btn btn-secondary" @click="plusP(item)">
                         <feather type="plus"/>
                       </button>
                     </div>
@@ -98,23 +104,27 @@
                 </div>
               </li>
               <a href="#" class="list-group-item list-group-item-action">
-                <h2 class="text-center font-weight-bold">Total: S/ {{ totalProducts.toFixed(2) }}</h2>
+                <h2 class="text-center font-weight-bold">Total: S/ {{ (totalProducts + (delivery ? delivery.price : 0)).toFixed(2) }}</h2>
               </a>
             </ul>
           </div>
           <div class="col" payments>
+            <!-- <select class="custom-select" v-model="delivery" required>
+              <option :value="null">SELECCIONE EL DISTRITO DE ENVIO...</option>
+              <option v-for="item in deliveries" :value="item" :key="item.id">{{ `${item.name} envio: S/ ${item.price.toFixed(2)}` }}</option>
+            </select> -->
             <p>Paga con cualquiera de estos métodos a través de Mercado Pago</p>
             <img src="@/assets/img/ways.jpg" alt="imagen" width="120">
             <img src="@/assets/img/paypal.png" alt="imagen" width="120">
             <div>
-            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#shoppingModal">
+            <button type="submit" class="btn btn-dark">
               Pagar ahora
             </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 </template>
@@ -138,10 +148,16 @@ export default {
         this.addProduct(product);
       });
     });
+    // axios.get('deliveries').then(res => {
+    //   console.log(res);
+    //   this.deliveries = res.data.deliveries;
+    // });
   },
   data() {
     return {
+      delivery: null,
       customer: {},
+      deliveries: [],
     }
   },
   computed: {
@@ -151,6 +167,9 @@ export default {
     }),
   },
   methods: {
+    checkDelivery() {
+      $('#shoppingModal').modal('show');
+    },
     removeP(product) {
       axios.delete(`shoppings/${product.id}`).catch(err => {
         console.log(err.response);
@@ -158,7 +177,7 @@ export default {
       this.removeProduct(product);
     },
     plusP(product) {
-      this.plusProduct(product);
+      this.addProduct(product);
       axios.post('shoppings', { product }).catch(err => {
         console.log(err.response);
       });
@@ -169,16 +188,19 @@ export default {
         console.log(err.response);
       });
     },
-    submit(customer) {
+    submit(sale) {
       axios.get('shoppings/removeAll').catch(err => {
         console.log(err.response);
       });
       var inventories = [];
+      // var sale = {
+      //   delivery_id: this.delivery.id,
+      // };
       this.products.forEach(item => {
         inventories.push(...this.checkInventory(item));
       });
       if (inventories.length) {
-        axios.post('sales', { customer, inventories }).then(res => {
+        axios.post('sales', { inventories, sale }).then(res => {
           console.log(res);
           $('.modal').modal('hide');
           var sale = res.data.sale;
@@ -194,54 +216,11 @@ export default {
         $('.modal').modal('hide');
       }
     },
-    checkInventory(product) {
-      var totalOne = 0;
-      var totalCollectionOne = [];
-      var totalTwo = 0;
-      var totalCollectionTwo = [];
-      
-      for (const inventory of product.inventory) {
-        if (product.counter % inventory.weight) {
-          continue;
-        }
-        if (product.counter >= (totalOne + inventory.weight)) {
-          totalOne += inventory.weight;
-          totalCollectionOne.push(inventory);
-        }
-      }
-
-      for (const inventory of product.inventory) {
-        if (product.counter >= (totalTwo + inventory.weight)) {
-          totalTwo += inventory.weight;
-          totalCollectionTwo.push(inventory);
-        }
-      }
-
-      var minOne = product.counter - totalOne;
-      var minTwo = product.counter - totalTwo; 
-
-      if (minOne < minTwo) {
-        if (!totalCollectionOne.length && product.inventory.length) {
-          totalCollectionOne.push(product.inventory.slice(-1)[0]);
-          return totalCollectionOne;
-        } else {
-          return totalCollectionOne;
-        }
-      } else {
-        if (!totalCollectionTwo.length && product.inventory.length) {
-          totalCollectionTwo.push(product.inventory.slice(-1)[0]);
-          return totalCollectionTwo;
-        } else {
-          return totalCollectionTwo;
-        }
-      }
-      // return [];
-    },
     ...mapActions({
       removeAllProducts: 'sale/removeAllProducts',
       addProduct: 'sale/addProduct',
       removeProduct: 'sale/removeProduct',
-      plusProduct: 'sale/plusProduct',
+      // plusProduct: 'sale/plusProduct',
       minusProduct: 'sale/minusProduct',
     }),
   }

@@ -15,6 +15,9 @@
         </div>
         <div class="card-body">
           <table class="table">
+            <caption>
+              <page-navigation v-model="page" :pages="pages" :count="count" :items="categories.length" @confirm="fetchData"/>
+            </caption>
             <thead>
               <th>Nombre</th>
               <th>Opciones</th>
@@ -49,15 +52,20 @@ export default {
   data() {
     return {
       categories: [],
+      page: 1,
+      pages: null,
+      count: null,
     }
   },
   methods: {
     fetchData() {
-      axios.get('categories').then(res => {
+      var params = { page: this.page };
+      axios.get('categories', { params }).then(res => {
         console.log(res.data);
         this.categories = res.data.categories;
+        this.pages = res.data.pages;
+        this.count = res.data.count;
       }).catch(res => {
-        console.log('pichula');
         console.log(res);
       });
     }

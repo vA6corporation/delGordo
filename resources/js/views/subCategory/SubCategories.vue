@@ -15,6 +15,9 @@
         </div>
         <div class="card-body">
           <table class="table">
+            <caption>
+              <page-navigation v-model="page" :pages="pages" :count="count" :items="subCategories.length" @confirm="fetchData"/>
+            </caption>
             <thead>
               <th>Nombre</th>
               <th>Opciones</th>
@@ -50,6 +53,9 @@ export default {
   data() {
     return {
       subCategories: [],
+      page: 1,
+      pages: null,
+      count: null,
     }
   },
   methods: {
@@ -57,8 +63,9 @@ export default {
       axios.get('subCategories').then(res => {
         console.log(res.data);
         this.subCategories = res.data.subCategories;
+        this.pages = res.data.pages;
+        this.count = res.data.count;
       }).catch(res => {
-        console.log('pichula');
         console.log(res);
       });
     }

@@ -14,8 +14,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return ['categories' => $categories];
+        $categories = Category::paginate(10);
+        // return ['categories' => $categories];
+        return [
+            'categories' => $categories->items(),
+            'count' => $categories->total(),
+            'pages' => $categories->lastPage(),
+        ];
     }
 
     /**

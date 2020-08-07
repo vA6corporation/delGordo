@@ -33,8 +33,12 @@ Route::get('/api/shoppings/removeAll', 'ShoppingController@removeAll');
 Route::get('/api/products/{id}/inventoryAll', 'ProductController@inventoryAll');
 Route::get('/api/sales/{id}/delivery', 'SaleController@delivery');
 Route::post('/api/sales/deleteSale', 'SaleController@deleteSale');
+Route::get('/api/products/{key}/search', 'ProductController@search');
+Route::get('/api/sales/find', 'SaleController@find');
+// Route::get('/api/products/page', 'ProductController@index');
 
 Route::apiResources([
+    'api/paymentMethods' => 'PaymentMethodController',
     'api/products' => 'ProductController',
     'api/categories' => 'CategoryController',
     'api/subCategories' => 'SubCategoryController',
@@ -43,6 +47,7 @@ Route::apiResources([
     'api/customers' => 'CustomerController',
     'api/sales' => 'SaleController',
     'api/checkout' => 'CheckoutController',
+    'api/deliveries' => 'DeliveryController',
 ]);
 
 

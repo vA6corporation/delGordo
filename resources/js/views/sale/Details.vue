@@ -19,6 +19,17 @@
           </li>
         </ul>
       </div>
+      <div class="card">
+        <div class="card-header">
+          <h3>Datos del envio</h3>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Fecha:</span>
+            <span>{{ formatDate(sale.created_at) }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="col">
       <div class="form-group">
@@ -60,8 +71,16 @@
             <span>{{ formatDate(sale.created_at) }}</span>
           </li>
           <li class="list-group-item d-flex justify-content-between">
-            <span>Total de Venta:</span>
-            <span>{{ sale.items.map(e => e.weight).reduce((a, b) => a + b, 0) }}</span>
+            <span>Total en productos:</span>
+            <span>S/ {{ (sale.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0)).toFixed(2) }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total de envio:</span>
+            <span>S/ {{ (sale.delivery_price).toFixed(2) }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total de venta:</span>
+            <span>S/ {{ (sale.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0) + sale.delivery_price).toFixed(2) }}</span>
           </li>
           <!-- <li class="list-group-item d-flex justify-content-between">
             <span>Sub Categoria:</span>
@@ -86,6 +105,7 @@ export default {
   data() {
     return {
       sale: {
+        delivery_price: 0,
         customer: {},
         items: [],
       },

@@ -11,5 +11,6 @@ class Customer extends Model
         'document',
         'address',
         'mobile',
+        'reference',
     ];
 }

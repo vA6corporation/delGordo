@@ -15,6 +15,9 @@
         </div>
         <div class="card-body">
           <table class="table">
+            <caption>
+              <page-navigation v-model="page" :pages="pages" :count="count" :items="products.length" @confirm="fetchData"/>
+            </caption>
             <thead>
               <th>Nombre</th>
               <th>Paquetes</th>
@@ -23,7 +26,7 @@
             </thead>
             <tbody>
               <tr v-for="item in products" :key='item.id'>
-                <td>{{ item.name }}</td>
+                <td>{{ item.name }} {{ item.sub_category.name }} {{ item.category.name }}</td>
                 <td>{{ item.packages }} Pak</td>
                 <td>{{ item.weights }} Kg</td>
                 <td>
@@ -59,13 +62,19 @@ export default {
   data() {
     return {
       products: [],
+      page: 1,
+      pages: null,
+      count: null,
     }
   },
   methods: {
     fetchData() {
-      axios.get('products/withInventory').then(res => {
+      var params = { page: this.page };
+      axios.get('products/withInventory', { params }).then(res => {
         console.log(res);
         this.products = res.data.products;
+        this.pages = res.data.pages;
+        this.count = res.data.count;
       }).catch(err => {
         console.log(err.response);
       });

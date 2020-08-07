@@ -7,22 +7,16 @@ export const sale = {
     ADD_PRODUCT(state, product) {
       var index = state.products.findIndex(e => e.id == product.id);
       if (index >= 0) {
-        product.counter = state.products[index].counter;
-        state.products.splice(index, 1, product);
+        product.counter = ++state.products[index].counter;
+        state.products.splice(index, 1, Object.assign({}, product));
       } else {
         product.counter = product.counter || 1;
-        state.products.push(product);
+        state.products.push(Object.assign({}, product));
       }
     },
     REMOVE_PRODUCT(state, product) {
       var index = state.products.findIndex(e => e.id == product.id);
       state.products.splice(index, 1);
-      // if (index >= 0) {
-      //   product.counter = state.products[index].counter;
-      // } else {
-      //   product.counter = product.counter || 1;
-      //   state.products.push(product);
-      // }
     },
     REMOVE_ALL_PRODUCTS(state) {
       state.products = [];
@@ -31,14 +25,21 @@ export const sale = {
       var index = state.products.findIndex(e => e.id == product.id);
       state.products.splice(index, 1);
     },
-    PLUS_PRODUCT(state, id) {
-      var product = state.products.find(e => e.id == id);
-      product.counter++;
-    },
-    MINUS_PRODUCT(state, id) {
-      var product = state.products.find(e => e.id == id);
-      if (product.counter > 0) {
-        product.counter--;
+    // PLUS_PRODUCT(state, product) {
+    //   var index = state.products.findIndex(e => e.id == product.id);
+    //   if (index >= 0) {
+    //     product.counter = ++state.products[index].counter;
+    //     state.products.splice(index, 1, Object.assign({}, product));
+    //   } else {
+    //     product.counter = product.counter || 1;
+    //     state.products.push(Object.assign({}, product));
+    //   }
+    // },
+    MINUS_PRODUCT(state, product) {
+      var index = state.products.findIndex(e => e.id == product.id);
+      if (index >= 0 && state.products[index].counter > 1) {
+        product.counter = --state.products[index].counter;
+        state.products.splice(index, 1, Object.assign({}, product));
       }
     },
   },
@@ -49,13 +50,13 @@ export const sale = {
     removeProduct({ commit }, product) {
       commit("REMOVE_PRODUCT", product);
     },
-    plusProduct({ commit }, product) {
-      commit("ADD_PRODUCT", product);
-      commit("PLUS_PRODUCT", product.id);
-    },
+    // plusProduct({ commit }, product) {
+    //   // commit("ADD_PRODUCT", product);
+    //   commit("PLUS_PRODUCT", product);
+    // },
     minusProduct({ commit }, product) {
-      commit("ADD_PRODUCT", product);
-      commit("MINUS_PRODUCT", product.id);
+      // commit("ADD_PRODUCT", product);
+      commit("MINUS_PRODUCT", product);
     },
     removeAllProducts({ commit }) {
       commit("REMOVE_ALL_PRODUCTS");
@@ -79,8 +80,6 @@ export const sale = {
           totalCollection.push(product.inventory.slice(-1)[0]);
         }
         return totalCollection.map(e => e.weight).reduce((a, b) => a + b, 0) * product.sale_price;
-        // return totalCollection;
-        // e.sale_price * e.counter
       }).reduce((a, b) => a + b, 0);
     },
     products(state) {

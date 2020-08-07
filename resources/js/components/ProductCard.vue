@@ -72,7 +72,7 @@ export default {
   methods: {
     ...mapActions({
       addProduct: 'sale/addProduct',
-      plusProduct: 'sale/plusProduct',
+      // plusProduct: 'sale/plusProduct',
       minusProduct: 'sale/minusProduct',
     }),
     addP(product) {
@@ -82,7 +82,7 @@ export default {
       });
     },
     plusP(product) {
-      this.plusProduct(product);
+      this.addProduct(product);
       axios.post('shoppings', { product }).catch(err => {
         console.log(err.response);
       });

@@ -14,8 +14,13 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
-        return ['customers' => $customers];
+        $customers = Customer::paginate(10);
+        // return ['customers' => $customers];
+        return [
+            'customers' => $customers->items(),
+            'count' => $customers->total(),
+            'pages' => $customers->lastPage(),
+        ];
     }
 
     public function byDni($dni)

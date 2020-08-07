@@ -18,6 +18,10 @@ class CreateSalesTable extends Migration
             $table->integer('customer_id');
             $table->date('delivered_date')->nullable();
             $table->date('deleted_id')->nullable();
+            $table->integer('payment_id')->nullable();
+            $table->integer('delivery_id');
+            $table->double('delivery_price', 10, 3);
+            $table->string('payment_method_id');
             $table->softDeletes();
             $table->timestamps();
         });

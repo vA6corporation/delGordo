@@ -15,14 +15,32 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category', 'subCategory')->get();
-        return ['products' => $products];
+        $products = Product::with('category', 'subCategory')->paginate(10);
+        return [
+            'products' => $products->items(),
+            'count' => $products->total(),
+            'pages' => $products->lastPage(),
+        ];
+    }
+
+    public function search($key)
+    {
+        $products = Product::with('category', 'subCategory')->where('name', 'like', "{$key}%")->get();
+        if (count($products)) {
+            return ['products' => $products];
+        } else {
+            return response('Sin resultados', 400);
+        }
     }
 
     public function withInventory()
     {
-        $products = Product::with('category', 'subCategory')->get();
-        return ['products' => $products];
+        $products = Product::with('category', 'subCategory')->paginate(10);
+        return [
+            'products' => $products->items(),
+            'count' => $products->total(),
+            'pages' => $products->lastPage(),
+        ];
     }
 
     public function checkInventory()

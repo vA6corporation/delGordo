@@ -8,6 +8,12 @@
       <div class="modal-body">
         <div class="form-group">
           <label for="email">Por favor, ingrese su DNI, teléfono y dirección de entrega</label>
+          <select class="custom-select" v-model="delivery" required>
+            <option :value="null">SELECCIONE EL DISTRITO DE ENVIO...</option>
+            <option v-for="item in deliveries" :value="item" :key="item.id">{{ `${item.name} envio: S/ ${item.price.toFixed(2)}` }}</option>
+          </select>
+        </div>
+        <div class="form-group">
           <input type="text" v-model="customer.document" class="form-control" placeholder="DNI: 77035606" minlength="8" maxlength="8" required>
         </div>
         <div class="form-group">
@@ -18,6 +24,9 @@
         </div>
         <div class="form-group">
           <input type="text" v-model="customer.address" class="form-control" placeholder="Direc: Cerro Prieto 269" required>
+        </div>
+        <div class="form-group">
+          <input type="text" v-model="customer.reference" class="form-control" placeholder="Referencia de la direccion" required>
         </div>
       </div>
       <div class="modal-footer">
@@ -32,16 +41,32 @@
 
 <script>
 export default {
+  mounted() {
+    this.fecthData();
+  },
   data() {
     return {
+      delivery: null,
+      deliveries: [],
       customer: {},
     }
   },
   methods: {
+    fecthData() {
+      axios.get('deliveries').then(res => {
+        console.log(res);
+        this.deliveries = res.data.deliveries;
+      });
+    },
     submit() {
       axios.post('customers', { customer: this.customer }).then(res => {
         console.log(res);
-        this.$emit('confirm', res.data.customer);
+        var customer = res.data.customer;
+        var sale = {};
+        sale.customer_id = customer.id,
+        sale.delivery_id = this.delivery.id;
+        sale.delivery_price = this.delivery.price;
+        this.$emit('confirm', sale);
       }).catch(err => {
         console.log(err.response);
       });
