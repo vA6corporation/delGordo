@@ -14,8 +14,7 @@ class PaymentMethodController extends Controller
      */
     public function index()
     {
-        $paymentMethods = PaymentMethod::paginate(10);
-        // return ['paymentMethods' => $paymentMethods];
+        $paymentMethods = PaymentMethod::paginate(18);
         return [
             'paymentMethods' => $paymentMethods->items(),
             'count' => $paymentMethods->total(),
@@ -71,6 +70,7 @@ class PaymentMethodController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $paymentMethod = PaymentMethod::find($id);
+        $paymentMethod->delete();
     }
 }

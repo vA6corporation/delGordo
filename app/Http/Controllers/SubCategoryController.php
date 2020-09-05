@@ -14,7 +14,7 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        $subCategories = SubCategory::paginate(10);
+        $subCategories = SubCategory::paginate(18);
         return [
             'subCategories' => $subCategories->items(),
             'count' => $subCategories->total(),

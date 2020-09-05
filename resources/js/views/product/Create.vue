@@ -32,6 +32,15 @@
           </div>
           <div class="row form-group">
             <div class="col">
+              <label for="">Unidad</label>
+              <select class="custom-select text-uppercase" v-model="product.unit_code" required>
+                <!-- <option :value="null" disabled selected>SELECCIONE UNA SUB CATEGORIA</option> -->
+                <option v-for="(item, index) in unitCodes" :key="index" :value="item.unitCode">{{ item.name }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col">
               <label for="">Precio de Venta (Incluir IGV)</label>
               <input type="number" v-model.number="product.sale_price" step="any" min="0" class="form-control" placeholder="Precio de Venta (Incluir IGV)" required>
             </div>
@@ -82,6 +91,7 @@ export default {
       srcTmp: null,
       file: null,
       product: {
+        unit_code: 'KGM',
         category_id: null,
         sub_category_id: null,
       },

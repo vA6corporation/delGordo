@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use MercadoPago;
-use Log;
-use DB;
+use App\Sale;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SaleNotifyCustomer;
+use App\Mail\SaleNotify;
 
 class CheckoutController extends Controller
 {
@@ -14,15 +16,23 @@ class CheckoutController extends Controller
     const APPROVED = "approved";
     const IN_PROCESS = "in_process";
     const PENDING = "pending";
+    protected $token = NULL;
+    // const TOKEN = "10";
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->token = env('APP_TOKEN', 'TEST-990840703433865-072809-e62819351af3852a6c9bec3d472486cd-146569502');
+    }
+
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -63,7 +73,7 @@ class CheckoutController extends Controller
         }
 
         try {
-            MercadoPago\SDK::setAccessToken('TEST-990840703433865-072809-e62819351af3852a6c9bec3d472486cd-146569502');
+            MercadoPago\SDK::setAccessToken($this->token);
             $payment = new MercadoPago\Payment();
             $payment->payment_method_id = $request->payment_method_id;
             $payment->transaction_amount = $request->transaction_amount;
@@ -73,10 +83,8 @@ class CheckoutController extends Controller
             $payment->payer = [
                 "email" => $request->email,
             ];
-
             $payment->save();
             $status = $payment->status;
-            error_log($payment->id);
             error_log(" === $status === ");
             $statusResponse = $payment->status_detail;
             error_log($statusResponse);
@@ -88,6 +96,13 @@ class CheckoutController extends Controller
             }
 
             if($status == self::APPROVED || $status == self::IN_PROCESS || $status == self::PENDING) {
+                $sale = Sale::find($request->sale['id']);
+                $sale->fill([
+                    'payment_method_id' => $request->payment_method_id,
+                    'payment_id' => $payment->id,
+                    'on_model' => 'mercadopago',
+                ]);
+                $sale->save();
                 return [
                     'msg' => [ $this->_errorMP($statusResponse), $payment, $isCard ]
                 ];

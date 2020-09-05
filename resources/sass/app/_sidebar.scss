@@ -147,13 +147,13 @@
   right: 10px;
 }
 
-.sidebar .nav li>a+div .nav,
-.off-canvas-sidebar .nav li>a+div .nav {
+.sidebar .nav li > a + div .nav,
+.off-canvas-sidebar .nav li > a + div .nav {
   margin-top: 5px;
 }
 
-.sidebar .nav li>a+div .nav li>a,
-.off-canvas-sidebar .nav li>a+div .nav li>a {
+.sidebar .nav li > a + div .nav li > a,
+.off-canvas-sidebar .nav li > a + div .nav li > a {
   margin-top: 0px;
   padding: 8px 8px;
 }
@@ -168,31 +168,30 @@
   position: relative;
   text-transform: uppercase;
   cursor: pointer;
-  // font-size: 0.62475rem;
-  padding: 10px 8px;
+  padding: 4px 8px;
   line-height: 1.625rem;
 }
 
-.sidebar .nav li:first-child>a,
-.off-canvas-sidebar .nav li:first-child>a {
+.sidebar .nav li:first-child > a,
+.off-canvas-sidebar .nav li:first-child > a {
   margin: 0 15px;
 }
 
-.sidebar .nav li:hover:not(.active)>a p,
-.sidebar .nav li:hover:not(.active)>a i,
-.sidebar .nav li:focus:not(.active)>a p,
-.sidebar .nav li:focus:not(.active)>a i,
-.off-canvas-sidebar .nav li:hover:not(.active)>a p,
-.off-canvas-sidebar .nav li:hover:not(.active)>a i,
-.off-canvas-sidebar .nav li:focus:not(.active)>a p,
-.off-canvas-sidebar .nav li:focus:not(.active)>a i {
+.sidebar .nav li:hover:not(.active) > a p,
+.sidebar .nav li:hover:not(.active) > a i,
+.sidebar .nav li:focus:not(.active) > a p,
+.sidebar .nav li:focus:not(.active) > a i,
+.off-canvas-sidebar .nav li:hover:not(.active) > a p,
+.off-canvas-sidebar .nav li:hover:not(.active) > a i,
+.off-canvas-sidebar .nav li:focus:not(.active) > a p,
+.off-canvas-sidebar .nav li:focus:not(.active) > a i {
   color: #ffffff;
 }
 
-.sidebar .nav li:hover:not(.active)>a i,
-.sidebar .nav li:focus:not(.active)>a i,
-.off-canvas-sidebar .nav li:hover:not(.active)>a i,
-.off-canvas-sidebar .nav li:focus:not(.active)>a i {
+.sidebar .nav li:hover:not(.active) > a i,
+.sidebar .nav li:focus:not(.active) > a i,
+.off-canvas-sidebar .nav li:hover:not(.active) > a i,
+.off-canvas-sidebar .nav li:focus:not(.active) > a i {
   color: #ffffff;
 }
 
@@ -232,21 +231,21 @@
   color: #ffffff;
 }
 
-.sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a,
-.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a {
+.sidebar .nav li.active>a[data-toggle="collapse"] + div .nav .active a,
+.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"] + div .nav .active a {
   box-shadow: none;
 }
 
-.sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a .sidebar-mini-icon,
-.sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a .sidebar-normal,
-.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a .sidebar-mini-icon,
-.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a .sidebar-normal {
+.sidebar .nav li.active > a[data-toggle="collapse"] + div .nav .active a .sidebar-mini-icon,
+.sidebar .nav li.active > a[data-toggle="collapse"] + div .nav .active a .sidebar-normal,
+.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"] + div .nav .active a .sidebar-mini-icon,
+.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"] + div .nav .active a .sidebar-normal {
   color: #ffffff;
   font-weight: 400;
 }
 
-.sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a:before,
-.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"]+div .nav .active a:before {
+.sidebar .nav li.active > a[data-toggle="collapse"] + div .nav .active a:before,
+.off-canvas-sidebar .nav li.active > a[data-toggle="collapse"] + div .nav .active a:before {
   content: " ";
   position: absolute;
   height: 6px;
@@ -257,8 +256,8 @@
   border-radius: 50%;
 }
 
-.sidebar .nav li.active>a[data-toggle="collapse"]:before,
-.off-canvas-sidebar .nav li.active>a[data-toggle="collapse"]:before {
+.sidebar .nav li.active > a[data-toggle="collapse"]:before,
+.off-canvas-sidebar .nav li.active > a[data-toggle="collapse"]:before {
   content: " ";
   position: absolute;
   height: 6px;
@@ -438,8 +437,8 @@
   line-height: 18px;
 }
 
-.sidebar .user .info>a>span,
-.off-canvas-sidebar .user .info>a>span {
+.sidebar .user .info > a > span,
+.off-canvas-sidebar .user .info > a > span {
   display: block;
   position: relative;
   opacity: 1;
@@ -460,11 +459,11 @@
   display: none !important;
 }
 
-.off-canvas-sidebar .nav>li>a,
-.off-canvas-sidebar .nav>li>a:hover {
+.off-canvas-sidebar .nav > li > a,
+.off-canvas-sidebar .nav > li > a:hover {
   color: #ffffff;
 }
 
-.off-canvas-sidebar .nav>li>a:focus {
+.off-canvas-sidebar .nav > li > a:focus {
   background: rgba(200, 200, 200, 0.2);
 }

@@ -23,7 +23,7 @@
             <span class="sr-only">Next</span>
         </a>
     </div>
-    <a href="#store" type="button" onclick="scroll()" class="btn" id="shop_now">COMPRA AQUÍ</a>
+    <a href="#store" onclick="scroll()" class="btn" id="shop_now">COMPRA AQUÍ</a>
 </section>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -40,11 +40,4 @@ $(document).ready(function(){
       $(".carrou3").html("<img src='./assets/images/ca3.jpg' class='d-block w-100 home_img_carrousel' alt='100% Carne Premium'><div class='carousel-caption d-none d-md-block home_CC'> <img src='./assets/images/cat2.png' class='cat'></div>"); 
     }
 });
-(function () { var ldk = document.createElement('script'); 
-               ldk.type = 'text/javascript'; 
-               ldk.async = true; 
-               ldk.src = 'https://s.cliengo.com/weboptimizer/5f0f9cf43b6953002a3d4876/5f0f9d63e2f723002a86f995.js';
-               var s = document.getElementsByTagName('script')[0]; 
-               s.parentNode.insertBefore(ldk, s); })();
-
 </script>

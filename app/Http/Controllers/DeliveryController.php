@@ -14,7 +14,7 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $deliveries = Delivery::paginate(10);
+        $deliveries = Delivery::paginate(18);
         // return ['deliveries' => $deliveries];
         return [
             'deliveries' => $deliveries->items(),
@@ -71,6 +71,7 @@ class DeliveryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delivery = Delivery::find($id);
+        $delivery->delete();
     }
 }

@@ -5,7 +5,32 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/deliveryman',
+    name: 'deliveryman',
+    component: require('@/views/deliveryman/Deliveryman').default
+  },
+  {
+    path: '/deliveryman/create',
+    name: 'deliveryman',
+    component: require('@/views/deliveryman/Create').default
+  },
+  {
+    path: '/deliveryman/:deliverymanId/edit',
+    name: 'deliveryman',
+    component: require('@/views/deliveryman/Edit').default
+  },
+  {
     path: '/:saleId/checkout',
+    name: 'checkout',
+    component: require('@/views/Checkout').default
+  },
+  {
+    path: '/:saleId/checkoutDetails',
+    name: 'checkout',
+    component: require('@/views/CheckoutDetails').default
+  },
+  {
+    path: '/checkout',
     name: 'checkout',
     component: require('@/views/Checkout').default
   },
@@ -20,7 +45,7 @@ const routes = [
     component: require('@/views/Shopping').default
   },
   {
-    path: '/store',
+    path: '/store/:categoryId?',
     name: 'store',
     component: require('@/views/Store').default
   },
@@ -97,6 +122,14 @@ const routes = [
     component: require('@/views/inventory/Inventories').default
   },
   {
+    path: '/inventoriesAdmin',
+    component: require('@/views/inventory/InventoriesAdmin').default
+  },
+  {
+    path: '/inventories/:productId/detailsAdmin',
+    component: require('@/views/inventory/DetailsAdmin').default
+  },
+  {
     path: '/inventories/create',
     component: require('@/views/subCategory/Edit').default
   },
@@ -113,6 +146,18 @@ const routes = [
     component: require('@/views/customer/Customers').default
   },
   {
+    path: '/customers/:customerId/edit',
+    component: require('@/views/customer/Edit').default
+  },
+  {
+    path: '/customers/:customerId/details',
+    component: require('@/views/customer/Details').default
+  },
+  {
+    path: '/salesAdmin',
+    component: require('@/views/sale/SalesAdmin').default
+  },
+  {
     path: '/sales',
     component: require('@/views/sale/Sales').default
   },
@@ -121,8 +166,48 @@ const routes = [
     component: require('@/views/sale/Details').default
   },
   {
+    path: '/sales/deliveries',
+    component: require('@/views/sale/Deliveries').default
+  },
+  {
+    path: '/sales/dispatcheds',
+    component: require('@/views/sale/Dispatcheds').default
+  },
+  {
     path: '/pos',
     component: require('@/views/pos/Pos').default
+  },
+  {
+    path: '/posAdmin',
+    component: require('@/views/pos/PosAdmin').default
+  },
+  {
+    path: '/deletedReasons',
+    component: require('@/views/deletedReason/DeletedReasons').default
+  },
+  {
+    path: '/users',
+    component: require('@/views/user/Users').default
+  },
+  {
+    path: '/users/create',
+    component: require('@/views/user/Create').default
+  },
+  {
+    path: '/users/:userId/edit',
+    component: require('@/views/user/Edit').default
+  },
+  {
+    path: '/users/:userId/credentials',
+    component: require('@/views/user/Credentials').default
+  },
+  {
+    path: '/deletedReasons/create',
+    component: require('@/views/deletedReason/Create').default
+  },
+  {
+    path: '/deletedReasons/:deletedReasonId/edit',
+    component: require('@/views/deletedReason/Edit').default
   },
 ]
 

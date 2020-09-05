@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar d-md-block" :class="{ 'd-none': show }">
     <div class="sidebar-wrapper">
       <div class="logo">
         <a href="javascript:void(0)" class="simple-text logo-mini">
@@ -10,12 +10,14 @@
         </a>
       </div>
       <ul class="nav">
-        <li class="nav-item" v-for="item in modules" :key="item.name">
-          <router-link class="nav-link" :to="item.path" @click.native="fetchCurrentModule(item)">
-            <feather :type="item.icon"/>
-            {{ item.label }}
-          </router-link>
-        </li>
+        <template v-for="item in modules">
+          <li class="nav-item" :key="item.name" v-if="isAuthorized(item.name)">
+            <router-link class="nav-link" :to="item.path" @click.native="fetchCurrentModule(item); $emit('toggle-sidebar')">
+              <feather :type="item.icon"/>
+              {{ item.label }}
+            </router-link>
+          </li>
+        </template>
       </ul>
     </div>
   </div>
@@ -25,9 +27,11 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  props: ['show'],
   computed: {
     ...mapGetters({
-      modules: 'modules/modules'
+      modules: 'modules/modules',
+      isAuthorized: 'user/isAuthorized',
     }),
   },
   methods: {

@@ -47,13 +47,13 @@
 
 <script>
 import Categories from '@/components/Categories'
-import ShopingCard from '@/components/ShopingCard'
+import ShoppingCard from '@/components/ShoppingCard'
 import ProductCard from '@/components/ProductCard'
 
 export default {
   components: {
     Categories,
-    ShopingCard,
+    ShoppingCard,
     ProductCard,
   },
   mounted() {

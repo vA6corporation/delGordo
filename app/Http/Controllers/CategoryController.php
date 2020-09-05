@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(10);
+        $categories = Category::paginate(18);
         // return ['categories' => $categories];
         return [
             'categories' => $categories->items(),

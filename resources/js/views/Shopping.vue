@@ -10,15 +10,15 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item" v-for="item in products" :key="item.id">
             <div class="form-row">
-              <div class="col-2">
+              <!-- <div class="col-2">
                 <img :src="`/api/products/${item.image_url}`" class="img-fluid" alt="producto">
-              </div>
+              </div> -->
               <div class="col text-center">
                 <h5>
-                  {{ item.name }} {{ item.counter }} Kg
+                  {{ item.name }} {{ item.counter }} {{ item.short_unit }}
                 </h5>
-                <h5 class="text-success" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
-                <h5 class="text-danger" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h5>
+                <span class="text-success lead" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }} {{ item.short_unit }}</span>
+                <span class="text-danger lead" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} {{ item.short_unit }}</span>
                 <p>Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</p>
               </div>
               <div class="col" style="max-width: 8.5rem">
@@ -36,12 +36,6 @@
               </div>
             </div>
           </li>
-          <!-- <li class="list-group-item">
-            <select class="custom-select" v-model="delivery" required>
-              <option :value="null">SELECCIONE EL DISTRITO DE ENVIO...</option>
-              <option v-for="item in deliveries" :value="item" :key="item.id">{{ `${item.name} envio: S/ ${item.price.toFixed(2)}` }}</option>
-            </select>
-          </li> -->
           <li class="list-group-item">
             <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ totalProducts.toFixed(2) }}</h2>
           </li>
@@ -54,65 +48,81 @@
               Pagar 
               <feather type="chevron-right"/>
             </button>
-            <!-- <h2 class="text-center font-weight-bold">Total: S/ {{ totalProducts.toFixed(2) }}</h2> -->
           </li>
         </ul>
       </div>
     </form>
-    <!-- <ul class="list-group">
-      <li class="list-group-item"></li>
-    </ul> -->
   </div>
   <div class="container d-none d-md-block">
-    <div class="row">
-      <div class="col">
-        <router-link to="/store" class="btn btn-dark my-3">
-          <feather type="chevron-left"/> 
-          Seguir Comprando
-        </router-link>
-      </div>
-    </div>
-    <form class="card" @submit.prevent="checkDelivery">
+    <form class="card mb-0 mt-3">
       <div class="card-body">
-        <h2>Carrito de Compras</h2>
+        <h3 class="text-center">Tienes {{ products.length }} Items</h3>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col">
             <ul class="list-group">
               <li class="list-group-item" v-for="item in products" :key="item.id">
                 <div class="row">
-                  <div class="col-md-6 text-center">
-                    <img :src="`/api/products/${item.image_url}`" width="150" alt="producto">
+                  <div class="col-md-3">
+                    <img :src="`/api/products/${item.image_url}`" width="100" alt="producto">
                   </div>
                   <div class="col text-center">
-                    <h3>{{ item.name }} {{ item.counter }} Kg</h3>
-                    <h4 class="form-group">S/ {{ item.sale_price.toFixed(2) }}</h4>
+                    <h3>{{ item.name }}</h3>
+                  </div>
+                  <div>
+                    <h4 class="text-danger">S/ {{ item.sale_price.toFixed(2) }}</h4>
+                  </div>
+                  <div class="col text-center">
                     <div class="form-group">
-                      <button type="button" class="btn btn-secondary" @click="removeP(item)">
+                      <div class="text-success lead" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }} {{ item.short_unit }}</div>
+                      <div class="text-danger lead" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }} {{ item.short_unit }}</div>
+                    </div>
+                    <div class="form-group">
+                      <button type="button" class="btn btn-sm btn-secondary mr-2 my-1" @click="removeP(item)">
                         <feather type="trash-2"/>
                       </button>
-                      <button type="button" class="btn btn-secondary" @click="minusP(item)">
-                        <feather type="minus"/>
-                      </button>
-                      <button type="button" class="btn btn-secondary" @click="plusP(item)">
-                        <feather type="plus"/>
-                      </button>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-secondary" @click="minusP(item)">
+                          <feather type="minus"/>
+                        </button>
+                        <div class="p-2 lead">{{ item.counter }} Kg</div>
+                        <button type="button" class="btn btn-sm btn-secondary" @click="plusP(item)">
+                          <feather type="plus"/>
+                        </button>
+                      </div>
                     </div>
-                    <h4 class="text-success" v-if="checkInventory(item).length">Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h4>
-                    <h4 class="text-danger" v-else>No Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</h4>
-                    <p>Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</p>
+                    <!-- <span>Sub Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</span> -->
                   </div>
                 </div>
               </li>
-              <a href="#" class="list-group-item list-group-item-action">
-                <h2 class="text-center font-weight-bold">Total: S/ {{ (totalProducts + (delivery ? delivery.price : 0)).toFixed(2) }}</h2>
-              </a>
+              <div class="list-group-item">
+                <!-- <div class="font-weight-bold lead d-flex justify-content-between">
+                  <span>
+                    Sub Total: 
+                  </span>
+                  <span>
+                    S/ {{ (totalProducts).toFixed(2) }}
+                  </span>
+                </div> -->
+                <!-- <div class="font-weight-bold lead d-flex justify-content-between">
+                  <span>
+                    Delivery: 
+                  </span>
+                  <span>
+                    S/ {{ ((delivery ? delivery.price : 0)).toFixed(2) }}
+                  </span>
+                </div> -->
+                <div class="font-weight-bold lead d-flex justify-content-between">
+                  <span>
+                    Total: 
+                  </span>
+                  <span>
+                    S/ {{ (totalProducts + (delivery ? delivery.price : 0)).toFixed(2) }}
+                  </span>
+                </div>
+              </div>
             </ul>
           </div>
-          <div class="col" payments>
-            <!-- <select class="custom-select" v-model="delivery" required>
-              <option :value="null">SELECCIONE EL DISTRITO DE ENVIO...</option>
-              <option v-for="item in deliveries" :value="item" :key="item.id">{{ `${item.name} envio: S/ ${item.price.toFixed(2)}` }}</option>
-            </select> -->
+          <!-- <div class="col" payments>
             <p>Paga con cualquiera de estos métodos a través de Mercado Pago</p>
             <img src="@/assets/img/ways.jpg" alt="imagen" width="120">
             <img src="@/assets/img/paypal.png" alt="imagen" width="120">
@@ -121,10 +131,22 @@
               Pagar ahora
             </button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </form>
+    <div class="row">
+      <div class="col d-flex justify-content-between">
+        <router-link to="/store" class="btn btn-dark my-3">
+          <feather type="chevron-left"/> 
+          Seguir Comprando
+        </router-link>
+        <button type="button" class="btn btn-dark my-3" @click="checkDelivery">
+          <feather type='check'/>
+          Pagar ahora
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -140,18 +162,17 @@ export default {
   mounted() {
     axios.get('shoppings').then(res => {
       console.log(res);
+      this.removeAllProducts();
       var shoppings = res.data.shoppings;
       shoppings.forEach(item => {
         var product = item.product;
-        product.counter = item.counter;
-        console.log(product);
-        this.addProduct(product);
+        if (product) {
+          product.counter = item.counter;
+          console.log(product);
+          this.addProduct(product);
+        }
       });
     });
-    // axios.get('deliveries').then(res => {
-    //   console.log(res);
-    //   this.deliveries = res.data.deliveries;
-    // });
   },
   data() {
     return {
@@ -167,6 +188,14 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      removeAllProducts: 'sale/removeAllProducts',
+      addProduct: 'sale/addProduct',
+      plusProduct: 'sale/plusProduct',
+      removeProduct: 'sale/removeProduct',
+      setSale: 'sale/setSale',
+      minusProduct: 'sale/minusProduct',
+    }),
     checkDelivery() {
       $('#shoppingModal').modal('show');
     },
@@ -177,7 +206,8 @@ export default {
       this.removeProduct(product);
     },
     plusP(product) {
-      this.addProduct(product);
+      console.log(product);
+      this.plusProduct(product);
       axios.post('shoppings', { product }).catch(err => {
         console.log(err.response);
       });
@@ -189,45 +219,29 @@ export default {
       });
     },
     submit(sale) {
-      axios.get('shoppings/removeAll').catch(err => {
-        console.log(err.response);
-      });
       var inventories = [];
-      // var sale = {
-      //   delivery_id: this.delivery.id,
-      // };
       this.products.forEach(item => {
         inventories.push(...this.checkInventory(item));
       });
       if (inventories.length) {
-        axios.post('sales', { inventories, sale }).then(res => {
-          console.log(res);
-          $('.modal').modal('hide');
-          var sale = res.data.sale;
-          // this.$snotify.success('Compra realizada correctamente');
-          this.removeAllProducts();
-          // this.$router.replace('/store');
-          this.$router.replace(`/${sale.id}/checkout`);
-        }).catch(err => {
-          console.log(err.response);
-        });
+        this.setSale(sale);
+        this.$router.replace(`/checkout`);
       } else {
         this.$snotify.error('Debe haber almenos un producto disponible');
         $('.modal').modal('hide');
       }
+      this.$loading(false);
     },
-    ...mapActions({
-      removeAllProducts: 'sale/removeAllProducts',
-      addProduct: 'sale/addProduct',
-      removeProduct: 'sale/removeProduct',
-      // plusProduct: 'sale/plusProduct',
-      minusProduct: 'sale/minusProduct',
-    }),
   }
 }
 </script>
 
 <style scoped>
+  .container {
+    font-size: 0.9rem;
+    max-width: 80rem;
+  }
+
   .btn-group button {
     background-color: black;
     color: white;

@@ -8,8 +8,8 @@
         <div class="card-body">
           <div class="row form-group">
             <div class="col">
-              <label for="">Distrito</label>
-              <input type="text" v-model="paymentMethod.name" class="form-control" placeholder="Distrito" required>
+              <label for="">Nombre</label>
+              <input type="text" v-model="paymentMethod.name" class="form-control" placeholder="Nombre" required>
             </div>
           </div>
           <!-- <div class="row form-group">

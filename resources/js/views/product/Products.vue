@@ -1,6 +1,11 @@
 <template>
   <div class="row">
     <div class="col">
+      <div class="form-group">
+        <form @submit.prevent="searchProducts" class="search-input">
+          <input type="text" v-model="key" class="form-control" placeholder="BUSCADOR" required>
+        </form>
+      </div>
       <div class="card">
         <div class="card-header">
           <div class="d-flex justify-content-between">
@@ -32,9 +37,12 @@
                 <td>{{ item.sub_category.name }}</td>
                 <td>S/ {{ item.sale_price.toFixed(2) }}</td>
                 <td>
-                  <router-link :to="{ path: `/products/${item.id}/edit` }">
+                  <router-link :to="{ path: `/products/${item.id}/edit` }" class="mr-2">
                     <feather type="edit"/>
                   </router-link>
+                  <a href="#" @click.prevent="deleteProduct(item.id)">
+                    <feather type="trash-2"/>
+                  </a>
                 </td>
               </tr>
             </tbody>
@@ -56,9 +64,29 @@ export default {
       page: 1,
       pages: null,
       count: null,
+      key: null,
     }
   },
   methods: {
+    deleteProduct(id) {
+      var ok = confirm('Esta seguro de eliminar?...');
+      if (ok) {
+        axios.delete(`products/${id}`).then(res => {
+          console.log(res);
+          this.fetchData();
+        });
+      }
+    },
+    searchProducts() {
+      axios.get(`products/${this.key}/search`).then(res => {
+        console.log(res);
+        this.products = res.data.products;
+      }).catch(err => {
+        console.log(err.response);
+        this.$snotify.error(err.response.data);
+      });
+      this.key = '';
+    },
     fetchData() {
       var params = { page: this.page };
       axios.get('products', { params }).then(res => {

@@ -1,4 +1,4 @@
-<section id="consejos" class="centrar">
+<section id="consejos">
     <img src="./assets/images/consejos.jpg" 
     style="width: 100%;"> 
     <a href="./consejos" id="entrar">

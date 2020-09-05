@@ -1,14 +1,10 @@
 <template>
 <div class="row">
-  <!-- <search/> -->
   <pos-modal @confirm="submit"/>
   <div class="col">
     <div class="form-group">
       <form @submit.prevent="searchProducts" class="search-input">
         <input type="text" v-model="key" class="form-control" placeholder="BUSCADOR" required>
-        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <i class="tim-icons icon-simple-remove"></i>
-        </button> -->
       </form>
     </div>
     <div class="form-row">
@@ -26,26 +22,52 @@
             </div>
           </div>
           <ul class="list-group list-group-flush">
-            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" v-for="item in products" :key="item.id">
-              <div>
-                <span class="lead">{{ item.name }} {{ item.sub_category.name }}</span>
-                <br>
-                <span>{{ item.category.name }}</span>
-              </div>
-              <div class="align-items-center">
-                <span class="mr-2">{{ item.counter }} Kg - Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }}Kg - Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</span>
-                <br>
-                <div class="btn-group float-right">
-                  <button type="button" @click="removeProduct(item)" class="btn btn-secondary">
-                    <feather type="trash-2"/>
-                  </button>
-                  <button type="button" @click="minusProduct(item)" class="btn btn-info">
-                    <feather type="minus"/>
-                  </button>
-                  <button type="button" @click="addProduct(item)" class="btn btn-info">
-                    <feather type="plus"/>
-                  </button>
+            <a href="#" class="list-group-item list-group-item-action" v-for="(item, productIndex) in products" :key="item.id">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="lead">{{ item.name }} {{ item.sub_category.name }}</span>
+                  <br>
+                  <span>{{ item.category.name }}</span>
+                  <br>
                 </div>
+                <div class="align-items-center">
+                  <span class="mr-2">{{ item.counter.toFixed(3) }} Kg - Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }}Kg - Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</span>
+                  <br>
+                  <div class="btn-group float-right">
+                    <button type="button" class="btn btn-secondary" data-toggle="collapse" :data-target="`#inventoryCollapse${productIndex}`">
+                      <feather type="chevron-down"/>
+                    </button>
+                    <button type="button" @click="removeProduct(item)" class="btn btn-secondary">
+                      <feather type="trash-2"/>
+                    </button>
+                    <button type="button" @click="minusProduct(item)" class="btn btn-info">
+                      <feather type="minus"/>
+                    </button>
+                    <button type="button" @click="plusProduct(item)" class="btn btn-info">
+                      <feather type="plus"/>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="collapse pt-3" :id="`inventoryCollapse${productIndex}`">
+                <table class="table w-100">
+                  <thead>
+                    <th>Codigo</th>
+                    <th>Peso</th>
+                    <th>F. Ingreso</th>
+                    <th>Incluido</th>
+                  </thead>
+                  <tbody>
+                    <tr v-for="inventory in item.inventory" :key="inventory.id">
+                      <td>{{ inventory.codigo }}</td>
+                      <td>{{ inventory.weight.toFixed(3) }}</td>
+                      <td>{{ formatDate(inventory.created_at) }}</td>
+                      <td>
+                        <toggle-button :value='item.picked.includes(e => e == e.id == inventory.id)' @change="pick(item, inventory)"></toggle-button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </a>
           </ul>
@@ -57,10 +79,6 @@
             <div class="d-flex justify-content-between">
               <h3 class="card-title mb-0">Resultados</h3>
               <div class="btn-toolbar">
-                <!-- <router-link class="btn btn-info" to="/deliveries/create">
-                  <feather type="save"/>
-                  Guardar
-                </router-link> -->
               </div>
             </div>
           </div>
@@ -104,25 +122,39 @@ export default {
   methods: {
     ...mapActions({
       addProduct: 'sale/addProduct',
+      plusProduct: 'sale/plusProduct',
+      minusProduct: 'sale/minusProduct',
       removeProduct: 'sale/removeProduct',
       removeAllProducts: 'sale/removeAllProducts',
-      // plusProduct: 'sale/plusProduct',
-      minusProduct: 'sale/minusProduct',
     }),
+    pick(product, inventory) {
+      let index = product.picked.findIndex(e => e.id == inventory.id);
+      console.log(index);
+      if (index >= 0) {
+        product.picked.splice(index, 1);
+      } else {
+        product.picked.push(inventory);
+      }
+    },
     submit(sale) {
-      console.log(sale);
-      console.log('estamos listos');
       var inventories = [];
       this.products.forEach(item => {
         inventories.push(...this.checkInventory(item));
       });
       if (inventories.length) {
-        axios.post('sales', { sale, inventories }).then(res => {
+        sale.channel = 'PUNTO DE VENTA';
+        axios.post('sales', { sale, inventories, email: sale.email, processPayment: sale.processPayment }).then(res => {
           console.log(res);
+          this.$loading(false);
           this.$snotify.success('Venta registrada correctamente');
+          this.productsPane = [];
           this.removeAllProducts();
+        }).catch(error => {
+          this.productsPane = [];
+          console.log(error.response);
         });
       } else {
+        this.$loading(false);
         this.$snotify.error('Es necesario al menos un producto');
       }
     },
@@ -137,6 +169,9 @@ export default {
       this.key = '';
     },
     fetchData() {
+      this.productsPane = [];
+      // this.products = [];
+      this.removeAllProducts();
       axios.get('deliveries').then(res => {
         console.log(res.data);
         this.deliveries = res.data.deliveries;
@@ -148,7 +183,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.list-group-item-action:hover, .list-group-item-action:focus {
+  background-color: unset;
+  color: white;
+}
+
 .search-input input {
   padding-right: 2rem;
   padding-left: 2rem;

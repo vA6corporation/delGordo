@@ -3,16 +3,20 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name', 
         'description', 
         'sale_price',
         'sub_category_id',
         'category_id',
-        'image_url'
+        'image_url',
+        'unit_code',
     ];
 
     protected $casts = [
@@ -21,8 +25,48 @@ class Product extends Model
 
     protected $appends = [
       'weights',
-      'packages'
+      'packages',
+      'picked',
+      'unit',
+      'short_unit'
     ];
+
+    public function getPickedAttribute()
+    {
+        return [];
+    }
+
+    public function getUnitAttribute()
+    {
+        switch ($this->unit_code) {
+          case 'KGM':
+            return 'Kilogramos';
+          case 'BO':
+            return 'Botellas';
+          case 'BG':
+            return 'Bolsas';
+          case 'BX':
+            return 'Cajas';
+          default:
+            return 'Unidades';
+        }
+    }
+
+    public function getShortUnitAttribute()
+    {
+        switch ($this->unit_code) {
+          case 'KGM':
+            return 'Kg';
+          case 'BG':
+            return 'Bol';
+          case 'BO':
+            return 'Bot';
+          case 'BX':
+            return 'Caj';
+          default:
+            return 'Ud';
+        }
+    }
 
     public function getWeightsAttribute()
     {

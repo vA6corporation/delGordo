@@ -20,18 +20,11 @@
             </caption>
             <thead>
               <th>Metodo</th>
-              <!-- <th>Cliente</th> -->
-              <!-- <th>Codigo</th> -->
-              <!-- <th>Sub Categoria</th> -->
-              <!-- <th>T. de Venta</th> -->
-              <!-- <th>Entrega</th> -->
-              <!-- <th>Precio</th> -->
               <th>Opciones</th>
             </thead>
             <tbody>
               <tr v-for="item in paymentMethods" :key='item.id'>
                 <td>{{ item.name }}</td>
-                <!-- <td>S/ {{ item.price.toFixed(2) }}</td> -->
                 <td>
                   <div class="btn-toolbar">
                     <button type="button" class="btn btn-secondary btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -39,6 +32,7 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                       <router-link :to="{ path: `/paymentMethods/${item.id}/edit` }" class="dropdown-item">Editar</router-link>
+                      <a href="#" @click.prevent="deletePaymentMethod(item.id)" class="dropdown-item">Eliminar</a>
                     </div>
                   </div>
                 </td>
@@ -65,6 +59,15 @@ export default {
     }
   },
   methods: {
+    deletePaymentMethod(id) {
+      var ok = confirm('Esta seguro de eliminar?...');
+      if (ok) {
+        axios.delete(`paymentMethods/${id}`).then(res => {
+          console.log(res);
+          this.fetchData();
+        });
+      }
+    },
     fetchData() {
       var params = { page: this.page };
       axios.get('paymentMethods', { params }).then(res => {

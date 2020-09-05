@@ -8,20 +8,39 @@ import VueFeather from 'vue-feather'
 import Snotify from 'vue-snotify'
 import PageNavigation from '@/components/PageNavigation'
 import Datepicker from '@/components/Datepicker'
+import ToggleButton from '@/components/ToggleButton'
+import VueLoading from 'vuejs-loading-plugin'
 
 Vue.component(VueFeather.name, VueFeather);
 Vue.component('page-navigation', PageNavigation);
 Vue.component('datepicker', Datepicker);
+Vue.component('toggle-button', ToggleButton);
 
+Vue.use(VueLoading);
 Vue.use(Snotify, { toast: { timeout: 4000 } });
 
 Vue.mixin({
+    data() {
+      return {
+        unitCodes: [
+          { unitCode: 'KGM', name: 'KILOGRAMOS' },
+          { unitCode: 'NIU', name: 'UNIDADES' },
+          { unitCode: 'BG', name: 'BOLSAS' },
+          { unitCode: 'BO', name: 'BOTELLAS' },
+          { unitCode: 'BX', name: 'CAJAS' },
+        ],
+      }
+    },
     methods: {
       checkInventory(product) {
         var totalOne = 0;
         var totalCollectionOne = [];
         var totalTwo = 0;
         var totalCollectionTwo = [];
+
+        if (product.picked.length) {
+          return product.picked;
+        }
         
         for (const inventory of product.inventory) {
           if (product.counter % inventory.weight) {
@@ -114,7 +133,7 @@ new Vue({
     router,
     store,
     render: function(h) {
-        if (this.$route.path == '/store' || this.$route.path == '/payment' || this.$route.path == '/shopping' || this.$route.path.includes('/checkout')) {
+        if (this.$route.path.includes('/store') || this.$route.path == '/payment' || this.$route.path == '/shopping' || this.$route.path.includes('/checkout')) {
             return h(StoreApp);
         } else {
             return h(App); 

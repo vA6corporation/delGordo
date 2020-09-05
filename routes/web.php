@@ -13,32 +13,41 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/phpinfo', function () {
-    return phpinfo();
-});
-
+// Auth::routes(['register' => false]);
 Auth::routes();
 
-// Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', function() {
+    return view('welcome');
+});
 
 Route::get('/api/products/withInventory', 'ProductController@withInventory');
 Route::post('/api/products/image', 'ProductController@storeImage');
 Route::get('/api/products/images/{id}', 'ProductController@getImage');
-Route::get('/api/customers/byDni', 'ProductController@byDni');
+Route::get('/api/customers/byDni', 'CustomerController@byDni');
 Route::get('/api/shoppings/removeAll', 'ShoppingController@removeAll');
 Route::get('/api/products/{id}/inventoryAll', 'ProductController@inventoryAll');
 Route::get('/api/sales/{id}/delivery', 'SaleController@delivery');
+Route::get('/api/sales/{id}/dispatched', 'SaleController@dispatched');
 Route::post('/api/sales/deleteSale', 'SaleController@deleteSale');
+Route::post('/api/sales/shop', 'SaleController@shop');
 Route::get('/api/products/{key}/search', 'ProductController@search');
 Route::get('/api/sales/find', 'SaleController@find');
-// Route::get('/api/products/page', 'ProductController@index');
+Route::put('/api/sales/pay', 'SaleController@pay');
+Route::get('/api/sales/dispatchedSales', 'SaleController@dispatchedSales');
+Route::get('/api/sales/deliverySales', 'SaleController@deliverySales');
+Route::get('/api/products/all', 'ProductController@all');
+Route::get('/api/deletedReasons/all', 'DeletedReasonController@all');
+Route::get('/api/users/session', 'UserController@session');
+Route::get('/api/customers/{dni}/dni', 'CustomerController@getDni');
+Route::get('/api/users/dealers', 'UserController@dealers');
 
 Route::apiResources([
+    'api/deliveryman' => 'DeliverymanController',
+    'api/credentials' => 'CredentialController',
+    'api/users' => 'UserController',
     'api/paymentMethods' => 'PaymentMethodController',
+    'api/emails' => 'EmailController',
     'api/products' => 'ProductController',
     'api/categories' => 'CategoryController',
     'api/subCategories' => 'SubCategoryController',
@@ -48,6 +57,7 @@ Route::apiResources([
     'api/sales' => 'SaleController',
     'api/checkout' => 'CheckoutController',
     'api/deliveries' => 'DeliveryController',
+    'api/deletedReasons' => 'DeletedReasonController',
 ]);
 
 
@@ -57,7 +67,15 @@ Route::get('/store', function () {
     return view('store');
 });
 
+Route::get('/store/{id}', function () {
+    return view('store');
+});
+
 Route::get('/payment', function () {
+    return view('store');
+});
+
+Route::get('/{saleId}/checkoutDetails', function () {
     return view('store');
 });
 

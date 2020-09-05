@@ -29,6 +29,22 @@ html {
     display: flex;
 }
 
+#us {
+    width: 100%;
+    background-color: black;
+    position: relative;
+}
+
+#us_text {
+    position: absolute;
+    color: white;
+    font-size: 0.35rem;
+    text-align: center;
+    padding: 0 27vw;
+    bottom: 2%;
+}
+
+
 #loader img{
     width: 45%;
     bottom: 25%;
@@ -152,6 +168,7 @@ background-color: #E89622;
     position:absolute;
     top: 40%; 
     z-index:15;
+    right: 41vw;
     margin-left:auto;
     margin-right:auto;
     width: 20vw;
@@ -340,8 +357,18 @@ background-color: #E89622;
     .home_CC{
         top: 20vh;
     }
-    #us{
+    #us {
         width: 100%;
+        background-color: black;
+        position: relative;
+    }
+    #us_text {
+        position: absolute;
+        color: white;
+        font-size: 1.5rem;
+        text-align: center;
+        padding: 0 27vw;
+        bottom: 10%;
     }
     #carrito{
         padding: 5em;

@@ -5,7 +5,29 @@
         <div class="card-header">
           <h3 class="card-title">Detalles de Inventario</h3>
         </div>
-        <ul class="list-group list-group-flush">
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <th>Peso</th>
+              <th>Codigo</th>
+              <th>Vendido</th>
+              <th>Entrega</th>
+              <th>F. Ingreso</th>
+            </thead>
+            <tbody>
+              <tr v-for='(item, index) in product.inventory_all' :key="index">
+                <td>{{ item.weight.toFixed(3) }}</td>
+                <td>{{ item.codigo }}</td>
+                <td v-if="item.sale_id">Si</td>
+                <td v-else>No</td>
+                <td v-if="item.delivered_date">Si</td>
+                <td v-else>No</td>
+                <td>{{ formatDate(item.created_at) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between">
             <span>Peso</span>
             <span>Codigo</span>
@@ -22,7 +44,7 @@
             <span v-else>No</span>
             <span>{{ formatDate(item.created_at) }}</span>
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
     <div class="col">
@@ -45,7 +67,7 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <span>Peso Total:</span>
-            <span>{{ product.inventory.map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(2) }} Kg</span>
+            <span>{{ product.inventory.map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }} Kg</span>
           </li>
         </ul>
       </div>

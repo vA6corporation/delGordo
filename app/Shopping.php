@@ -12,6 +12,10 @@ class Shopping extends Model
         'counter', 
     ];
 
+    protected $casts = [
+      'counter' => 'double',
+    ];
+
     public function product()
     {
       return $this->belongsTo('App\Product');

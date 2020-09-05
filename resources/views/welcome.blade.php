@@ -20,13 +20,9 @@
     </head>
     <body>
     <div id="loader" class="" onLoad="loader()" style="z-index: 23982193">
-<<<<<<< HEAD
-        <img src="./assets/images/loader2.gif" alt="">
-=======
         <video style="max-width:30vw" id="video" loop autoplay muted>
             <source src="./assets/images/loader.mp4" type="video/mp4">
         </video>
->>>>>>> delGordo/alfonso
     </div>
     <div id="page" class="bye">
     <img src="./assets/images/logo.png" id="fixed_logo">    
@@ -37,8 +33,10 @@
         @include('inicio')
         @include('storeLanding')
         @include('us')
-        @include('consejos')
+        <!--@include('consejos')-->
+        <div class="row" style="text-align: center;justify-content: center; color: #ffffff7a; border-top: solid 1px; background-color: #131212ed;">
+            DelGordo - Carnes Premium 2020
+        </div>  
     </div>
     </body>
 </html>
-

@@ -8,16 +8,16 @@
         <div class="card-body">
           <div class="row form-group">
             <div class="col">
-              <label for="">Distrito</label>
+              <label for="">Nombre</label>
               <input type="text" v-model="paymentMethod.name" class="form-control" placeholder="Distrito" required>
             </div>
           </div>
-          <div class="row form-group">
+          <!-- <div class="row form-group">
             <div class="col">
               <label for="">Precio envio</label>
               <input type="number" step="any" min="0" v-model="paymentMethod.price" class="form-control" placeholder="Precio de envio" required>
             </div>
-          </div>
+          </div> -->
           <div class="row">
             <div class="col">
               <button type="submit" class="btn btn-info float-right">
@@ -66,7 +66,6 @@ export default {
       axios.put(`paymentMethods/${this.paymentMethod.id}`, { paymentMethod: this.paymentMethod }).then(res => {
         console.log(res.data);
         this.$snotify.success('Se han guardado los cambios');
-        // this.$router.replace('/paymentMethods')
       }).catch(err => {
         console.log(err.response);
       });

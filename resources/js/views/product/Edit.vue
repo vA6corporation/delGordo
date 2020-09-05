@@ -32,6 +32,15 @@
           </div>
           <div class="row form-group">
             <div class="col">
+              <label for="">Unidad</label>
+              <select class="custom-select text-uppercase" v-model="product.unit_code" required>
+                <!-- <option :value="null" disabled selected>SELECCIONE UNA SUB CATEGORIA</option> -->
+                <option v-for="(item, index) in unitCodes" :key="index" :value="item.unitCode">{{ item.name }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col">
               <label for="">Precio de Venta (Incluir IGV)</label>
               <input type="number" v-model.number="product.sale_price" step="any" class="form-control" placeholder="Precio de Venta (Incluir IGV)" required>
             </div>
@@ -82,6 +91,7 @@ export default {
       srcTmp: null,
       file: null,
       product: {
+        unit_code: 'NIU',
         category: null,
         sub_category: null,
       },
@@ -89,7 +99,7 @@ export default {
   },
   computed: {
     src() {
-      if (this.product.image_url) {
+      if (this.product.image_url && !this.srcTmp) {
         return `/api/products/${this.product.image_url}`;
       } else if (this.srcTmp) {
         return this.srcTmp;
@@ -105,7 +115,7 @@ export default {
       var reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        console.log(reader.result);
+        // console.log(reader.result);
         this.srcTmp = reader.result;
         // this.priviewImage.src = reader.result;
       };
@@ -126,18 +136,25 @@ export default {
       });
     },
     async submit() {
-      if (!this.file) {
-        return this.$snotify.error('Es necesario una imagen');
-      }
+      // if (!this.file) {
+      //   return this.$snotify.error('Es necesario una imagen');
+      // }
       var formData = new FormData();
-      formData.append('image', this.file)
-      var config = {
-          headers: {
-              'content-type': 'multipart/form-data'
-          }
+      if (this.file) {
+        formData.append('image', this.file);
+        formData.append('image_url', this.product.image_url);
+        var config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        try {
+          var path = await axios.post('products/image', formData, config).then(res => res.data);
+        } catch (error) {
+          console.log(error.response);        
+        }
+        this.product.image_url = path;
       }
-      var path = await axios.post('products/image', formData, config).then(res => res.data);
-      this.product.image_url = path;
       console.log(path);
       axios.put(`products/${this.product.id}`, { product: this.product }).then(res => {
         console.log(res.data);

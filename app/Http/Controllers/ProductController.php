@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category', 'subCategory')->paginate(10);
+        $products = Product::with('category', 'subCategory')->paginate(18);
         return [
             'products' => $products->items(),
             'count' => $products->total(),
@@ -23,9 +23,17 @@ class ProductController extends Controller
         ];
     }
 
+    public function all()
+    {
+        $products = Product::with('category', 'subCategory')->get();
+        return [
+            'products' => $products,
+        ];
+    }
+
     public function search($key)
     {
-        $products = Product::with('category', 'subCategory')->where('name', 'like', "{$key}%")->get();
+        $products = Product::with('category', 'subCategory')->where('name', 'like', "%{$key}%")->get();
         if (count($products)) {
             return ['products' => $products];
         } else {
@@ -35,13 +43,19 @@ class ProductController extends Controller
 
     public function withInventory()
     {
-        $products = Product::with('category', 'subCategory')->paginate(10);
+        $products = Product::with('category', 'subCategory')->paginate(18);
         return [
             'products' => $products->items(),
             'count' => $products->total(),
             'pages' => $products->lastPage(),
         ];
     }
+
+    // public function withInventoryAll()
+    // {
+    //     $products = Product::with('category', 'subCategory')->get();
+    //     return [ 'products' => $products ];
+    // }
 
     public function checkInventory()
     {
@@ -64,6 +78,10 @@ class ProductController extends Controller
 
     public function storeImage(Request $request)
     {
+        $image_url = $request->image_url;
+        if (isSet($image_url)) {
+            Storage::delete($image_url);
+        }
         $path = $request->file('image')->store('images');
         return $path;
     }
@@ -114,6 +132,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
     }
 }

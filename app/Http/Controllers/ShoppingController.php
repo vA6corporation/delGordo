@@ -26,8 +26,6 @@ class ShoppingController extends Controller
             $item->delete();
         }
         return NULL;
-        // ::destroy([1, 2, 3]);
-        // return ['shoppings' => $shoppings];
     }
 
     /**
@@ -42,8 +40,10 @@ class ShoppingController extends Controller
             session(['tmp_id' => Str::random(10)]);
         }
         $product = $request->product;
-        // error_log(json_encode($product), JSON_PRETTY_PRINT);
-        $shopping = Shopping::where('product_id', $product['id'])->first();
+        $shopping = Shopping::where([
+            'product_id' => $product['id'],
+            'tmp_id' => session('tmp_id'),
+        ])->first();
         if ($shopping) {
             if (isSet($product['counter'])) {
                 $shopping->counter = $product['counter'];
@@ -92,9 +92,10 @@ class ShoppingController extends Controller
      */
     public function destroy($id)
     {
-        error_log($id);
-        $shopping = Shopping::where('product_id', $id)->first();
-        // error_log($shopping);
+        $shopping = Shopping::where([
+            'product_id' => $id,
+            'tmp_id' => session('tmp_id'),
+        ])->first();
         $shopping->delete();
         return NULL;
     }

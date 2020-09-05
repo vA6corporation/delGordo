@@ -9,11 +9,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <select v-model="sale.deleted_id" class="custom-select" required>
-          <option :value="null">MOTIVO DE BAJA</option>
-          <option value="1">Opcion 1</option>
-          <option value="2">Opcion 2</option>
-          <option value="3">Opcion 3</option>
+        <select v-model="sale.deleted_reason_id" class="custom-select" required>
+          <option :value="undefined">MOTIVO DE BAJA</option>
+          <option v-for="item in deletedReasons" :key="item.id" value="1">{{ item.name }}</option>
         </select>
       </div>
       <div class="modal-footer">
@@ -28,7 +26,21 @@
 <script>
 export default {
   props: ['sale'],
+  mounted() {
+    this.fetchData();
+  },
+  data() {
+    return {
+      deletedReasons: [],
+    }
+  },
   methods: {
+    fetchData() {
+      axios.get('deletedReasons/all').then(res => {
+        console.log(res);
+        this.deletedReasons = res.data.deletedReasons;
+      });
+    },
     submit() {
       $('.modal').modal('hide');
       axios.post('sales/deleteSale', { sale: this.sale }).then(res => {

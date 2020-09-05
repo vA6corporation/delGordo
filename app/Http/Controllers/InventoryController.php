@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Inventory;
+use DateTime;
 
 class InventoryController extends Controller
 {
@@ -13,9 +14,20 @@ class InventoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $sd = (new DateTime($request->sd))->format('Y-m-d');
+        $ed = (new DateTime($request->ed))->modify('+1 day')->format('Y-m-d');
+        $inventories = Inventory::with(['product' => function($query) {
+                return $query->with('category', 'subCategory');
+            }])
+            ->with(['sale' => function($query) {
+                return $query->with('customer', 'delivery');
+            }])
+            ->whereNotNull('sale_id')
+            ->whereBetween('created_at', [$sd, $ed])
+            ->get();
+        return ['inventories' => $inventories];
     }
 
     /**
@@ -67,6 +79,7 @@ class InventoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $inventory = Inventory::find($id);
+        $inventory->delete();
     }
 }

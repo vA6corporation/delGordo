@@ -15,9 +15,30 @@
             <!-- <span>{{ formatDate(item.created_at) }}</span> -->
             {{ item.product.name }}
             <span>{{ item.codigo }}</span>
-            <span>{{ item.weight }} Kg</span>
+            <span>{{ item.weight.toFixed(3) }} Kg</span>
           </li>
         </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Detalles de Venta</h3>
+        </div>
+        <table class='table'>
+          <thead>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio U.</th>
+            <th>Sub Total</th>
+          </thead>
+          <tbody>
+            <tr v-for='item in products'>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.totalWeight.toFixed(3) }} {{ item.product.short_unit }}</td>
+              <td>S/ {{ item.sale_price.toFixed(2) }}</td>  
+              <td>S/ {{ (item.totalWeight * item.sale_price).toFixed(2) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div class="card">
         <div class="card-header">
@@ -27,6 +48,15 @@
           <li class="list-group-item d-flex justify-content-between">
             <span>Fecha:</span>
             <span>{{ formatDate(sale.created_at) }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Distrito:</span>
+            <span>{{ sale.delivery.name }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Repartidor:</span>
+            <span v-if="sale.deliveryman">{{ sale.deliveryman.name }}</span>
+            <span v-else>Sin asignar</span>
           </li>
         </ul>
       </div>
@@ -72,7 +102,7 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <span>Total en productos:</span>
-            <span>S/ {{ (sale.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0)).toFixed(2) }}</span>
+            <span>S/ {{ (sale.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0)).toFixed(3) }}</span>
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <span>Total de envio:</span>
@@ -80,7 +110,12 @@
           </li>
           <li class="list-group-item d-flex justify-content-between">
             <span>Total de venta:</span>
-            <span>S/ {{ (sale.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0) + sale.delivery_price).toFixed(2) }}</span>
+            <span>S/ {{ (sale.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0) + sale.delivery_price).toFixed(3) }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Usuario:</span>
+            <span v-if="sale.user">{{ sale.user.name }}</span>
+            <span v-else>Vendido por tienda</span>
           </li>
           <!-- <li class="list-group-item d-flex justify-content-between">
             <span>Sub Categoria:</span>
@@ -108,34 +143,39 @@ export default {
         delivery_price: 0,
         customer: {},
         items: [],
+        delivery: {},
       },
       inventory: {
         weight: null,
         quantity: 1
       },
       inventories: [],
+      products: [],
     }
   },
   methods: {
     addInventory() {
-      console.log('chulapi');
       this.inventories.push(Object.assign({}, this.inventory));
     },
     async fetchData() {
-      // var saleId = this.$route.params.saleId;
       var saleId = this.$route.params.saleId;
       await axios.get(`sales/${saleId}`).then(res => {
         console.log(res);
+        let sale = res.data.sale;
         this.sale = res.data.sale;
+        let groupItems = res.data.items;
+        console.log(groupItems);
+        for (const key in groupItems) {
+          if (groupItems.hasOwnProperty(key)) {
+            const element = groupItems[key];
+            let product = element[0];
+            product.totalWeight = element.map(e => e.weight).reduce((a, b) => a + b, 0);
+            this.products.push(product);
+          }
+        }
       }).catch(err => {
         console.log(err.response);
       });
-      // axios.get(`sales/${saleId}`).then(res => {
-      //   console.log(res);
-      //   this.sale = res.data.sale;
-      // }).catch(err => {
-      //   console.log(err.response);
-      // });
     },
     submit() {
       if (!this.inventories.length) {

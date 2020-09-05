@@ -12,5 +12,6 @@ class Customer extends Model
         'address',
         'mobile',
         'reference',
+        'email',
     ];
 }

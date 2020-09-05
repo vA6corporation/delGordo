@@ -21,6 +21,8 @@ class CreateProductsTable extends Migration
             $table->integer('sub_category_id')->nullable();
             $table->integer('category_id')->nullable();
             $table->string('image_url', 250)->nullable();
+            $table->string('unit_code');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -32,6 +32,9 @@
                   <router-link :to="{ path: `/customers/${item.id}/edit` }">
                     <feather type="edit"/>
                   </router-link>
+                  <router-link :to="{ path: `/customers/${item.id}/details` }">
+                    <feather type="menu"/>
+                  </router-link>
                 </td>
               </tr>
             </tbody>
