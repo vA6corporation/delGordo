@@ -46,16 +46,12 @@
         <div class="card-header">
           <div class="d-flex justify-content-between">
             <h3 class="card-title mb-0">Ventas</h3>
-            <!-- <div class="btn-toolbar">
-              <button type="button" @click="downloadExcel" class="btn btn-info mr-2">
-                <feather type="download"/>
-                Desc Excel 1
+            <div class="btn-toolbar">
+              <button type="button" @click="clearFilters" class="btn btn-info">
+                <feather type="x"/>
+                Limpiar Filtros
               </button>
-              <button type="button" @click="downloadExcel2" class="btn btn-info">
-                <feather type="download"/>
-                Desc Excel 2
-              </button>
-            </div> -->
+            </div>
           </div>
         </div>
         <div class="card-body">
@@ -96,6 +92,7 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                       <router-link :to="{ path: `/sales/${item.id}/details` }" class="dropdown-item">Detalles</router-link>
+                      <router-link :to="{ path: `/sales/${item.id}/edit` }" class="dropdown-item">Editar</router-link>
                       <!-- <a href="#" class="dropdown-item" data-toggle="modal" data-target="#paymentSaleModal" @click.prevent="sale = item">Marcar Pago</a> -->
                       <!-- <a href="#" class="dropdown-item" @click.prevent="deliverSale(item)">Marcar Contra entrega</a> -->
                       <!-- <a href="#" class="dropdown-item" @click.prevent="deliveredSale(item)">Marcar Entrega</a> -->
@@ -146,6 +143,12 @@ export default {
     }
   },
   methods: {
+    clearFilters() {
+      this.deleted = null;
+      this.payed = null;
+      this.delivered = null;
+      this.fetchData();
+    },
     async downloadExcel() {
       var wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
       var params = { 

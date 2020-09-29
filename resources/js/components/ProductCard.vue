@@ -10,7 +10,7 @@
         </h2> 
         <h4 class="card-subtitle mb-2 text-center">
           S/ {{ product.sale_price.toFixed(2) }}
-          <span style="font-size:0.8rem">x Kg</span>
+          <span style="font-size:0.8rem">x {{ product.short_unit }}</span>
         </h4>
         <div class="form-row">
           <div class="col-6">
@@ -89,10 +89,22 @@ export default {
       });
     },
     plusP(product) {
-      product.counter += 1;
+      if (product.unit_code == 'KGM') {
+        product.counter += 0.5;
+      } else {
+        product.counter += 1;
+      }
     },
     minusP(product) {
-      product.counter -= 1;
+      if (product.unit_code == 'KGM') {
+        if (product.counter >= 0.5) {
+          product.counter -= 0.5;
+        }
+      } else {
+        if (product.counter >= 1) {
+          product.counter -= 1;
+        }
+      }
     }
   }
 }

@@ -25,6 +25,7 @@ class Credential extends Model
         'deliveries',
         'paymentMethods',
         'deletedReasons',
+        'offices',
     ];
 
     protected $casts = [
@@ -46,5 +47,6 @@ class Credential extends Model
         'deliveries' => 'integer',
         'paymentMethods' => 'integer',
         'deletedReasons' => 'integer',
+        'offices' => 'integer',
     ];
 }

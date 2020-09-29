@@ -12,7 +12,6 @@
               <span>Peso</span>
           </li>
           <li class="list-group-item d-flex justify-content-between" v-for="(item, index) in sale.items" :key="index">
-            <!-- <span>{{ formatDate(item.created_at) }}</span> -->
             {{ item.product.name }}
             <span>{{ item.codigo }}</span>
             <span>{{ item.weight.toFixed(3) }} Kg</span>
@@ -30,8 +29,8 @@
             <th>Precio U.</th>
             <th>Sub Total</th>
           </thead>
-          <tbody>
-            <tr v-for='item in products'>
+          <tbody style="color: white">
+            <tr v-for='item in products' :key="item.id">
               <td>{{ item.product.name }}</td>
               <td>{{ item.totalWeight.toFixed(3) }} {{ item.product.short_unit }}</td>
               <td>S/ {{ item.sale_price.toFixed(2) }}</td>  
@@ -80,14 +79,6 @@
               <span>Celuar:</span>
               <span>{{ sale.customer.mobile }}</span>
             </li>
-            <!-- <li class="list-group-item d-flex justify-content-between">
-              <span>Sub Categoria:</span>
-              <span>{{ sale.sub_category.name }}</span>
-            </li> -->
-            <!-- <li class="list-group-item d-flex justify-content-between">
-              <span>Peso Total:</span>
-              <span>{{ sale.inventory.map(e => e.weight).reduce((a, b) => a + b, 0) }} Kg</span>
-            </li> -->
           </ul>
         </div>
       </div>
@@ -117,14 +108,22 @@
             <span v-if="sale.user">{{ sale.user.name }}</span>
             <span v-else>Vendido por tienda</span>
           </li>
-          <!-- <li class="list-group-item d-flex justify-content-between">
-            <span>Sub Categoria:</span>
-            <span>{{ sale.sub_category.name }}</span>
-          </li> -->
-          <!-- <li class="list-group-item d-flex justify-content-between">
-            <span>Peso Total:</span>
-            <span>{{ sale.inventory.map(e => e.weight).reduce((a, b) => a + b, 0) }} Kg</span>
-          </li> -->
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3>Datos del pago</h3>
+        </div>
+        <ul class="list-group" v-if='sale.payment_id'>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Fecha:</span>
+            <span>{{ formatDate(sale.payment.created_at) }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Usuario:</span>
+            <span v-if="sale.payment.user">{{ sale.payment.user.name }}</span>
+            <span v-else>MercadoPago</span>
+          </li>
         </ul>
       </div>
     </div>

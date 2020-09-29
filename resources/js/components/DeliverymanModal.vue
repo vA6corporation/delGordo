@@ -39,7 +39,9 @@ export default {
   mounted() {
     this.fetchData();
     $('.modal').on('shown.bs.modal', () => {
-      this.localSale = Object.assign({}, this.sale);
+      this.localSale = Object.assign({
+        // deliveryman_id: null,
+      }, this.sale);
     });
   },
   data() {

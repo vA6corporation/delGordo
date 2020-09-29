@@ -29,10 +29,10 @@
               <input class="form-control" @click.stop type="text" placeholder="Search" aria-label="Search">
             </form>
             <li class="nav-item" v-for="item in categories" :key="item.id">
-              <a class="nav-link" href="#" @click.prevent="category_id = item.id">{{ item.name }}</a>
+              <a class="nav-link" href="#" @click.prevent="category_id = item.id; page = 0">{{ item.name }}</a>
             </li>
             <li class="nav-item">
-              <a href="#" @click.prevent="category_id = null">
+              <a href="#" @click.prevent="category_id = null; page = 0">
                 Todas las Categorias
               </a>
             </li>
@@ -58,7 +58,7 @@
       <div class="container">
         <div class="row">
           <div class="col">
-            <categories v-model="category_id"/>
+            <categories v-model="category_id" @input="page = 0"/>
           </div>
           <div class="col-10 col-xl-9">
             <div class="row">
@@ -68,6 +68,7 @@
             </div>
           </div>
         </div>
+        <page-navigation-store class="mb-5" v-model="computedPage" :pages="pages" :count="products.length" :items="filterProducts"/>
       </div>
     </div>
   </div>
@@ -96,6 +97,7 @@
 import Categories from '@/components/Categories'
 import ShoppingCard from '@/components/ShoppingCard'
 import ProductCard from '@/components/ProductCard'
+import PageNavigationStore from '@/components/PageNavigationStore'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -103,6 +105,7 @@ export default {
     Categories,
     ShoppingCard,
     ProductCard,
+    PageNavigationStore,
   },
   mounted() {
     var categoryId = this.$route.params.categoryId;
@@ -115,6 +118,8 @@ export default {
       categories: [],
       category_id: null,
       key: null,
+      page: 0,
+      itemsPerPage: 18,
     }
   },
   computed: {
@@ -122,9 +127,21 @@ export default {
       totalProducts: 'sale/totalProducts',
       saleProducts: 'sale/products',
     }),
+    computedPage: {
+      get(value) {
+        return this.page + 1;
+      },
+      set(value) {
+        this.page = value - 1;
+      }
+    },
+    pages() {
+      return Math.ceil(this.products.length / this.itemsPerPage);
+    },
     filterProducts() {
       return this.products.filter(e => !this.category_id || this.category_id == e.category_id)
-        .filter(e => !this.key || e.name.toLowerCase().includes((this.key || '').toLowerCase()));
+        .filter(e => !this.key || e.name.toLowerCase().includes((this.key || '').toLowerCase()))
+        .splice((this.page * this.itemsPerPage), ((this.page + 1) * this.itemsPerPage));
     }
   },
   methods: {
@@ -136,7 +153,7 @@ export default {
     }),
     check() {
       if (this.saleProducts.length) {
-        this.$router.replace('shopping');
+        this.$router.push('/shopping');
       } else {
         $('#checkModal').modal('show');
       }

@@ -75,10 +75,6 @@
               <span>Motivos de anulacion</span>
               <toggle-button v-model="credential.deletedReasons"></toggle-button>
             </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Sucursales</span>
-              <toggle-button v-model="credential.offices"></toggle-button>
-            </li>
           </ul>
           <div class="row">
             <div class="col">

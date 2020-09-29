@@ -15,6 +15,7 @@ use App\Mail\SaleNotifyCustomer;
 use App\Mail\SaleNotifyPaymentCustomer;
 use App\Mail\SaleNotify;
 use MercadoPago;
+use App;
 
 class SaleController extends Controller
 {
@@ -32,7 +33,11 @@ class SaleController extends Controller
 
     public function __construct()
     {
-        $this->token = env('APP_TOKEN', 'TEST-990840703433865-072809-e62819351af3852a6c9bec3d472486cd-146569502');
+        if (App::environment('production')) {
+            $this->token = env('TOKEN');
+        } else {
+            $this->token = env('TEST_TOKEN');
+        }
     }
 
     public function index(Request $request)
@@ -65,6 +70,39 @@ class SaleController extends Controller
             'sales' => $sales->items(),
             'count' => $sales->total(),
             'pages' => $sales->lastPage(),
+        ];
+    }
+
+    public function all(Request $request)
+    {
+        $sd = (new DateTime($request->sd))->format('Y-m-d');
+        $ed = (new DateTime($request->ed))->modify('+1 day')->format('Y-m-d');
+        $query = Sale::withTrashed()
+            ->with('customer', 'items', 'delivery', 'deliveryman', 'user')
+            ->whereBetween('created_at', [$sd, $ed]);
+        if ($request->payed == 'true') {
+            $query->whereNotNull('payment_id');
+        }
+        if ($request->payed == 'false') {
+            $query->whereNull('payment_id');
+        }
+        if ($request->delivered == 'true') {
+            $query->whereNotNull('delivered_date');
+        }
+        if ($request->delivered == 'false') {
+            $query->whereNull('delivered_date');
+        }
+        if ($request->deleted == 'true') {
+            $query->whereNotNull('deleted_at');
+        }
+        if ($request->deleted == 'false') {
+            $query->whereNull('deleted_at');
+        }
+        $sales = $query->get();
+        return [
+            'sales' => $sales,
+            // 'count' => $sales->total(),
+            // 'pages' => $sales->lastPage(),
         ];
     }
 
@@ -117,10 +155,12 @@ class SaleController extends Controller
     }
 
     public function pay(Request $request) {
+
         $sale = Sale::find($request->sale['id']);
         $payment = new Payment([
-            'date_created' => (new DateTime())->format('Y-m-d H:i:s'),
+            // 'date_created' => (new DateTime())->format('Y-m-d H:i:s'),
         ]);
+        $payment->user_id = Auth::id();
         $payment->save();
         $sale->payment_id = $payment->id;
         $sale->save();
@@ -136,7 +176,7 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         $email = $request->email;
-        // $processPayment = $request->;
+        $processPayment = $request->sale['processPayment'];
         $deliver_date = $request->sale['deliver_date'];
         $sale = new Sale($request->sale);
         if ($deliver_date == 'true') {
@@ -146,8 +186,9 @@ class SaleController extends Controller
         }
         if ($sale->payment_id) {
             $payment = new Payment([
-                'date_created' => (new DateTime())->format('Y-m-d H:i:s'),
+                // 'date_created' => (new DateTime())->format('Y-m-d H:i:s'),
             ]);
+            $payment->user_id = Auth::id();
             $payment->save();
             $sale->payment_id = $payment->id;
         }
@@ -169,7 +210,7 @@ class SaleController extends Controller
                 $inventory->save();
             }
             try {
-                if (isSet($request->processPayment) && $request->processPayment == true) {
+                if ($processPayment) {
                     Mail::to($email)->send(new SaleNotifyPaymentCustomer(['id' => $sale->id]));
                 } else {
                     Mail::to($email)->send(new SaleNotifyCustomer(['id' => $sale->id]));
@@ -184,12 +225,57 @@ class SaleController extends Controller
         }
     }
 
+    public function shopPayment(Request $request)
+    {
+        return $request;
+        $payment_method_id = $request->paymentMethodId;
+        $transaction_amount = $request->transactionAmount;
+        $description = $request->description;
+        $installments = $request->installments;
+        $email = $request->email;
+        $first_name = $request->cardholderName;
+        $doc_type = $request->docType;
+        $doc_number = $request->docNumber;
+        $token = $request->token;
+        
+        try {
+            $mercadopago_payment = $this->checkout(
+                $payment_method_id, 
+                $transaction_amount, 
+                $description,
+                $installments,
+                $doc_type,
+                $doc_number,
+                $email,
+                $token 
+            );
+        } catch (\Throwable $th) {
+            return response(['message' => 'Favor de revisar la información de la tarjeta'], 400);
+        }
+
+        $sale = Sale::find($request->sale['id']);
+        $payment = new Payment();
+        $payment->mercadopago_id = $mercadopago_payment->id;
+        $payment->save();
+        $sale->payment_id = $payment->id;
+        $sale->save();
+
+        return ['sale' => $sale];
+    }
+
     public function shop(Request $request)
     {
-        $payment_method_id = $request->payment_method_id;
-        $transaction_amount = $request->transaction_amount;
-        $token = $request->token;
+        // return $request;
+        $payment_method_id = $request->paymentMethodId;
+        $transaction_amount = $request->transactionAmount;
+        $description = $request->description;
+        $installments = $request->installments;
         $email = $request->email;
+        $first_name = $request->cardholderName;
+        $doc_type = $request->docType;
+        $doc_number = $request->docNumber;
+        $token = $request->token;
+        
         $inventories = $request->inventories;
         
         $ids = collect($inventories)->map(function($item) {
@@ -207,16 +293,27 @@ class SaleController extends Controller
         }
 
         try {
-            $payment = $this->checkout($payment_method_id, $transaction_amount, $token, $email);
+            $mercadopago_payment = $this->checkout(
+                $payment_method_id, 
+                $transaction_amount, 
+                $description,
+                $installments,
+                $doc_type,
+                $doc_number,
+                $email,
+                $token 
+            );
         } catch (\Throwable $th) {
             return response(['message' => 'Favor de revisar la información de la tarjeta'], 400);
         }
 
-        error_log('pichula');
-
         $sale = new Sale($request->sale);
+        $payment = new Payment();
+        $payment->mercadopago_id = $mercadopago_payment->id;
+        $payment->save();
         $sale->payment_id = $payment->id;
         $sale->deliver_date = (new DateTime())->format('Y-m-d H:i:s');
+        $sale->channel = "TIENDA VIRTUAL";
         $sale->save();
 
         foreach ($inventories as $inventory) {
@@ -247,23 +344,20 @@ class SaleController extends Controller
      */
     public function show($id)
     {
-        $sale = Sale::with('customer', 'delivery', 'user', 'deliveryman')->with(['items' => function($query) {
-            return $query->with('product');
-        }])->find($id);
+        $sale = Sale::with('customer', 'delivery', 'user', 'deliveryman')
+            ->with(['items' => function($query) {
+                return $query->with('product');
+            }])
+            ->with(['payment' => function($query) {
+                return $query->with('user');
+            }])
+            ->find($id);
         $items = collect($sale->items)->groupBy('product_id');
         return [
             'sale' => $sale,
             'items' => $items,
         ];
     }
-
-    // public function group($id)
-    // {
-    //     $sale = Sale::with('customer', 'delivery', 'user')->with(['items' => function($query) {
-    //         return $query->with('product');
-    //     }])->find($id);
-    //     return ['sale' => $sale];
-    // }
 
     public function delivery($id)
     {
@@ -314,6 +408,35 @@ class SaleController extends Controller
         return ['sale' => $sale];
     }
 
+    public function updateWithInventory(Request $request, $id)
+    {
+        // return $request;
+        $sale = Sale::find($id);
+        $inventories = $request->inventories;
+        $preInventories = $request->preInventories;
+        foreach ($preInventories as $item) {
+            // error_log(json_decode($item));
+            foreach ($item as $subItem) {
+                // error_log(json_encode($subItem));
+                $inventory = Inventory::find($subItem['id']);
+                $inventory->sale_id = NULL;
+                $inventory->save();
+                error_log($inventory);
+                // error_log($inventory);
+            }
+        }
+        foreach ($inventories as $item) {
+            $inventory = Inventory::find($item['id']);
+            $inventory->sale_id = $sale->id;
+            $inventory->sale_price = $inventory->product->sale_price;
+            $inventory->save();
+        }
+        $sale->fill($request->sale);
+        // $inventories = $request->inventories;
+        $sale->save();
+        return ['sale' => $sale];
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -335,13 +458,23 @@ class SaleController extends Controller
         $sale->save();
         $sale->delete();
     }
+
     public function destroy($id)
     {
         //
     }
 
-    private function checkout($payment_method_id, $transaction_amount, $token, $email)
-    {
+    private function checkout(
+        $payment_method_id, 
+        $transaction_amount, 
+        $description,
+        $installments,
+        $doc_type,
+        $doc_number,
+        $email,
+        $token 
+    ) {
+        error_log('======');
         error_log($payment_method_id);
         error_log($transaction_amount);
         error_log($token);
@@ -371,11 +504,7 @@ class SaleController extends Controller
                 $isCard = true;
                 break;
             default:
-                // return 
                 throw new Exception('Favor de revisar la información de la tarjeta');
-                // return Response([
-                //     'msg' => [ 'Favor de revisar la información de la tarjeta', [], false ]
-                // ], 400);
         }
 
         try {
@@ -383,53 +512,35 @@ class SaleController extends Controller
             $payment = new MercadoPago\Payment();
             $payment->payment_method_id = $payment_method_id;
             $payment->transaction_amount = $transaction_amount;
-            $payment->token = $token;
-            $payment->description = "Tienda del gordo";
             $payment->installments = 1;
-            $payment->payer = [
-                "email" => $email,
+            $payment->token = $token;
+            $payment->description = $description;
+            $payer = new MercadoPago\Payer();
+            $payer->email = $email;
+            $payer->identification = [
+                "type" => $doc_type,
+                "number" => $doc_number,
             ];
+            $payment->payer = $payer;
             $payment->save();
             $status = $payment->status;
+            $statusDetail = $payment->status_detail;
             error_log(" === $status === ");
-            $statusResponse = $payment->status_detail;
-            error_log($statusResponse);
+            error_log($statusDetail);
             
-            if (empty($status) && empty($statusResponse)) {
-                // return Response([
-                //     'msg' => [ 'Tarjeta declinada', [], $isCard ],
-                // ], 400);
-                // return NULL;
+            if (empty($status) && empty($statusDetail)) {
                 throw new Exception('Tarjeta declinada');
             }
 
             if($status == self::APPROVED || $status == self::IN_PROCESS || $status == self::PENDING) {
-                // $sale = Sale::find($request->sale['id']);
-                // $sale->fill([
-                //     'payment_method_id' => $request->payment_method_id,
-                //     'payment_id' => $payment->id,
-                //     'on_model' => 'mercadopago',
-                // ]);
-                // $sale->save();
-                // return [
-                //     'msg' => [ $this->_errorMP($statusResponse), $payment, $isCard ]
-                // ];
                 return $payment;
             } else if ($status == self::REJECTED) {
-                // return Response([
-                //     'msg' => [ $this->_errorMP($statusResponse), $payment, false ] 
-                // ], 400);
-                // return ['ok' => false, 'msg' => $this->_errorMP($statusResponse)];
-                throw new Exception($this->_errorMP($statusResponse));
+                throw new Exception($this->_errorMP($statusDetail));
             }
 
-        } catch (\Exception  $e) {
+        } catch (\Throwable $th) {
             error_log('Error: '.$e->getMessage().' - Line:' .$e->getLine() . ' - Archivo: ' . $e->getFile());
-            // return Response([
-            //     'error' => [ $e->getMessage(). $e->getLine() ]
-            // ], 400);
-            // return NULL;
-            throw new Exception($e->getMessage());
+            throw $th;
         }
     }
 

@@ -32,6 +32,7 @@ export default {
     ...mapGetters({
       modules: 'modules/modules',
       isAuthorized: 'user/isAuthorized',
+      // office: 'system/office',
     }),
   },
   methods: {

@@ -11,19 +11,8 @@
     </div>
     <div class="card">
       <div class="card-body">
-        <!-- <h1 class="text-center">Compra procesada con exito</h1> -->
         <h2 class="text-center mb-4">Detalles de su compra</h2>
         <ul class="list-group list-group-flush">
-          <!-- <li class="list-group-item" v-for="item in products" :key="item.id">
-            <div class="form-row">
-              <div class="col d-flex justify-content-between">
-                <h5>
-                  {{ item.product.name }} {{ item.totalWeight }} Kg
-                </h5>
-                <p>Precio: S/ {{ (item.totalWeight * item.sale_price).toFixed(2) }}</p>
-              </div>
-            </div>
-          </li> -->
           <table class='table'>
             <thead>
               <th>Producto</th>

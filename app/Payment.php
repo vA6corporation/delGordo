@@ -8,7 +8,8 @@ class Payment extends Model
 {
     protected $fillable = [
         'sale_id',
-        'date_created',
+        'user_id',
+        'mercadopago_id',
     ];
 
     // protected $casts = [
@@ -16,10 +17,10 @@ class Payment extends Model
     //   'weight' => 'double',
     // ];
 
-    // public function product()
-    // {
-    //   return $this->belongsTo('App\Product');
-    // }
+    public function user()
+    {
+      return $this->belongsTo('App\User');
+    }
 
     // public function sale()
     // {

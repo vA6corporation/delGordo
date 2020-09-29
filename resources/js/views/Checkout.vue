@@ -1,130 +1,54 @@
 <template>
-<div v-if="sale.payment_id">
+<div>
+  <checkout-modal description="Del Gordo" :transaction-amount="items.map(e => e.weight * e.sale_price).reduce((a, b) => a + b, 0) + (sale.delivery_price || 0)" :sale="sale" @confirm="successCheckout" @error="errorCheckout"/>
+  <customer-modal @confirm="submit"/>
   <div class="container">
     <div class="row">
       <div class="col">
-        <router-link to="/store" class="btn btn-dark my-3">
+        <!-- <router-link to="/store" class="btn btn-dark my-3">
           <feather type="chevron-left"/> 
           Ir a la tienda
-        </router-link>
+        </router-link> -->
       </div>
     </div>
-    <div class="card">
+    <div class="card my-3">
       <div class="card-body">
-        <h1 class="text-center">Compra procesada con exito</h1>
-        <h2 class="text-center mb-4">Detalles de su compra</h2>
+        <h2 class="text-center">Detalles de su compra</h2>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item" v-for="item in sale.items" :key="item.id">
-            <div class="form-row">
-              <div class="col-2">
-                <img :src="`/api/products/${item.product.image_url}`" class="img-fluid" alt="producto">
-              </div>
-              <div class="col text-center">
-                <h5>
-                  {{ item.product.name }} {{ item.weight }} Kg
-                </h5>
-                <h5 class="text-success">Cantidad: {{ item.weight }} Kg</h5>
-                <p>Precio: S/ {{ (item.sale_price).toFixed(2) }}</p>
-              </div>
-            </div>
-          </li>
+          <table class='table'>
+            <thead>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio U.</th>
+              <th>Sub Total</th>
+            </thead>
+            <tbody>
+              <tr v-for='item in products' :key="item.id">
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.totalWeight.toFixed(3) }} {{ item.product.short_unit }}</td>
+                <td>S/ {{ item.sale_price.toFixed(2) }}</td>  
+                <td>S/ {{ (item.totalWeight * item.sale_price).toFixed(2) }}</td>
+              </tr>
+            </tbody>
+          </table>
           <li class="list-group-item text-center lead">
             Costo de envio: S/ {{ sale.delivery_price }}
           </li>
           <li class="list-group-item">
-            <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ (totalProducts + sale.delivery_price).toFixed(2) }}</h2>
+            <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ (items.map(e => e.weight * e.sale_price).reduce((a, b) => a + b, 0) + sale.delivery_price).toFixed(2) }}</h2>
           </li>
         </ul>
       </div>
     </div>
-  </div>
-</div>
-<div v-else>
-  <div>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <router-link to="/store" class="btn btn-dark my-3">
-            <feather type="chevron-left"/> 
-            Seguir Comprando
-          </router-link>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h2 class="text-center mb-4">S/ {{ (totalProducts + sale.delivery_price).toFixed(2) }}</h2>
-          <form @submit.prevent="submit" method="post" id="pay" name="pay" >
-            <fieldset>
-              <div class="row form-group">
-                <label for="cardNumber" class="col-md-3 col-form-label">Número de la tarjeta</label>
-                <div class="col">
-                  <input type="text" class="form-control" placeholder="Numero de tarjeta" id="cardNumber" data-checkout="cardNumber" onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" @input="guessPaymentMethod" autocomplete=off required>
-                </div>
-              </div>
-              <div class="row form-group">
-                <label for="cardholderName" class="col-md-3 col-form-label">Nombre y apellido</label>
-                <div class="col">
-                  <input type="text" class="form-control" placeholder="Nombres" id="cardholderName" data-checkout="cardholderName" required>
-                </div>
-              </div>
-              <div class="row form-group">
-                <label for="cardExpirationMonth" class="col-md-3 col-form-label">Mes de vencimiento</label>
-                <div class="col">
-                  <select id="carExpirationMonth" data-checkout="cardExpirationMonth" class="custom-select">
-                    <option v-for="(item, index) in months"  :value="item" :key="index">{{ item }}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="row form-group">
-                <label for="cardExpirationYear" class="col-md-3 col-form-label">Año de vencimiento</label>
-                <div class="col">
-                  <select id="cardExpirationYear" data-checkout="cardExpirationYear" class="custom-select">
-                    <option v-for="(item, index) in years"  :value="item" :key="index">{{ item }}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="row form-group">
-                <label for="securityCode" class="col-md-3 col-form-label">Código de seguridad</label>
-                <div class="col">
-                  <input type="text" class="form-control" placeholder="Codigo de seguridad" id="securityCode" data-checkout="securityCode" onselectstart="return false" onpaste="return false" onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off required>
-                </div>
-              </div>
-              <div class="row form-group">
-                <label for="docType" class="col-md-3 col-form-label">Tipo de documento</label>
-                <div class="col">
-                  <select id="docType" class="custom-select" data-checkout="docType"></select>
-                </div>
-              </div>
-              <div class="row form-group">
-                <label for="docNumber" class="col-md-3 col-form-label">Número de documento</label>
-                <div class="col">
-                  <input type="text" class="form-control" placeholder="Numero de documento" id="docNumber" data-checkout="docNumber" required>
-                </div>
-              </div>
-              <div class="row form-group" hidden>
-                <label for="email" class="col-md-3 col-form-label">Email</label>
-                <div class="col">
-                  <input type="email" class="form-control" id="email" name="email">
-                </div>
-              </div>
-              <input name="transaction_amount" :value="totalProducts + sale.delivery_price" class="form-control" id="transaction_amount" hidden>
-              <input name="payment_method_id" id="payment_method_id" hidden>
-              <input class="form-control" id="token" hidden>
-              <select id="installments" class="form-control" name="installments" hidden>
-                <option value="1">1</option>
-              </select>
-              <div class="row">
-                <div class="col">
-                  <button type="submit" class="btn btn-info float-right">
-                    <feather type="check"/>
-                    Pagar
-                  </button>
-                </div>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </div>
+    <div class="float-right">
+      <router-link to="/store" class="btn bg-white mr-2">
+        <feather type="chevron-left"/> 
+        Ir a la tienda
+      </router-link>
+      <button type="button" class="btn btn-warning cart_buttons" data-toggle="modal" data-target="#checkoutModal" v-if="!sale.payment_id">
+        <feather type='check'/>
+        Pagar ahora
+      </button>
     </div>
   </div>
 </div>
@@ -132,8 +56,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import CustomerModal from '@/components/CustomerModal'
+import CheckoutModal from '@/components/CheckoutPaymentModal'
 
 export default {
+  components: {
+    CustomerModal,
+    CheckoutModal,
+  },
   mounted() {
     this.loadMercadoPago();
     var saleId = this.$route.params.saleId;
@@ -142,15 +72,16 @@ export default {
         console.log(res);
         var sale = res.data.sale;
         this.setSale(sale);
-        this.products = sale.items;
-        sale.items.forEach(item => {
-          console.log(item);
-          this.inventories.push(item);
-          var product = item.product;
-          product.counter = item.counter;
-          console.log(product);
-          this.addProduct(product);
-        });
+        this.items = sale.items;
+        let groupItems = res.data.items;
+        for (const key in groupItems) {
+          if (groupItems.hasOwnProperty(key)) {
+            const element = groupItems[key];
+            let product = element[0];
+            product.totalWeight = element.map(e => e.weight).reduce((a, b) => a + b, 0);
+            this.products.push(product);
+          }
+        }
       });
     } else {
       if (!this.sale.customer_id) {
@@ -184,14 +115,17 @@ export default {
         '10',
         '11',
         '12',
-      ]
+      ],
+      products: [],
+      items: [],
+      groupitems: [],
     }
   },
   computed: {
     ...mapGetters({
       sale: 'sale/getSale',
       totalProducts: 'sale/totalProducts',
-      products: 'sale/products',
+      // products: 'sale/products',
     }),
   },
   methods: {
@@ -200,10 +134,23 @@ export default {
       removeAllProducts: 'sale/removeAllProducts',
       setSale: 'sale/setSale',
     }),
-    submit() {
-      this.$loading(true);
-      let $form = document.querySelector('#pay');
-      Mercadopago.createToken($form, this.sdkResponseHandler.bind(this));
+    successCheckout(data) {
+      // this.$router.replace(`/${data.sale.id}/checkoutDetails`);
+      // axios.get('shoppings/removeAll').catch(err => {
+      //   console.log(err.response);
+      // });
+      // this.removeAllProducts();
+      // console.log(data);
+      // location.reload();
+    },
+    errorCheckout(error) {
+      console.log(data);
+    },
+    submit(sale) {
+      this.setSale(sale);
+      $('.modal').modal('hide');
+      $('#checkoutModal').modal('show');
+      this.$loading(false);
     },
     loadMercadoPago() {
       Mercadopago.getIdentificationTypes();
@@ -254,7 +201,6 @@ export default {
           msg += response.cause[data].code + "-" + response.cause[data].description;
         }
         alert(msg);
-        this.$loading(false);
       } else {
         document.getElementById("token").value = response.id;
         var inventories = [];
@@ -265,59 +211,41 @@ export default {
           var sale = this.sale;
           sale.channel = 'TIENDA VIRTUAL';
           sale.deliver_date = 'true';
-          axios.post('sales/shop', { 
-            inventories, sale,
-            'payment_method_id': document.getElementById('payment_method_id').value,
-            'transaction_amount': document.getElementById('transaction_amount').value,
-            'token': document.getElementById("token").value,
-            'email': sale.email,
-          }).then(res => {
+          axios.post('sales', { inventories, sale }).then(res => {
             console.log(res);
             axios.get('shoppings/removeAll').catch(err => {
               console.log(err.response);
             });
             let sale = res.data.sale;
             this.removeAllProducts();
-            this.$loading(false);
-            console.log(res.data);
-            this.$router.replace(`/${sale.id}/checkoutDetails`);
-            // location.reload();
-            this.$snotify.success('Compra reazalizada correctamente');
-            // axios.post('checkout', {
-            //   'payment_method_id': document.getElementById('payment_method_id').value,
-            //   'transaction_amount': document.getElementById('transaction_amount').value,
-            //   'token': document.getElementById("token").value,
-            //   'email': document.getElementById('email').value,
-            //   sale,
-            // }).then(res => {
-            //   this.$loading(false);
-            //   console.log(res.data);
-            //   this.$router.replace(`/${sale.id}/checkout`);
-            //   location.reload();
-            //   this.$snotify.success('Compra reazalizada correctamente');
-            // }).catch(err => {
-            //   this.$loading(false);
-            //   console.log(err);
-            //   var res = err.response;
-            //   console.log(err.response);
-            //   if (res.data.msg[2]) {
-            //     alert(res.data.msg[0]);
-            //   } else {
-            //     alert(res.data.msg[0]);
-            //     window.location.reload(0)
-            //   }
-            // });
-          }).catch(error => {
-            this.$loading(false);
-            console.log(error);
-            try {
-              alert(error.data.message);
-            } catch (error) {
-              alert('Revise los datos de su tarjeta');
-            }
+            axios.post('checkout', {
+              'payment_method_id': document.getElementById('payment_method_id').value,
+              'transaction_amount': document.getElementById('transaction_amount').value,
+              'token': document.getElementById("token").value,
+              'email': document.getElementById('email').value,
+              sale,
+            }).then(res => {
+              this.$loading(false);
+              console.log(res.data);
+              this.$router.replace(`/${sale.id}/checkout`);
+              location.reload();
+              this.$snotify.success('Compra reazalizada correctamente');
+            }).catch(err => {
+              this.$loading(false);
+              console.log(err);
+              var res = err.response;
+              console.log(err.response);
+              if (res.data.msg[2]) {
+                alert(res.data.msg[0]);
+              } else {
+                alert(res.data.msg[0]);
+                window.location.reload(0)
+              }
+            });
+          }).catch(err => {
+            console.log(err.response);
           });
         } else {
-          this.$loading(false);
           this.$snotify.error('Debe haber almenos un producto disponible');
           $('.modal').modal('hide');
         }
@@ -328,8 +256,11 @@ export default {
 </script>
 
 <style scoped>
+  .container {
+    max-width: 70rem;
+  }
   form {
     /* color: white; */
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 </style>

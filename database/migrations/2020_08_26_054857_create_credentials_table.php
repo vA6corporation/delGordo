@@ -33,6 +33,7 @@ class CreateCredentialsTable extends Migration
             $table->boolean('deliveries')->nullable();
             $table->boolean('paymentMethods')->nullable();
             $table->boolean('deletedReasons')->nullable();
+            $table->boolean('offices')->nullable();
             $table->timestamps();
         });
     }

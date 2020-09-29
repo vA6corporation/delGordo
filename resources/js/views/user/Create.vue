@@ -32,7 +32,7 @@
           </div>
           <div class="row form-group">
             <div class="col">
-              <label for="">Administrador</label>
+              <label for="">Mostrar todos los delivery</label>
               <toggle-button v-model="user.is_admin"/>
             </div>
           </div>

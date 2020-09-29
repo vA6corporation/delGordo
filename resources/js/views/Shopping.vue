@@ -1,16 +1,17 @@
 <template>
 <div>
+  <checkout-modal description="Del Gordo" :transaction-amount="totalProducts + (sale.delivery_price || 0)" :sale="sale" @confirm="successCheckout" @error="errorCheckout"/>
   <customer-modal @confirm="submit"/>
   <div class="row d-sm-block d-md-none">
     <form @submit.prevent="checkDelivery" class="col m-0 p-0">
       <div class="card rounded-0">
-        <!--<div class="card-header border-bottom-0 text-center">
+        <div class="card-header border-bottom-0 text-center">
           Tienes {{ products.length }} Items
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item" v-for="item in products" :key="item.id">
             <div class="form-row">
-              <!-- <div class="col-2">
+              <div class="col-2">
                 <img :src="`/api/products/${item.image_url}`" class="img-fluid" alt="producto">
               </div> 
               <div class="col text-center">
@@ -38,9 +39,9 @@
           </li>  
           <li class="list-group-item">
             <h2 class="text-center font-weight-bold mb-0">Total: S/ {{ totalProducts.toFixed(2) }}</h2>
-          </li>-->
+          </li>
           <li class="list-group-item d-flex">
-            <router-link to="/store" class="btn btn-dark mr-auto">
+            <router-link to="/store" class="btn btn-dark mr-auto" style="background-color: white;">
               <feather type="chevron-left"/> 
               Segir Comprando
             </router-link>
@@ -64,78 +65,48 @@
               <th>Sub Total</th>
             </thead>
             <tbody>
-              <tr>
-                <td style="text-align:center">1</td>
-                <td>Picanha Golden Angus &nbsp;&nbsp; <img style="height: 5vh;" src="https://cdn.shopify.com/s/files/1/2530/7762/products/1218-picanha-whole-choice-angus-0012_f7f24368-21a9-4c42-8ad3-998be4f40d86_1200x.jpg?v=1571713007" alt=""></td>
-                <td>10.5 KG</td>
-                <!--<td>KG</td>-->
+              <tr v-for="(item, index) in products" :key="item.id">
+                <td style="text-align:center">{{ index + 1 }}</td>
+                <td class="text-truncate" style="max-width: 18rem">
+                  <img style="height: 5vh;" :src="`/api/products/${item.image_url}`" alt=""/>
+                  <span class="ml-2">{{ item.name }}</span>
+                </td>
                 <td>
-                  <button type="button" class="btn btn-sm btn-secondary">
+                  <p>
+                    {{ item.counter }} {{ item.short_unit }}
+                  </p>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-secondary" @click="removeP(item)">
                     <feather type="trash-2"/>
                   </button>
-                  <button type="button" class="btn btn-sm btn-secondary">
+                  <button type="button" class="btn btn-sm btn-secondary" @click="minusP(item)">
                     <feather type="minus"/>
                   </button>
-                  <button type="button" class="btn btn-sm btn-secondary">
+                  <button type="button" class="btn btn-sm btn-secondary" @click="plusP(item)">
                     <feather type="plus"/>
                   </button>
                 </td>
-                <td>10.35 KG</td>
-                <!--<td>KG</td>-->
-                <td>S/485.15</td>
-              </tr>
-              <tr>
-                <td style="text-align:center">2</td>
-                <td>Pan Brioche &nbsp;&nbsp; <img style="height: 5vh;" src="https://cdn.shopify.com/s/files/1/2530/7762/products/1218-picanha-whole-choice-angus-0012_f7f24368-21a9-4c42-8ad3-998be4f40d86_1200x.jpg?v=1571713007" alt=""></td>
-                <td>5 UND</td>
-                <!--<td>UND</td>-->
                 <td>
-                  <button type="button" class="btn btn-sm btn-secondary">
-                    <feather type="trash-2"/>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-secondary">
-                    <feather type="minus"/>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-secondary">
-                    <feather type="plus"/>
-                  </button>
+                  <span class="text-success" v-if="checkInventory(item).length">{{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }} {{ item.short_unit }}</span>
+                  <span class="text-danger" v-else>No Disponible</span>
                 </td>
-                <td>5 UND</td>
-                <!--<td>UND</td>-->
-                <td>S/25.00</td>
-              </tr>
-              <tr>
-                <td style="text-align:center">3</td>
-                <td>Vino  Domaine de la Romanée-Conti &nbsp;&nbsp; <img style="height: 5vh;" src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/vinos-mas-caros-del-mundo-screaming-eagle-1560258957.jpg?resize=480:*" alt=""></td>
-                <td>2 BOT</td>
-                <!--<td>BOT</td>-->
                 <td>
-                  <button type="button" class="btn btn-sm btn-secondary">
-                    <feather type="trash-2"/>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-secondary">
-                    <feather type="minus"/>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-secondary">
-                    <feather type="plus"/>
-                  </button>
+                  S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}
                 </td>
-                <td>2 BOT</td>
-                <!--<td>BOT</td>-->
-                <td>S/257.15</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
                   <td colspan="4"></td>
                   <th scope="row">Total:</th>
-                  <td>S/ 785.45</td>
+                  <td>S/ {{ totalProducts.toFixed(2) }}</td>
               </tr>
             </tfoot>
       </table>
     <div class="row">
-      <div class="col d-flex justify-content-between">
-        <router-link to="/store" class="btn btn-dark my-3 cart_buttons">
+      <div class="col d-flex justify-content-end">
+        <router-link to="/store" class="btn my-3 cart_buttons mr-2" style="background-color: white !important">
           <feather type="chevron-left"/> 
           Seguir Comprando
         </router-link>
@@ -152,10 +123,12 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import CustomerModal from '@/components/CustomerModal'
+import CheckoutModal from '@/components/CheckoutModal'
 
 export default {
   components: {
     CustomerModal,
+    CheckoutModal,
   },
   mounted() {
     axios.get('shoppings').then(res => {
@@ -174,6 +147,7 @@ export default {
   },
   data() {
     return {
+      token: process.env.VUE_APP_TOKEN || 'TEST-dd114825-b697-4ce1-9f03-e5fce322b40f',
       delivery: null,
       customer: {},
       deliveries: [],
@@ -181,6 +155,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      sale: 'sale/getSale',
       products: 'sale/products',
       totalProducts: 'sale/totalProducts',
     }),
@@ -216,14 +191,28 @@ export default {
         console.log(err.response);
       });
     },
+    successCheckout(data) {
+      this.$router.replace(`/${data.sale.id}/checkoutDetails`);
+      axios.get('shoppings/removeAll').catch(err => {
+        console.log(err.response);
+      });
+      this.removeAllProducts();
+      console.log(data);
+      location.reload();
+    },
+    errorCheckout(error) {
+      console.log(data);
+    },
     submit(sale) {
       var inventories = [];
       this.products.forEach(item => {
         inventories.push(...this.checkInventory(item));
       });
       if (inventories.length) {
+        console.log('hola mundo');
         this.setSale(sale);
-        this.$router.replace(`/checkout`);
+        $('.modal').modal('hide');
+        $('#checkoutModal').modal('show');
       } else {
         this.$snotify.error('Debe haber almenos un producto disponible');
         $('.modal').modal('hide');

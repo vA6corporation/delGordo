@@ -35,6 +35,6 @@ class SaleNotifyPaymentCustomer extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.saleNotifyCustomer');
+        return $this->view('emails.saleNotifyPaymentCustomer');
     }
 }

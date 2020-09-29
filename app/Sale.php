@@ -49,6 +49,11 @@ class Sale extends Model
       return $this->belongsTo('App\User');
     }
 
+    public function payment()
+    {
+      return $this->belongsTo('App\Payment');
+    }
+
     public function items()
     {
       return $this->hasMany('App\Inventory');

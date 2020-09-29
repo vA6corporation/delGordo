@@ -20,6 +20,15 @@
             </select>
           </div>
         </div>
+        <div class="row form-group" v-if="!sale.payment_id">
+          <label for="" class="col-form-label col-md-3">
+            Adjuntar link de pago
+          </label>
+          <div class="col d-flex align-items-center">
+            <toggle-button v-model='sale.processPayment'></toggle-button>
+            <!-- <input type="text" v-model="customer.reference" class="form-control" placeholder="Referencia de la direccion" required> -->
+          </div>
+        </div>
         <!-- <div class="row form-group">
           <label for="" class="col-form-label col-md-3">
             Estado de pago
@@ -166,10 +175,7 @@ export default {
     },
     submit() {
       this.$loading(true)
-      // if (this.sale.payment_id) {
-      // }
-      // this.sale.deliver_date = 'true';
-      this.sale.processPayment = false;
+      // this.sale.processPayment = false;
       if (this.customer._id) {
         axios.put('customers', { customer: this.customer }).then(res => {
           console.log(res);
@@ -179,7 +185,7 @@ export default {
           sale.delivery_price = this.delivery.price;
           sale.customer_id = customer.id;
           sale.email = customer.email;
-          this.$emit('confirm', sale);
+          this.$emit('confirm', { sale, customer });
           this.customer = {};
           this.sale = {
             processPayment: false,
@@ -197,7 +203,7 @@ export default {
           sale.delivery_price = this.delivery.price;
           sale.customer_id = customer.id;
           sale.email = customer.email;
-          this.$emit('confirm', sale);
+          this.$emit('confirm', { sale, customer });
           this.customer = {};
           this.sale = {
             processPayment: false,

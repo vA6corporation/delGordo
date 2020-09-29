@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,21 +22,32 @@ Route::get('/', function() {
     return view('welcome');
 });
 
+Route::get('/api/{officeId}/setOffice', function($officeId) {
+    session(['officeId' => $officeId]);
+    return ['ok' => true];
+});
+
 Route::get('/api/products/withInventory', 'ProductController@withInventory');
 Route::post('/api/products/image', 'ProductController@storeImage');
 Route::get('/api/products/images/{id}', 'ProductController@getImage');
 Route::get('/api/customers/byDni', 'CustomerController@byDni');
 Route::get('/api/shoppings/removeAll', 'ShoppingController@removeAll');
 Route::get('/api/products/{id}/inventoryAll', 'ProductController@inventoryAll');
+
+Route::get('/api/products/{key}/search', 'ProductController@search');
+
 Route::get('/api/sales/{id}/delivery', 'SaleController@delivery');
+Route::get('/api/sales/all', 'SaleController@all');
 Route::get('/api/sales/{id}/dispatched', 'SaleController@dispatched');
 Route::post('/api/sales/deleteSale', 'SaleController@deleteSale');
 Route::post('/api/sales/shop', 'SaleController@shop');
-Route::get('/api/products/{key}/search', 'ProductController@search');
+Route::post('/api/sales/shopPayment', 'SaleController@shopPayment');
 Route::get('/api/sales/find', 'SaleController@find');
+Route::put('/api/sales/{id}/withInventory', 'SaleController@updateWithInventory');
 Route::put('/api/sales/pay', 'SaleController@pay');
 Route::get('/api/sales/dispatchedSales', 'SaleController@dispatchedSales');
 Route::get('/api/sales/deliverySales', 'SaleController@deliverySales');
+
 Route::get('/api/products/all', 'ProductController@all');
 Route::get('/api/deletedReasons/all', 'DeletedReasonController@all');
 Route::get('/api/users/session', 'UserController@session');
@@ -43,6 +55,7 @@ Route::get('/api/customers/{dni}/dni', 'CustomerController@getDni');
 Route::get('/api/users/dealers', 'UserController@dealers');
 
 Route::apiResources([
+    'api/offices' => 'OfficeController',
     'api/deliveryman' => 'DeliverymanController',
     'api/credentials' => 'CredentialController',
     'api/users' => 'UserController',

@@ -28,6 +28,7 @@ Vue.mixin({
                 { unitCode: 'BG', name: 'BOLSAS' },
                 { unitCode: 'BO', name: 'BOTELLAS' },
                 { unitCode: 'BX', name: 'CAJAS' },
+                { unitCode: 'PK', name: 'PAQUETES' },
             ],
         }
     },

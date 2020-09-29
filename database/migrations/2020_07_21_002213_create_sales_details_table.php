@@ -17,6 +17,7 @@ class CreateSalesDetailsTable extends Migration
             $table->id();
             $table->integer('product_id');
             $table->integer('sale_id');
+            $table->integer('office_id');
             $table->timestamps();
         });
     }

@@ -17,6 +17,7 @@ export const modules = {
       { label: 'Despacho', name: 'dispatchedsSale', path: '/sales/dispatcheds', icon: 'map-pin' },
       { label: 'Delivery', name: 'deliveriesSale', path: '/sales/deliveries', icon: 'map-pin' },
       { label: 'Usuarios', name: 'users', path: '/users', icon: 'users' },
+      { label: 'Sucursales', name: 'offices', path: '/offices', icon: 'home' },
       // { label: 'Repartidores', name: 'deliveryman', path: '/deliveryman', icon: 'user-check' },
       { label: 'L. de envio', name: 'deliveries', path: '/deliveries', icon: 'map-pin' },
       { label: 'M. de pago', name: 'paymentMethods', path: '/paymentMethods', icon: 'map-pin' },

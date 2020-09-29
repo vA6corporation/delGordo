@@ -5,6 +5,26 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/offices',
+    name: 'offices',
+    component: require('@/views/office/Offices').default
+  },
+  {
+    path: '/offices/create',
+    name: 'offices',
+    component: require('@/views/office/Create').default
+  },
+  {
+    path: '/offices/:officeId/edit',
+    name: 'offices',
+    component: require('@/views/office/Edit').default
+  },
+  {
+    path: '/setOffice',
+    name: 'offices',
+    component: require('@/views/office/SetOffice').default
+  },
+  {
     path: '/deliveryman',
     name: 'deliveryman',
     component: require('@/views/deliveryman/Deliveryman').default
@@ -164,6 +184,10 @@ const routes = [
   {
     path: '/sales/:saleId/details',
     component: require('@/views/sale/Details').default
+  },
+  {
+    path: '/sales/:saleId/edit',
+    component: require('@/views/sale/PosAdmin').default
   },
   {
     path: '/sales/deliveries',

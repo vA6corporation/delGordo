@@ -99,11 +99,9 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                       <router-link :to="{ path: `/sales/${item.id}/details` }" class="dropdown-item">Detalles</router-link>
-                      <!-- <a href="#" class="dropdown-item" @click.prevent="payedSale(item)">Marcar Pago</a> -->
-                      <a href="#" class="dropdown-item" @click.prevent="deliveredSale(item)">Marcar Despacho</a>
                       <a href="#" class="dropdown-item" data-toggle='modal' data-target='#deliverymanModal' @click.prevent="sale = item">Asignar Repartidor</a>
+                      <a href="#" class="dropdown-item" @click.prevent="deliveredSale(item)">Marcar Despacho</a>
                       <a :href="`https://wa.me/51${item.customer.mobile}`" target='_blank' class="dropdown-item">WhatsApp</a>
-                      <!-- <a href="#" class="dropdown-item" data-toggle="modal" data-target="#deleteModal" @click.prevent="sale = item">Anular</a>                     -->
                     </div>
                   </div>
                 </td>
@@ -247,6 +245,9 @@ export default {
       });
     },
     deliveredSale(sale) {
+      if (!sale.deliveryman_id) {
+        return this.$snotify.error('Primero seleccione un repartidor');
+      }
       axios.get(`sales/${sale.id}/dispatched`).then(res => {
         this.$snotify.success('La venta a sido despachada');
         console.log(res);

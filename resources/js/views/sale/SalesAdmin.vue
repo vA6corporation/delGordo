@@ -51,9 +51,13 @@
                 <feather type="download"/>
                 Desc Excel 1
               </button>
-              <button type="button" @click="downloadExcel2" class="btn btn-info">
+              <button type="button" @click="downloadExcel2" class="btn btn-info mr-2">
                 <feather type="download"/>
                 Desc Excel 2
+              </button>
+              <button type="button" @click="clearFilters" class="btn btn-info">
+                <feather type="x"/>
+                Limpiar Filtros
               </button>
             </div>
           </div>
@@ -96,8 +100,9 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                       <router-link :to="{ path: `/sales/${item.id}/details` }" class="dropdown-item">Detalles</router-link>
+                      <router-link :to="{ path: `/sales/${item.id}/edit` }" class="dropdown-item">Editar</router-link>
                       <a href="#" class="dropdown-item" data-toggle="modal" data-target="#paymentSaleModal" @click.prevent="sale = item">Marcar Pago</a>
-                      <a href="#" class="dropdown-item" @click.prevent="deliverSale(item)">Marcar Contra entrega</a>
+                      <a href="#" class="dropdown-item" @click.prevent="deliverSale(item)">Enviar a despacho</a>
                       <!-- <a href="#" class="dropdown-item" @click.prevent="deliveredSale(item)">Marcar Entrega</a> -->
                       <a href="#" class="dropdown-item" data-toggle="modal" data-target="#deleteModal" @click.prevent="sale = item">Anular</a>                    </div>
                   </div>
@@ -145,6 +150,12 @@ export default {
     }
   },
   methods: {
+    clearFilters() {
+      this.deleted = null;
+      this.payed = null;
+      this.delivered = null;
+      this.fetchData();
+    },
     async downloadExcel() {
       var wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
       var params = { 
@@ -159,67 +170,75 @@ export default {
       console.log(inventories);
       var body = [];
       body.push([
-        'FECHA',
-        'HORA',
-        'LOTE',
+        'ORDEN',
+        'FECHA Y HORA',
+        'COD. DE VENTA',
         'DNI CLIENTE',
         'CLIENTE',
         'DISTRITO',
-        'CODIGO DE PRODUCTO',
-        'PRODUCTO',
-        // 'EMPAQUE',
-        'PESO',
         'CATEGORIA',
-        'SUBCATEGORIA',
-        'VALOR',
-        'CODIGO DE VENTA',
-        'CANAL',
+        'PRODUCTO',
+        'CODIGO DE EMPAQUE',
+        'PESO DE EMPAQUE',
+        'PRECIO DE EMPAQUE',
+        'CANAL DE VENTA',
       ]);
-      inventories.forEach(item => {
+      inventories.forEach((item, index) => {
         var customer = item.sale.customer;
         var delivery = item.sale.delivery;
         var category = item.product.category;
         var subCategory = item.product.sub_category;
         console.log(customer);
         body.push([
-          this.formatDate(item.created_at),
-          this.formatTime(item.created_at),
-          item.codigo,
+          index + 1,
+          `${this.formatDate(item.created_at)} ${this.formatTime(item.created_at)}`,
+          this.formatCode(item.sale.id),
           customer.document,
           customer.name,
-          delivery.name,
-          this.formatCode(item.product.id),
+          delivery ? delivery.name : null,
+          item.product.category.name,
           item.product.name,
+          item.codigo,
           item.weight,
-          // item.product.category,
-          category.name,
-          subCategory.name,
           item.sale_price * item.weight,
-          this.formatCode(item.sale.id),
           item.sale.channel
         ]);
       });
       var name = `Ventas_desde_${this.formatDate(this.sd)}_hasta_${this.formatDate(this.ed)}`;
       this.getExcel(body, name, [], wscols);
     },
-    downloadExcel2() {
+    async downloadExcel2() {
       var wscols = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
       var body = [];
       body.push([
-        'FECHA',
-        'HORA',
+        'ORDEN',
+        'FECHA Y HORA',
+        // 'HORA',
+        'COD. DE VENTA',
         'DNI CLIENTE',
         'CLIENTE',
         'DISTRITO',
-        'VALOR DE VENTA',
-        'VALOR DE DELIVERY',
-        'MONTO PAGADO',
-        'CANAL DE VENTA'
+        'PRECIO DELIVERY',
+        'PRECIO VENTA',
+        'PRECIO TOTAL',
+        'CANAL DE VENTA',
+        'AUTOR DE VENTA',
+        'ENCARGADO DE DELIVERY',
       ]);
-      this.sales.forEach(item => {
+      let params = { 
+        // page: this.page,
+        sd: this.sd,
+        ed: this.ed,
+        payed: this.payed,
+        deleted: this.deleted,
+        delivered: this.delivered,
+      };
+      let sales = await axios.get('sales/all', { params }).then(res => res.data.sales);
+      sales.forEach((item, index) => {
         body.push([
-          this.formatDate(item.created_at),
-          this.formatTime(item.created_at),
+          index + 1,
+          `${this.formatDate(item.created_at)} / ${this.formatTime(item.created_at)}`,
+          this.formatCode(item.id),
           item.customer.document,
           item.customer.name,
           item.delivery.name,
@@ -227,6 +246,8 @@ export default {
           item.delivery_price,
           item.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0) + item.delivery_price,
           item.channel,
+          item.user ? item.user.name : 'TIENDA VIRTUAL',
+          item.deliveryman ? item.deliveryman.name : 'SIN DEFINIR',
         ]);
       });
       var name = `Ventas_desde_${this.formatDate(this.sd)}_hasta_${this.formatDate(this.ed)}`;

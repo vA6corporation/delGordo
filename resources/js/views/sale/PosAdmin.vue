@@ -9,12 +9,16 @@
     </div>
     <div class="form-row">
       <div class="col">
-        <div class="card">
+        <div class="card mb-3">
           <div class="card-header py-2">
             <div class="d-flex justify-content-between">
-              <h3 class="card-title mb-0">Punto de Venta</h3>
+              <h3 class="card-title mb-0">Punto de Venta (Editar Venta)</h3>
               <div class="btn-toolbar">
-                <button type="button" data-toggle="modal" data-target="#posModal" class="btn btn-info" to="/deliveries/create">
+                <!-- <button type="button" data-toggle="modal" data-target="#posModal" class="btn btn-info" to="/deliveries/create">
+                  <feather type="save"/>
+                  Guardar
+                </button> -->
+                <button type="button" class="btn btn-info" @click="submit">
                   <feather type="save"/>
                   Guardar
                 </button>
@@ -31,7 +35,7 @@
                   <br>
                 </div>
                 <div class="align-items-center">
-                  <span class="mr-2">{{ item.counter.toFixed(3) }} Kg - Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }}Kg - Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</span>
+                  <span class="mr-2">{{ item.counter }} Kg - Disponible: {{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }}Kg - Total: S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}</span>
                   <br>
                   <div class="btn-group float-right">
                     <button type="button" class="btn btn-secondary" data-toggle="collapse" :data-target="`#inventoryCollapse${productIndex}`">
@@ -50,10 +54,6 @@
                 </div>
               </div>
               <div class="collapse pt-3" :id="`inventoryCollapse${productIndex}`">
-                <select v-model="orderBy" class="custom-select">
-                  <option value="date">ORDENAR MAS ANTIGUO</option>
-                  <option value="peso">ORDENAR MAS PESO</option>
-                </select>
                 <table class="table w-100">
                   <thead>
                     <th>Codigo</th>
@@ -62,12 +62,12 @@
                     <th>Incluido</th>
                   </thead>
                   <tbody>
-                    <tr v-for="inventory in orderProducts(item.inventory)" :key="inventory.id">
+                    <tr v-for="inventory in item.inventory" :key="inventory.id">
                       <td>{{ inventory.codigo }}</td>
                       <td>{{ inventory.weight.toFixed(3) }}</td>
                       <td>{{ formatDate(inventory.created_at) }}</td>
                       <td>
-                        <toggle-button :value='item.picked.includes(e => e == e.id == inventory.id)' @change="pick(item, inventory)"></toggle-button>
+                        <toggle-button :value='item.picked.find(e => e.id == inventory.id)' @change="pick(item, inventory)"></toggle-button>
                       </td>
                     </tr>
                   </tbody>
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import PosModal from '@/components/PosModal'
+import PosModal from '@/components/PosAdminModal'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -113,10 +113,12 @@ export default {
   },
   data() {
     return {
-      orderBy: 'date',
       key: '',
       deliveries: [],
       productsPane: [],
+      preProducts: [],
+      sale: {},
+      items: [],
     }
   },
   computed: {
@@ -128,35 +130,10 @@ export default {
     ...mapActions({
       addProduct: 'sale/addProduct',
       plusProduct: 'sale/plusProduct',
-      minusProduct: 'sale/minusProduct',
       removeProduct: 'sale/removeProduct',
       removeAllProducts: 'sale/removeAllProducts',
+      minusProduct: 'sale/minusProduct',
     }),
-    orderProducts(products) {
-      let items = JSON.parse(JSON.stringify(products));
-      switch (this.orderBy) {
-        case 'date':
-          return items.sort((a, b) => {
-            if (a.created_at > b.created_at) {
-              return 1;
-            }
-            if (a.created_at < b.created_at) {
-              return -1;
-            }
-            return 0;
-          });
-        case 'peso':
-          return items.sort((a, b) => {
-            if (a.weight < b.weight) {
-              return 1;
-            }
-            if (a.weight > b.weight) {
-              return -1;
-            }
-            return 0;
-          }); 
-      }
-    },
     pick(product, inventory) {
       let index = product.picked.findIndex(e => e.id == inventory.id);
       console.log(index);
@@ -166,31 +143,29 @@ export default {
         product.picked.push(inventory);
       }
     },
-    submit({ sale, customer }) {
+    submit(sale) {
       var inventories = [];
       this.products.forEach(item => {
         inventories.push(...this.checkInventory(item));
       });
-      if (inventories.length) {
-        sale.channel = 'PUNTO DE VENTA';
-        axios.post('sales', { sale, inventories, email: sale.email, processPayment: sale.processPayment }).then(res => {
-          console.log(res);
-          this.$loading(false);
-          this.$snotify.success('Venta registrada correctamente');
-          this.productsPane = [];
-          this.removeAllProducts();
-          let sale = res.data.sale;
-          console.log(customer);
-          console.log(sale);
-          location.replace(`https://wa.me/51${customer.mobile}?text=Hola,%20le%20envio%20los%20detalles%20de%20su%20compra%20en%20DelGordo%20-%20Carnes%20Premium:%20delgordo.com.pe/${sale.id}/checkoutDetails`);
-        }).catch(error => {
-          this.productsPane = [];
-          console.log(error.response);
-        });
-      } else {
+      axios.put(`sales/${this.sale.id}/withInventory`, { 
+        sale, 
+        inventories,
+        preInventories: this.items,
+      }).then(res => {
+        console.log(res);
         this.$loading(false);
-        this.$snotify.error('Es necesario al menos un producto');
-      }
+        this.$snotify.success('Se han guardado los cambios');
+        this.productsPane = [];
+      }).catch(error => {
+        this.productsPane = [];
+        console.log(error.response);
+      });
+      // if (inventories.length) {
+      // } else {
+      //   this.$loading(false);
+      //   this.$snotify.error('Es necesario al menos un producto');
+      // }
     },
     searchProducts() {
       axios.get(`products/${this.key}/search`).then(res => {
@@ -204,8 +179,29 @@ export default {
     },
     fetchData() {
       this.productsPane = [];
-      // this.products = [];
       this.removeAllProducts();
+      let saleId = this.$route.params.saleId;
+      axios.get(`sales/${saleId}`).then(async res => {
+        console.log(res);
+        let sale = res.data.sale;
+        this.sale = sale;
+        this.items = res.data.items;
+        this.preProducts = sale.items;
+        let groupItems = res.data.items;
+        for (const key in groupItems) {
+          if (groupItems.hasOwnProperty(key)) {
+            const element = groupItems[key];
+            let productId = element[0].product_id;
+            console.log(productId);
+            let product = await axios.get(`products/${productId}`).then(res => res.data.product);
+            product.inventory.push(...element);
+            product.picked = JSON.parse(JSON.stringify(element));
+            product.counter = 0;
+            console.log(product);
+            this.products.push(product);
+          }
+        }
+      });
       axios.get('deliveries').then(res => {
         console.log(res.data);
         this.deliveries = res.data.deliveries;

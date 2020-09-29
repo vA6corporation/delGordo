@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use App\Office;
 
 use Illuminate\Http\Request;
 
@@ -18,8 +19,18 @@ class UserController extends Controller
     public function session() {
         $user = Auth::user();
         $user = User::with('credentials')->find($user->id);
-        return ['user' => $user];
+        $officeId = session('officeId');
+        $office = Office::find($officeId);
+        return [
+            'user' => $user,
+            'office' => $office,
+            'credentials' => $user->credentials,
+        ];
     }
+
+    // public function setOffice($officeId) {
+    //     session(['officeId' => $officeId]);
+    // }
 
     public function index()
     {

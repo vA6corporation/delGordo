@@ -132,7 +132,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      // currentModule: 'modules/currentModule',      
       user: 'user/user',
     }),
   },
@@ -226,22 +225,22 @@ export default {
     },
     async prePayment(sale) {
       this.sale = sale;
-      console.log(sale.payment_id);
       if (sale.payment_id) {
         var ok = confirm('Esta seguro de marcar la entrega');
         if (ok) {
           await axios.get(`sales/${sale.id}/delivery`);
           this.fetchData();
+          this.$snotify.success('La venta a sido entregada correctamente');
         }
       } else {
         $('#paymentSaleModal').modal('show');
       }
-      this.$snotify.success('La venta a sido entregada correctamente');
     },
     payedSale(sale) {
       axios.put(`sales/pay`, { sale }).then(res => {
         console.log(res);
         this.fetchData();
+        this.$snotify.success('La venta a sido entregada correctamente');
       }).catch(err => {
         console.log(err.response);
       });
@@ -282,7 +281,7 @@ export default {
         setTimeout(() => {
           let sales = res.data.sales;
           console.log(this.user);
-          if (this.user.isAdmin) {
+          if (this.user.is_admin) {
             sales = sales;
           } else {
             sales = sales.filter(e => e.deliveryman_id == this.user.id);

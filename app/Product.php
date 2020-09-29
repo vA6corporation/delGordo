@@ -89,7 +89,10 @@ class Product extends Model
     }
 
     public function inventory() {
-      return $this->hasMany('App\Inventory')->where('sale_id', NULL)->orderBy('weight', 'desc');
+      return $this->hasMany('App\Inventory')->where([
+        'sale_id' => NULL,
+        'office_id' => session('officeId'),
+      ])->orderBy('weight', 'desc');
     }
 
     public function inventoryAll() {

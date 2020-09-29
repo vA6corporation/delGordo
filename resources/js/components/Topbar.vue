@@ -9,7 +9,7 @@
             <span class="navbar-toggler-bar bar3"></span>
           </button>
         </div>
-        <a class="navbar-brand" href="#">{{ currentModule.label }}</a>
+        <a class="navbar-brand" href="#">{{ (office || {}).name }}</a>
       </div>
       <div>
         <ul class="ml-auto">
@@ -31,6 +31,9 @@
               <li class="nav-link">
                 <a href="#" class="nav-item dropdown-item">Ajustes</a>
               </li>
+              <li class="nav-link">
+                <router-link class="nav-item dropdown-item" @click.native="fetchOffice(null)" to="/setOffice">Cambiar Sucursal</router-link>
+              </li>
               <li class="dropdown-divider"></li>
               <li class="nav-link">
                 <a href="#" class="nav-item dropdown-item" @click.prevent="logout">Salir</a>
@@ -44,16 +47,20 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
     ...mapGetters({
+      office: 'system/office',
       currentModule: 'modules/currentModule',      
       user: 'user/user',
     }),
   },
   methods: {
+    ...mapActions({
+      fetchOffice: 'system/fetchOffice',
+    }),
     logout() {
       this.$router.replace('/login');
       axios.post('logout').then(res => {
