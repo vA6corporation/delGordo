@@ -13,8 +13,9 @@ class Sale extends Model
         'user_id',
         'customer_id',
         'dispatched_date',
-        'deliver_date',
-        'delivered_date',
+        'delivery_date', // Fecha programada de entrega
+        'deliver_date', // Fecha aprobada para la entrega
+        'delivered_date', // Fecha entregada
         'deleted_reason_id',
         'delivery_price',
         'delivery_id',

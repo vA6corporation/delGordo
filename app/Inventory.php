@@ -18,6 +18,10 @@ class Inventory extends Model
         'delivered_date',
     ];
 
+    protected $attributes = [
+      'office_id' => 1,
+    ];
+
     protected $casts = [
       'sale_price' => 'double',
       'weight' => 'double',

@@ -29,6 +29,16 @@
             <!-- <input type="text" v-model="customer.reference" class="form-control" placeholder="Referencia de la direccion" required> -->
           </div>
         </div>
+        <div class="row form-group">
+          <label for="" class="col-form-label col-md-3">
+            Fecha de envio
+          </label>
+          <div class="col d-flex align-items-center">
+            <datepicker v-model="sale.delivery_date" append="F. de entrega"/>
+            <!-- <toggle-button v-model='sale.processPayment'></toggle-button> -->
+            <!-- <input type="text" v-model="customer.reference" class="form-control" placeholder="Referencia de la direccion" required> -->
+          </div>
+        </div>
         <!-- <div class="row form-group">
           <label for="" class="col-form-label col-md-3">
             Estado de pago
@@ -100,7 +110,7 @@
             Email del cliente
           </label>
           <div class="col">
-            <input type="text" v-model="customer.email" class="form-control" placeholder="Email del cliente" required>
+            <input type="email" v-model="customer.email" class="form-control" placeholder="Email del cliente" required>
           </div>
         </div>
         <div class="row form-group">
@@ -144,6 +154,7 @@ export default {
       paymentMethods: [],
       currentDate: new Date,
       sale: {
+        delivery_date: new Date(),
         processPayment: false,
         deliver_date: null,
         payment_id: null,

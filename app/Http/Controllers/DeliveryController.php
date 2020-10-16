@@ -23,6 +23,14 @@ class DeliveryController extends Controller
         ];
     }
 
+    public function all()
+    {
+        $deliveries = Delivery::all();
+        return [
+            'deliveries' => $deliveries,
+        ];
+    }
+
     /**
      * Store a newly created resource in storage.
      *

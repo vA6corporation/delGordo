@@ -73,6 +73,7 @@
               <th>Codigo</th>
               <th>Distrito</th>
               <th>T. de Venta</th>
+              <th>F. de Entrega</th>
               <th>Pagado</th>
               <th>Entrega</th>
               <th>Anulado</th>
@@ -85,6 +86,7 @@
                 <td>{{ formatCode(item.id) }}</td>
                 <td>{{ item.delivery.name }}</td>
                 <td>S/ {{ (item.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0) + item.delivery_price).toFixed(2) }}</td>
+                <td>{{ formatDate(item.delivery_date) }}</td>
                 <td v-if="item.payment_id">Pagado</td>
                 <td v-else>Pendiente</td>
                 <td v-if="item.delivered_date">Entregado</td>

@@ -20,6 +20,7 @@ class CreateSalesTable extends Migration
             $table->integer('office_id');
             $table->string('channel');
             $table->date('dispatched_date')->nullable();
+            $table->date('delivery_date')->nullable();
             $table->date('deliver_date')->nullable();
             $table->date('delivered_date')->nullable();
             $table->date('deleted_reason_id')->nullable();

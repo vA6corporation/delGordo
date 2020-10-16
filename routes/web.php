@@ -54,6 +54,8 @@ Route::get('/api/users/session', 'UserController@session');
 Route::get('/api/customers/{dni}/dni', 'CustomerController@getDni');
 Route::get('/api/users/dealers', 'UserController@dealers');
 
+Route::get('/api/deliveries/all', 'DeliveryController@all');
+
 Route::apiResources([
     'api/offices' => 'OfficeController',
     'api/deliveryman' => 'DeliverymanController',
@@ -107,4 +109,3 @@ Route::get('/shopping', function () {
 Route::get('{any}', function () {
     return view('app');
 })->where('any', '.*');
-  

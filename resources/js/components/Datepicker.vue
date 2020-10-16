@@ -85,7 +85,10 @@ export default {
       type: null,
     }, 
     placeholder: String, 
-    disabled: null, 
+    disabled: { 
+      type: Boolean, 
+      default: false, 
+    }, 
     required: Boolean, 
     append: String, 
   },
@@ -198,5 +201,10 @@ export default {
 .unselectable:hover { 
   background-color: #6cb2eb;
   cursor: pointer;
+}
+
+.form-control[readonly] {
+    background-color: #ffffff;
+    opacity: 1;
 }
 </style>
