@@ -64,7 +64,8 @@
               <page-navigation v-model="page" :pages="pages" :count="count" :items="sales.length" @confirm="fetchData"/>
             </caption>
             <thead>
-              <th>F/H de venta</th>
+              <th>F/H de Entrega</th>
+              <th>F/H de despacho</th>
               <th>Cliente</th>
               <th>Codigo</th>
               <th>Distrito</th>
@@ -77,7 +78,9 @@
             </thead>
             <tbody>
               <tr v-for="item in sales" :key='item.id'>
-                <td>{{ formatDate(item.created_at) }} / {{ formatTime(item.created_at) }}</td>
+                <td>{{ formatDate(item.delivery_date) }} / {{ formatTime(item.delivery_date) }}</td>
+                <td v-if="item.dispatched_date">{{ formatDate(item.dispatched_date) }} / {{ formatTime(item.dispatched_date) }}</td>
+                <td v-else class="text-muted">Sin despacho</td>
                 <td>{{ item.customer.name }}</td>
                 <td>{{ formatCode(item.id) }}</td>
                 <td>{{ item.delivery.name }}</td>

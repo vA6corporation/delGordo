@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="submit" class="row">
+    <move-modal :inventory="inventory" @confirm="fetchData"></move-modal>
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
@@ -13,6 +14,7 @@
               <th>Vendido</th>
               <th>Entrega</th>
               <th>F. Ingreso</th>
+              <th></th>
             </thead>
             <tbody>
               <tr v-for='(item, index) in product.inventory_all' :key="index">
@@ -23,28 +25,20 @@
                 <td v-if="item.delivered_date">Si</td>
                 <td v-else>No</td>
                 <td>{{ formatDate(item.created_at) }}</td>
+                <td>
+                  <div class="btn-toolbar">
+                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <feather type="more-vertical"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <a href="#" class="dropdown-item" data-toggle="modal" data-target="#moveModal" @click="inventory = item">Mover de Sucursal</a>
+                    </div>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <!-- <ul class="list-group list-group-flush">
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Peso</span>
-            <span>Codigo</span>
-            <span>Vendido</span>
-            <span>Entrega</span>
-            <span>F. Ingreso</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between" v-for="(item, index) in product.inventory_all" :key="index">
-            <span>{{ item.weight.toFixed(2) }} Kg</span>
-            <span>{{ item.codigo }}</span>
-            <span v-if="item.sale_id">Si</span>
-            <span v-else>No</span>
-            <span v-if="item.delivered_date">Si</span>
-            <span v-else>No</span>
-            <span>{{ formatDate(item.created_at) }}</span>
-          </li>
-        </ul> -->
       </div>
     </div>
     <div class="col">
@@ -76,7 +70,12 @@
 </template>
 
 <script>
+import MoveModal from '@/components/MoveModal'
+
 export default {
+  components: {
+    MoveModal
+  },
   mounted() {
     this.inventories.push(Object.assign({}, this.inventory));
     this.fetchData();

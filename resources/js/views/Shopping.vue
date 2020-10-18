@@ -56,54 +56,54 @@
   </div>
   <div id="table_shopping" class="container d-none d-md-block">
     <table class='table' style="background-color: white; margin-top: 5vh;">
-            <thead style="background-color:rgb(245, 166, 35)">
-              <th style="text-align:center">#</th>
-              <th>Producto Solicitado</th>
-              <th colspan="1"> Solicitado</th>
-              <th>Modificar Cantidad</th>
-              <th colspan="1"> A Despachar</th>
-              <th>Sub Total</th>
-            </thead>
-            <tbody>
-              <tr v-for="(item, index) in products" :key="item.id">
-                <td style="text-align:center">{{ index + 1 }}</td>
-                <td class="text-truncate" style="max-width: 18rem">
-                  <img style="height: 5vh;" :src="`/api/products/${item.image_url}`" alt=""/>
-                  <span class="ml-2">{{ item.name }}</span>
-                </td>
-                <td>
-                  <p>
-                    {{ item.counter }} {{ item.short_unit }}
-                  </p>
-                </td>
-                <td>
-                  <button type="button" class="btn btn-sm btn-secondary" @click="removeP(item)">
-                    <feather type="trash-2"/>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-secondary" @click="minusP(item)">
-                    <feather type="minus"/>
-                  </button>
-                  <button type="button" class="btn btn-sm btn-secondary" @click="plusP(item)">
-                    <feather type="plus"/>
-                  </button>
-                </td>
-                <td>
-                  <span class="text-success" v-if="checkInventory(item).length">{{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }} {{ item.short_unit }}</span>
-                  <span class="text-danger" v-else>No Disponible</span>
-                </td>
-                <td>
-                  S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                  <td colspan="4"></td>
-                  <th scope="row">Total:</th>
-                  <td>S/ {{ totalProducts.toFixed(2) }}</td>
-              </tr>
-            </tfoot>
-      </table>
+      <thead style="background-color:rgb(245, 166, 35)">
+        <th style="text-align:center">#</th>
+        <th>Producto Solicitado</th>
+        <th colspan="1"> Solicitado</th>
+        <th>Modificar Cantidad</th>
+        <th colspan="1"> A Despachar</th>
+        <th>Sub Total</th>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in products" :key="item.id">
+          <td style="text-align:center">{{ index + 1 }}</td>
+          <td class="text-truncate" style="max-width: 18rem">
+            <img style="height: 5vh;" :src="`/api/products/${item.image_url}`" alt=""/>
+            <span class="ml-2">{{ item.name }}</span>
+          </td>
+          <td>
+            <p>
+              {{ item.counter }} {{ item.short_unit }}
+            </p>
+          </td>
+          <td>
+            <button type="button" class="btn btn-sm btn-secondary" @click="removeP(item)">
+              <feather type="trash-2"/>
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" @click="minusP(item)">
+              <feather type="minus"/>
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary" @click="plusP(item)">
+              <feather type="plus"/>
+            </button>
+          </td>
+          <td>
+            <span class="text-success" v-if="checkInventory(item).length">{{ checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0).toFixed(3) }} {{ item.short_unit }}</span>
+            <span class="text-danger" v-else>No Disponible</span>
+          </td>
+          <td>
+            S/ {{ (checkInventory(item).map(e => e.weight).reduce((a, b) => a + b, 0) * item.sale_price).toFixed(2) }}
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4"></td>
+          <th scope="row">Total:</th>
+          <td>S/ {{ totalProducts.toFixed(2) }}</td>
+        </tr>
+      </tfoot>
+    </table>
     <div class="row">
       <div class="col d-flex justify-content-end">
         <router-link to="/store" class="btn my-3 cart_buttons mr-2" style="background-color: white !important">
@@ -140,6 +140,8 @@ export default {
         if (product) {
           product.counter = item.counter;
           console.log(product);
+          product.inventory = product.inventory_shop;
+          // product.inventory = product.inventory_all.filter(e => e.office_id == 1);
           this.addProduct(product);
         }
       });

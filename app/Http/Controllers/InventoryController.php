@@ -73,7 +73,10 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $inventory = Inventory::find($id);
+        $inventory->fill($request->inventory);
+        $inventory->save();
+        return ['inventory' => $inventory];
     }
 
     /**

@@ -114,6 +114,7 @@ export default {
   },
   data() {
     return {
+      disableds: [],
       products: [],
       categories: [],
       category_id: null,
@@ -243,9 +244,13 @@ export default {
           }
         });
       });
-      axios.get('products/all').then(res => {
+      axios.get('disableds/shop').then(res => {
         console.log(res);
-        this.products = res.data.products;
+        this.disableds = res.data.disableds;
+        axios.get('products/all').then(res => {
+          console.log(res);
+          this.products = res.data.products.filter(item => !this.disableds.find(e => e.product_id == item.id));
+        });
       });
     }
   }

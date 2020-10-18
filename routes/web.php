@@ -55,8 +55,10 @@ Route::get('/api/customers/{dni}/dni', 'CustomerController@getDni');
 Route::get('/api/users/dealers', 'UserController@dealers');
 
 Route::get('/api/deliveries/all', 'DeliveryController@all');
+Route::get('/api/disableds/shop', 'DisabledController@shop');
 
 Route::apiResources([
+    'api/disableds' => 'DisabledController',
     'api/offices' => 'OfficeController',
     'api/deliveryman' => 'DeliverymanController',
     'api/credentials' => 'CredentialController',

@@ -11,7 +11,7 @@
       <div class="modal-body">
         <div class="row">
           <div class="col">
-            <select v-model="localSale.payment_method_id" class="custom-select" required>
+            <select v-model="localSale.payment_method_id" class="custom-select">
               <option :value="null">SELECCIONE UN METODO DE PAGO...</option>
               <option v-for="item in paymentMethods" :value="item.name" :key="item.id">{{ item.name }}</option>
             </select>

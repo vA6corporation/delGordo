@@ -112,9 +112,10 @@ class SaleController extends Controller
         $ed = (new DateTime($request->ed))->modify('+1 day')->format('Y-m-d');
         $query = Sale::withTrashed()
             ->with('customer', 'items', 'delivery', 'deliveryman')
-            ->whereBetween('created_at', [$sd, $ed]);
+            ->whereBetween('delivery_date', [$sd, $ed]);
         $query->whereNotNull('deliver_date');
         $query->whereNull('delivered_date');
+        $query->orderBy('delivery_date');
         $sales = $query->paginate(18);
         return [
             'sales' => $sales->items(),
@@ -149,7 +150,7 @@ class SaleController extends Controller
         $sales = Sale::withTrashed()
             ->whereIn('customer_id', $customers)
             ->orWhere('id', $key)
-            ->with('customer', 'items')
+            ->with('customer', 'items', 'delivery')
             ->get();
         return ['sales' => $sales];
     }

@@ -10,6 +10,7 @@ class Inventory extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'office_id',
         'sale_id',
         'product_id',
         'weight',
@@ -18,9 +19,9 @@ class Inventory extends Model
         'delivered_date',
     ];
 
-    protected $attributes = [
-      'office_id' => 1,
-    ];
+    // protected $attributes = [
+    //   'office_id' => 1,
+    // ];
 
     protected $casts = [
       'sale_price' => 'double',

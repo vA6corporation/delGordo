@@ -9,6 +9,8 @@ class Product extends Model
 {
     use SoftDeletes;
 
+    protected $with = ['inventoryShop'];
+
     protected $fillable = [
         'name', 
         'description', 
@@ -88,6 +90,13 @@ class Product extends Model
       return $this->belongsTo('App\SubCategory');
     }
 
+    public function inventoryShop() {
+      return $this->hasMany('App\Inventory')->where([
+        'sale_id' => NULL,
+        'office_id' => 1,
+      ])->orderBy('weight', 'desc');
+    }
+
     public function inventory() {
       return $this->hasMany('App\Inventory')->where([
         'sale_id' => NULL,
@@ -96,6 +105,8 @@ class Product extends Model
     }
 
     public function inventoryAll() {
-      return $this->hasMany('App\Inventory')->orderBy('weight', 'desc');
+      return $this->hasMany('App\Inventory')->where([
+        'office_id' => session('officeId'),
+      ])->orderBy('weight', 'desc');
     }
 }

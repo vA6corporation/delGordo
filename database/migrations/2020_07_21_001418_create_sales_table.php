@@ -18,6 +18,7 @@ class CreateSalesTable extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('customer_id');
             $table->integer('office_id');
+            // $table->double('discount')->default(0);
             $table->string('channel');
             $table->date('dispatched_date')->nullable();
             $table->date('delivery_date')->nullable();

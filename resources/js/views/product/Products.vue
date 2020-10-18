@@ -28,6 +28,7 @@
               <th>Categoria</th>
               <th>Sub Categoria</th>
               <th>P. de Venta</th>
+              <th>Activo</th>
               <th>Opciones</th>
             </thead>
             <tbody>
@@ -36,6 +37,9 @@
                 <td>{{ item.category.name }}</td>
                 <td>{{ item.sub_category.name }}</td>
                 <td>S/ {{ item.sale_price.toFixed(2) }}</td>
+                <td>
+                  <toggle-button :value="!disableds.find(e => e.product_id == item.id)" @change="disableProduct(item, $event.target.value)"></toggle-button>
+                </td>
                 <td>
                   <router-link :to="{ path: `/products/${item.id}/edit` }" class="mr-2">
                     <feather type="edit"/>
@@ -60,6 +64,7 @@ export default {
   },
   data() {
     return {
+      disableds: [],
       products: [],
       page: 1,
       pages: null,
@@ -87,7 +92,26 @@ export default {
       });
       this.key = '';
     },
+    disableProduct(product) {
+      let disabled = this.disableds.find(e => e.product_id == product.id);
+      if (disabled) {
+        axios.delete(`disableds/${disabled.id}`).then(res => {
+          console.log(res);
+          this.fetchData();
+        });
+      } else {
+        disabled = { product_id: product.id };
+        axios.post('disableds', { disabled }).then(res => {
+          console.log(res);
+          this.fetchData();
+        });
+      }
+    },
     fetchData() {
+      axios.get('disableds').then(res => {
+        console.log(res);
+        this.disableds = res.data.disableds;
+      });
       var params = { page: this.page };
       axios.get('products', { params }).then(res => {
         console.log(res);

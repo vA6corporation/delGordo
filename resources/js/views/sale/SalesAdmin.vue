@@ -84,7 +84,8 @@
                 <td>{{ formatDate(item.created_at) }} / {{ formatTime(item.created_at) }}</td>
                 <td>{{ item.customer.name }}</td>
                 <td>{{ formatCode(item.id) }}</td>
-                <td>{{ item.delivery.name }}</td>
+                <td v-if="item.delivery">{{ item.delivery.name }}</td>
+                <td v-else>Sin delivery</td>
                 <td>S/ {{ (item.items.map(e => e.sale_price * e.weight).reduce((a, b) => a + b, 0) + item.delivery_price).toFixed(2) }}</td>
                 <td>{{ formatDate(item.delivery_date) }}</td>
                 <td v-if="item.payment_id">Pagado</td>
@@ -184,8 +185,19 @@ export default {
         'PESO DE EMPAQUE',
         'PRECIO DE EMPAQUE',
         'CANAL DE VENTA',
+        // 'FECHA Y HORA DESPACHO',
       ]);
-      inventories.forEach((item, index) => {
+      inventories
+      .sort((a, b) => {
+        if (a.sale.id > b.sale.id) {
+          return 1;
+        }
+        if (a.sale.id < b.sale.id) {
+          return -1;
+        }
+        return 0;
+      })
+      .forEach((item, index) => {
         var customer = item.sale.customer;
         var delivery = item.sale.delivery;
         var category = item.product.category;
@@ -193,7 +205,7 @@ export default {
         console.log(customer);
         body.push([
           index + 1,
-          `${this.formatDate(item.created_at)} ${this.formatTime(item.created_at)}`,
+          `${this.formatDate(item.sale.created_at)} ${this.formatTime(item.sale.created_at)}`,
           this.formatCode(item.sale.id),
           customer.document,
           customer.name,
@@ -203,7 +215,8 @@ export default {
           item.codigo,
           item.weight,
           item.sale_price * item.weight,
-          item.sale.channel
+          item.sale.channel,
+          // item.dispatched_date ? `${this.formatDate(item.dispatched_date)} ${this.formatTime(item.dispatched_date)}` : 'Sin despacho',
         ]);
       });
       var name = `Ventas_desde_${this.formatDate(this.sd)}_hasta_${this.formatDate(this.ed)}`;
@@ -226,6 +239,7 @@ export default {
         'CANAL DE VENTA',
         'AUTOR DE VENTA',
         'ENCARGADO DE DELIVERY',
+        'FECHA HORA DESPACHO',
       ]);
       let params = { 
         // page: this.page,
@@ -250,6 +264,7 @@ export default {
           item.channel,
           item.user ? item.user.name : 'TIENDA VIRTUAL',
           item.deliveryman ? item.deliveryman.name : 'SIN DEFINIR',
+          item.dispatched_date ? `${this.formatDate(item.dispatched_date)} ${this.formatTime(item.dispatched_date)}` : 'Sin despacho',
         ]);
       });
       var name = `Ventas_desde_${this.formatDate(this.sd)}_hasta_${this.formatDate(this.ed)}`;

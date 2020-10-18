@@ -250,10 +250,13 @@ export default {
         console.log(res);
         try {
           await axios.get(`sales/${sale.id}/delivery`);
+          this.fetchData();
         } catch (error) {
           console.log(error.response);        
         }
-        this.payedSale(sale);
+        if (sale.payment_method_id) {
+          this.payedSale(sale);
+        }
       });
     },
     findSales() {
